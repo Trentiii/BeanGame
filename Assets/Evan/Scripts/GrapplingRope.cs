@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 
-public class Tutorial_GrapplingRope : MonoBehaviour
+public class GrapplingRope : MonoBehaviour
 {
     [Header("General Refernces:")]
-    public Tutorial_GrapplingGun grapplingGun;
+    public GrapplingGun grapplingGun;
     public LineRenderer m_lineRenderer;
 
     [Header("General Settings:")]
@@ -86,7 +86,10 @@ public class Tutorial_GrapplingRope : MonoBehaviour
             {
                 waveSize = 0;
 
-                if (m_lineRenderer.positionCount != 2) { m_lineRenderer.positionCount = 2; }
+                if (m_lineRenderer.positionCount != 2)
+                {
+                    m_lineRenderer.positionCount = 2;
+                }
 
                 DrawRopeNoWaves();
             }
