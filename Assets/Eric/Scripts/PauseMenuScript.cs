@@ -24,13 +24,16 @@ public class PauseMenuScript : MonoBehaviour
                 StartCoroutine(closePauseMenu());
                 openCoolDown = Time.time + 0.42f;
                 pauseOpen = !pauseOpen;
+                Time.timeScale = 1f;
             }
-            else if(!pauseOpen && Time.time > openCoolDown)
+            else if(!pauseOpen && Time.time > openCoolDown)// ITS USING TIME DUMMY!!!!
             {
+                Time.timeScale = 0f;
                 PausePanel.SetActive(true);
                 openCoolDown = Time.time + 0.42f;
                 pauseOpen = !pauseOpen;
             }
+            Debug.Log("space");
         }
         
     }
@@ -39,7 +42,7 @@ public class PauseMenuScript : MonoBehaviour
     {
         ani.SetTrigger("PauseDone");
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSecondsRealtime(0.5f);
 
         PausePanel.SetActive(false);
     }
