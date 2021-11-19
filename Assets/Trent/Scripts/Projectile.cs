@@ -27,7 +27,7 @@ public class Projectile : MonoBehaviour
             DestroyProjectile();
         }
 
-        StartCoroutine
+        
     }
 
     
