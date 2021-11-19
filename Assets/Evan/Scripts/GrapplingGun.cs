@@ -12,21 +12,24 @@ public class GrapplingGun : MonoBehaviour
     [Header("Distance:")]
     [Tooltip("If grapple has a max distance value")]
     [SerializeField] private bool hasMaxDistance = false;
-    [SerializeField] private float maxDistnace = 15;
+    [SerializeField] private float maxDistance = 15;
 
     [Header("Launching:")]
-    [Tooltip("Holds speed of grapple")]
-    [SerializeField] private float launchSpeed = 2.54f;
+    [Tooltip("Holds start speed of grapple")]
+    public float startLaunchSpeed = 2.54f;
+    [SerializeField] private float maxSpeed = 10;
 
-    //--Private varibles--
+    //--Public varibles--
     [HideInInspector] public Vector2 grapplePoint; //Holds point to grapple too
     [HideInInspector] public Vector2 grappleDirection; //Holds vector towards grapple point
+    [HideInInspector] public float currentLaunchSpeed; //Holds currentLanchSpeed
 
     //--Private references--
     private Camera mCamera; //Holds main camera 
     private Transform gunHolder; //Holds parent
     private GrapplingRope grappleRope; //Holds grappleRope script
     private SpringJoint2D springJoint2D; //Holds springJoint
+    private Rigidbody2D rb2; //Holds rigibody2d
 
     private void Start()
     {
@@ -34,6 +37,7 @@ public class GrapplingGun : MonoBehaviour
         gunHolder = transform.parent;
         grappleRope = transform.GetChild(0).GetComponent<GrapplingRope>();
         springJoint2D = gunHolder.GetComponent<SpringJoint2D>();
+        rb2 = gunHolder.GetComponent<Rigidbody2D>();
         mCamera = Camera.main;
 
         //Sets rope and spring joint to off by default
@@ -43,11 +47,22 @@ public class GrapplingGun : MonoBehaviour
 
     private void Update()
     {
+        //Clamp velocity to maxSpeed
+        rb2.velocity = new Vector2(Mathf.Clamp(rb2.velocity.x, -maxSpeed, maxSpeed), Mathf.Clamp(rb2.velocity.y, -maxSpeed, maxSpeed));
+
         //If right click detected
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
+            //Sets start launch speed
+            currentLaunchSpeed = startLaunchSpeed;
+
             //Start setGrapplePoint
             setGrapplePoint();
+        }
+        else if (Input.GetKey(KeyCode.Mouse0)) //If right click is currently held down
+        {
+            //Starts speedUp
+            speedUp();
         }
         else if (Input.GetKeyUp(KeyCode.Mouse0)) //If right click was let go
         {
@@ -73,7 +88,7 @@ public class GrapplingGun : MonoBehaviour
             if (_hit.transform.gameObject.layer == grappableLayerNumber || grappleToAll)
             {
                 //If distance is less than max
-                if (Vector2.Distance(_hit.point, transform.position) <= maxDistnace || !hasMaxDistance)
+                if (Vector2.Distance(_hit.point, transform.position) <= maxDistance || !hasMaxDistance)
                 {
                     grapplePoint = _hit.point; //Set grapple point to raycast hit point 
                     grappleDirection = grapplePoint - (Vector2)gunHolder.position; //Get grapple distance vector
@@ -87,9 +102,7 @@ public class GrapplingGun : MonoBehaviour
     public void grapple()
     {
         springJoint2D.connectedAnchor = grapplePoint; //Sets spring joint start to end of grapple
-        springJoint2D.frequency = launchSpeed; //Sets spring joint pull speed to lanchspeed
         springJoint2D.enabled = true; //Turns on spring joint
-
     }
 
     //Draws max distance circle
@@ -100,9 +113,31 @@ public class GrapplingGun : MonoBehaviour
         {
             //Draw a circle the size of maxdistance
             Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(transform.position, maxDistnace);
+            Gizmos.DrawWireSphere(transform.position, maxDistance);
         }
     }
 
+    //Speeds up grapple based on current positon
+    void speedUp()
+    {
+        //Gets current distance between the player and the grapplePoint
+        Vector2 currentDistance = grapplePoint - (Vector2)gunHolder.position;
+
+        //Gets that precange of the amount moved so far
+        float movementPrecentage = Mathf.Abs(currentDistance.magnitude - grappleDirection.magnitude) / grappleDirection.magnitude;
+
+        //Sets current launch speed to starting launch speed times the movement precentage 
+        currentLaunchSpeed += startLaunchSpeed * movementPrecentage;
+
+        //If movement is done (only goes up to about 0.75 for some reason)
+        if (movementPrecentage > 0.7)
+        {
+            springJoint2D.frequency = 0; //Turns off pulling
+        }
+        else
+        {
+            springJoint2D.frequency = currentLaunchSpeed; //Sets spring joint pull speed to launchspeed
+        }
+    }
 }
 

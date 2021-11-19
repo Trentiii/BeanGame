@@ -4,7 +4,7 @@ public class GrapplingRope : MonoBehaviour
 {
     [Header("General Settings:")]
     [Tooltip("The number of points the line renderer uses to draw the wave")]
-    [SerializeField] private int precision = 40;
+    public int precision = 40;
     [Tooltip("The speed that the line's wave straightens out")]
     [Range(0, 20)] [SerializeField] private float straightenLineSpeed = 12;
 
@@ -12,7 +12,7 @@ public class GrapplingRope : MonoBehaviour
     [Tooltip("Holds the shape of the wave animation")]
     public AnimationCurve ropeAnimationCurve;
     [Tooltip("Holds how large the wave animation is before it starts shrinking")]
-    [Range(0.01f, 4)] [SerializeField] private float StartWaveSize = 1;
+    [Range(0.01f, 10)] [SerializeField] private float StartWaveSize = 1;
 
     [Header("Rope Progression:")]
    // [Tooltip("Holds how r")]
@@ -28,6 +28,7 @@ public class GrapplingRope : MonoBehaviour
     //--Private references--
     private GrapplingGun grapplingGun; //Holds grapplingGunScript
     private LineRenderer lineRenderer; //Holds line renderer
+    private Transform gunHolder; //Holds parent
 
     private void OnEnable()
     {
@@ -36,6 +37,7 @@ public class GrapplingRope : MonoBehaviour
         {
             grapplingGun = transform.parent.GetComponent<GrapplingGun>();
             lineRenderer = GetComponent<LineRenderer>();
+            gunHolder = transform.parent.transform.parent;
         }
 
         moveTime = 0; //Resets move time
