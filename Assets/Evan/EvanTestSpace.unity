@@ -236,6 +236,18 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!114 &1497572241 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7393178443343035169, guid: 2c4306f4a6128c641a0e85a4f9bba750,
+    type: 3}
+  m_PrefabInstance: {fileID: 1622259761}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48c40318640d047489a6e07b125f5bea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1567295350
 GameObject:
   m_ObjectHideFlags: 0
@@ -505,6 +517,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5900136962100869364, guid: 2c4306f4a6128c641a0e85a4f9bba750,
+        type: 3}
+      propertyPath: grapplingGun
+      value: 
+      objectReference: {fileID: 1497572241}
+    - target: {fileID: 5900136962100869364, guid: 2c4306f4a6128c641a0e85a4f9bba750,
+        type: 3}
+      propertyPath: lineRenderer
+      value: 
+      objectReference: {fileID: 1773357606}
+    - target: {fileID: 5900136962100869364, guid: 2c4306f4a6128c641a0e85a4f9bba750,
+        type: 3}
+      propertyPath: m_lineRenderer
+      value: 
+      objectReference: {fileID: 1773357606}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2c4306f4a6128c641a0e85a4f9bba750, type: 3}
 --- !u!1 &1728004221
@@ -637,3 +664,9 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!120 &1773357606 stripped
+LineRenderer:
+  m_CorrespondingSourceObject: {fileID: 1325706999412944578, guid: 2c4306f4a6128c641a0e85a4f9bba750,
+    type: 3}
+  m_PrefabInstance: {fileID: 1622259761}
+  m_PrefabAsset: {fileID: 0}
