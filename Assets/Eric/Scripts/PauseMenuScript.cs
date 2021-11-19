@@ -7,7 +7,7 @@ public class PauseMenuScript : MonoBehaviour
     public GameObject PausePanel;
     public Animator ani;
     public bool pauseOpen = false;
-    public float openCoolDown = 0f;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -19,26 +19,33 @@ public class PauseMenuScript : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (pauseOpen && Time.time > openCoolDown)
+            if (pauseOpen)
             {
-                StartCoroutine(closePauseMenu());
-                openCoolDown = Time.time + 0.42f;
-                pauseOpen = !pauseOpen;
-                Time.timeScale = 1f;
+                closePauseMenu();
             }
-            else if(!pauseOpen && Time.time > openCoolDown)// ITS USING TIME DUMMY!!!!
+            else if (!pauseOpen)
             {
-                Time.timeScale = 0f;
-                PausePanel.SetActive(true);
-                openCoolDown = Time.time + 0.42f;
-                pauseOpen = !pauseOpen;
+                openPauseMenu();
             }
-            Debug.Log("space");
         }
-        
+    }
+    
+    public void openPauseMenu()
+    {
+        Time.timeScale = 0f;
+        PausePanel.SetActive(true);
+        pauseOpen = !pauseOpen;
+        Debug.Log("Open");
+    }
+    public void closePauseMenu()
+    {
+        StartCoroutine(closePauseMenuCoroutine());
+        pauseOpen = !pauseOpen;
+        Time.timeScale = 1f;
+        Debug.Log("Close");
     }
 
-    IEnumerator closePauseMenu()
+    IEnumerator closePauseMenuCoroutine()
     {
         ani.SetTrigger("PauseDone");
 
