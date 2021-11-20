@@ -5,6 +5,7 @@ using UnityEngine;
 public class PauseMenuScript : MonoBehaviour
 {
     public GameObject PausePanel;
+    public GameObject GVolume;
     public Animator ani;
     public bool pauseOpen = false;
     
@@ -22,6 +23,8 @@ public class PauseMenuScript : MonoBehaviour
             if (pauseOpen)
             {
                 closePauseMenu();
+                
+                //Mathf.Lerp()
             }
             else if (!pauseOpen)
             {
@@ -35,14 +38,14 @@ public class PauseMenuScript : MonoBehaviour
         Time.timeScale = 0f;
         PausePanel.SetActive(true);
         pauseOpen = !pauseOpen;
-        Debug.Log("Open");
+        //Debug.Log("Open");
     }
     public void closePauseMenu()
     {
         StartCoroutine(closePauseMenuCoroutine());
         pauseOpen = !pauseOpen;
         Time.timeScale = 1f;
-        Debug.Log("Close");
+        //Debug.Log("Close");
     }
 
     IEnumerator closePauseMenuCoroutine()
