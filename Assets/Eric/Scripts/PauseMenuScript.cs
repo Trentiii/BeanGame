@@ -5,9 +5,10 @@ using UnityEngine;
 public class PauseMenuScript : MonoBehaviour
 {
     public GameObject PausePanel;
+    public GameObject GVolume;
     public Animator ani;
     public bool pauseOpen = false;
-    public float openCoolDown = 0f;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -19,27 +20,39 @@ public class PauseMenuScript : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (pauseOpen && Time.time > openCoolDown)
+            if (pauseOpen)
             {
-                StartCoroutine(closePauseMenu());
-                openCoolDown = Time.time + 0.42f;
-                pauseOpen = !pauseOpen;
+                closePauseMenu();
+                
+                //Mathf.Lerp()
             }
-            else if(!pauseOpen && Time.time > openCoolDown)
+            else if (!pauseOpen)
             {
-                PausePanel.SetActive(true);
-                openCoolDown = Time.time + 0.42f;
-                pauseOpen = !pauseOpen;
+                openPauseMenu();
             }
         }
-        
+    }
+    
+    public void openPauseMenu()
+    {
+        Time.timeScale = 0f;
+        PausePanel.SetActive(true);
+        pauseOpen = !pauseOpen;
+        //Debug.Log("Open");
+    }
+    public void closePauseMenu()
+    {
+        StartCoroutine(closePauseMenuCoroutine());
+        pauseOpen = !pauseOpen;
+        Time.timeScale = 1f;
+        //Debug.Log("Close");
     }
 
-    IEnumerator closePauseMenu()
+    IEnumerator closePauseMenuCoroutine()
     {
         ani.SetTrigger("PauseDone");
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSecondsRealtime(0.5f);
 
         PausePanel.SetActive(false);
     }

@@ -26,8 +26,8 @@ public class Projectile : MonoBehaviour
         {
             DestroyProjectile();
         }
-
-        
+        // THIS IS WHERE YOU LEFT OFF!!!
+        //StartCoroutine
     }
 
     
