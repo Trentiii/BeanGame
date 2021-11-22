@@ -17,6 +17,8 @@ public class GrapplingGun : MonoBehaviour
     [Header("Launching:")]
     [Tooltip("Holds start speed of grapple")]
     public float startLaunchSpeed = 2.54f;
+    [Tooltip("Holds ending speed of grapple")]
+    public float endLaunchSpeed = 7;
     [SerializeField] private float maxSpeed = 10;
 
     //--Public varibles--
@@ -127,7 +129,7 @@ public class GrapplingGun : MonoBehaviour
         float movementPrecentage = Mathf.Abs(currentDistance.magnitude - grappleDirection.magnitude) / grappleDirection.magnitude;
 
         //Sets current launch speed to starting launch speed times the movement precentage 
-        currentLaunchSpeed += startLaunchSpeed * movementPrecentage;
+        currentLaunchSpeed = startLaunchSpeed + (endLaunchSpeed * movementPrecentage);
 
         //If movement is done (only goes up to about 0.75 for some reason)
         if (movementPrecentage > 0.7)

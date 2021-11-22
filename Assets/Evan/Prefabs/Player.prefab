@@ -48,7 +48,8 @@ MonoBehaviour:
   grappableLayerNumber: 9
   hasMaxDistance: 1
   maxDistance: 15
-  startLaunchSpeed: 1
+  startLaunchSpeed: 0.5
+  endLaunchSpeed: 20
   maxSpeed: 10
   grapplePoint: {x: 0, y: 0}
   grappleDirection: {x: 0, y: 0}
