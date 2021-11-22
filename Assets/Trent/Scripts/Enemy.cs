@@ -41,7 +41,7 @@ public class Enemy : MonoBehaviour
         if(timeBtwShots <= 0)
         {
             GameObject Clone = Instantiate(projectile, transform.position, Quaternion.identity);
-            GameObject Clone = Instantiate(projectile2, transform.position, Quaternion.identity);
+            //GameObject Clone = Instantiate(projectile2, transform.position, Quaternion.identity);
             Clone.GetComponent<Rigidbody2D>().AddForce((player.transform.position - transform.position).normalized * 1000);
             Destroy(Clone, 5);
             timeBtwShots = startTimeBtwShots;
