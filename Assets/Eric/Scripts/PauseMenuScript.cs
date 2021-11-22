@@ -31,6 +31,8 @@ public class PauseMenuScript : MonoBehaviour
                 openPauseMenu();
             }
         }
+        if (Input.GetKeyDown(KeyCode.Space))
+            GVolume.SetActive(!GVolume.activeSelf);
     }
     
     public void openPauseMenu()
@@ -52,7 +54,7 @@ public class PauseMenuScript : MonoBehaviour
     {
         ani.SetTrigger("PauseDone");
 
-        yield return new WaitForSecondsRealtime(0.5f);
+        yield return new WaitForSecondsRealtime(0.7f);
 
         PausePanel.SetActive(false);
     }
