@@ -640,11 +640,6 @@ PrefabInstance:
       propertyPath: m_lineRenderer
       value: 
       objectReference: {fileID: 1773357606}
-    - target: {fileID: 6093449214106973981, guid: 2c4306f4a6128c641a0e85a4f9bba750,
-        type: 3}
-      propertyPath: fallMultiplier
-      value: 1.5
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2c4306f4a6128c641a0e85a4f9bba750, type: 3}
 --- !u!1 &1728004221
