@@ -247,7 +247,7 @@ GameObject:
   - component: {fileID: 648846640}
   - component: {fileID: 648846639}
   - component: {fileID: 648846638}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Ground (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -640,6 +640,11 @@ PrefabInstance:
       propertyPath: m_lineRenderer
       value: 
       objectReference: {fileID: 1773357606}
+    - target: {fileID: 6093449214106973981, guid: 2c4306f4a6128c641a0e85a4f9bba750,
+        type: 3}
+      propertyPath: fallMultiplier
+      value: 1.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2c4306f4a6128c641a0e85a4f9bba750, type: 3}
 --- !u!1 &1728004221

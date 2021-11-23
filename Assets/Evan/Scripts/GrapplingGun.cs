@@ -12,6 +12,7 @@ public class GrapplingGun : MonoBehaviour
     [Header("Distance:")]
     [Tooltip("If grapple has a max distance value")]
     [SerializeField] private bool hasMaxDistance = false;
+    [Tooltip("Max shoot distance for the grapple")]
     [SerializeField] private float maxDistance = 15;
 
     [Header("Launching:")]
@@ -19,6 +20,9 @@ public class GrapplingGun : MonoBehaviour
     public float startLaunchSpeed = 2.54f;
     [Tooltip("Holds ending speed of grapple")]
     public float endLaunchSpeed = 7;
+
+    [Header("Launching")]
+    [Tooltip("Hold max speed for all movement")]
     [SerializeField] private float maxSpeed = 10;
 
     //--Public varibles--
@@ -32,6 +36,7 @@ public class GrapplingGun : MonoBehaviour
     private GrapplingRope grappleRope; //Holds grappleRope script
     private SpringJoint2D springJoint2D; //Holds springJoint
     private Rigidbody2D rb2; //Holds rigibody2d
+    private PlayerMovement pm; //Holds playerMovement script
 
     private void Start()
     {
@@ -41,6 +46,7 @@ public class GrapplingGun : MonoBehaviour
         springJoint2D = gunHolder.GetComponent<SpringJoint2D>();
         rb2 = gunHolder.GetComponent<Rigidbody2D>();
         mCamera = Camera.main;
+        pm = gunHolder.GetComponent<PlayerMovement>();
 
         //Sets rope and spring joint to off by default
         grappleRope.enabled = false;
@@ -60,6 +66,9 @@ public class GrapplingGun : MonoBehaviour
 
             //Start setGrapplePoint
             setGrapplePoint();
+
+            //Turns off player movement
+            pm.enabled = false;
         }
         else if (Input.GetKey(KeyCode.Mouse0)) //If right click is currently held down
         {
@@ -71,6 +80,9 @@ public class GrapplingGun : MonoBehaviour
             //Turn rope and springjoint back off
             grappleRope.enabled = false;
             springJoint2D.enabled = false;
+
+            //Turns on player movement
+            pm.enabled = true;
         }
     }
 
