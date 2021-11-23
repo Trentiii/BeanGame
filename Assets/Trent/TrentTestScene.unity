@@ -252,7 +252,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 770000164}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 718f6d4e9219a864d8db556107ab0901, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -521,10 +521,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db54da622bb328e4094639d13e87508a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
-  lineOfSight: 10
-  shootingRange: 5
-  fireRate: 1
+  speed: 3.5
+  lineOfSight: 12.5
+  shootingRange: 5.5
+  fireRate: 0
+  startTimeBtwShots: 1
   bullet: {fileID: 4921207389436139059, guid: 73174ca831db51c40badfc1dfae4f02b, type: 3}
   bulletParent: {fileID: 353923239}
 --- !u!212 &1221683398
@@ -585,7 +586,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1221683396}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.33, y: 0.59, z: 0}
+  m_LocalPosition: {x: 11.57, y: 2.8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 353923240}
@@ -782,7 +783,7 @@ GameObject:
   - component: {fileID: 1690600854}
   m_Layer: 8
   m_Name: Square (1)
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
