@@ -38,10 +38,18 @@ public class Projectile : MonoBehaviour
         {
             DestroyProjectile();
         }
+
+        if (other.CompareTag("Ground"))
+        {
+            DestroyProjectile();
+        }
+
     }
 
     void DestroyProjectile()
     {
         Destroy(gameObject);
     }
+
+    
 }
