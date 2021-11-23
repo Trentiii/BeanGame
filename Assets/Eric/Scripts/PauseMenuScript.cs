@@ -34,20 +34,26 @@ public class PauseMenuScript : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
             GVolume.SetActive(!GVolume.activeSelf);
     }
-    
+    /// <summary>
+    /// Opens pause menu
+    /// </summary>
     public void openPauseMenu()
     {
+        //ah
         Time.timeScale = 0f;
         PausePanel.SetActive(true);
         pauseOpen = !pauseOpen;
-        //Debug.Log("Open");
+        Debug.Log("Open");
     }
+    /// <summary>
+    /// Closes pause menu (Uses coroutine)
+    /// </summary>
     public void closePauseMenu()
     {
         StartCoroutine(closePauseMenuCoroutine());
         pauseOpen = !pauseOpen;
         Time.timeScale = 1f;
-        //Debug.Log("Close");
+        Debug.Log("Close");
     }
 
     IEnumerator closePauseMenuCoroutine()

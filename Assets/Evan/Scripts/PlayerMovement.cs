@@ -74,7 +74,7 @@ public class PlayerMovement : MonoBehaviour
         rb2 = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
 
-        groundCheckTrans = transform.GetChild(0);
+        groundCheckTrans = transform.GetChild(1);
     }
 
     // Update is called once per frame
@@ -95,7 +95,7 @@ public class PlayerMovement : MonoBehaviour
         //Activate the ground check, movment, slope check, and the two managers
         CheckGround();
         GetMovement();
-        DownSpeedManager();
+        //DownSpeedManager();
     }
 
     private void Jump()
@@ -228,7 +228,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         //Calls Jump() when jump is pressed or the input is currently being held
-        if (Input.GetButton("Jump") || jumpInputHoldCounter > 0)
+        if (Input.GetButtonDown("Jump") || jumpInputHoldCounter > 0)
         {
             Jump();
         }
