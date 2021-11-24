@@ -232,6 +232,7 @@ GameObject:
   - component: {fileID: 88019582}
   - component: {fileID: 88019581}
   - component: {fileID: 88019583}
+  - component: {fileID: 88019584}
   m_Layer: 5
   m_Name: MainPanel
   m_TagString: Untagged
@@ -273,7 +274,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6862745, g: 0.09803922, b: 0.09803922, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -309,6 +310,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4015b0ba9a7a5e4e89af9f3d0b1e446, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ani: {fileID: 88019584}
+--- !u!95 &88019584
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 88019579}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c1971562ea624cb408990dc4ce17513a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &338053638
 GameObject:
   m_ObjectHideFlags: 0
@@ -559,8 +580,8 @@ Camera:
   m_GameObject: {fileID: 1474322111}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
