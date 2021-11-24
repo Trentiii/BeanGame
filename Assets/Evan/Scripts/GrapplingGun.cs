@@ -66,10 +66,11 @@ public class GrapplingGun : MonoBehaviour
         rb2.velocity = new Vector2(Mathf.Clamp(rb2.velocity.x, -maxSpeed, maxSpeed), Mathf.Clamp(rb2.velocity.y, -maxSpeed, maxSpeed));
 
         //If right click detected
-        if (Input.GetKeyDown(KeyCode.Mouse0) && !grappling)
+        if (Input.GetKeyDown(KeyCode.Mouse0) && !grappling && grappleRope.retracted)
         {
-            //Turns on grappling
+            //Flips grappling and retracted
             grappling = true;
+            grappleRope.retracted = false;
 
             //Sets start launch speed
             currentLaunchSpeed = startLaunchSpeed;
@@ -82,13 +83,13 @@ public class GrapplingGun : MonoBehaviour
         }
         else if (cancelable && Input.GetKeyUp(KeyCode.Mouse0)) //If right click was let go
         {
-            //Start resetGrapple
-            resetGrapple();
+            //Sets grapple to ended
+            grappleRope.grappleEnded = true;
         }
         else if (!cancelable && grappling && !Input.GetKey(KeyCode.Mouse0) && ((grapplePoint - (Vector2)gunHolder.position).magnitude < finalDistance)) //If right click was let go and grapple is done
         {
-            //Start resetGrapple
-            resetGrapple();
+            //Sets grapple to ended
+            grappleRope.grappleEnded = true;
         }
 
         //If grappling
@@ -112,19 +113,36 @@ public class GrapplingGun : MonoBehaviour
             //Get that hit
             RaycastHit2D hit = Physics2D.Raycast(transform.position, distanceVector.normalized);
 
-            //If that hit is on a grapplable layer
-            if (hit.transform.gameObject.layer == grappableLayerNumber || grappleToAll)
+            //If that hit is on a grapplable layer and if distance is less than max
+            if ((hit.transform.gameObject.layer == grappableLayerNumber || grappleToAll) && (Vector2.Distance(hit.point, transform.position) <= maxDistance || !hasMaxDistance))
             {
-                //If distance is less than max
-                if (Vector2.Distance(hit.point, transform.position) <= maxDistance || !hasMaxDistance)
-                {
                     grappleNormal = hit.normal; //Gets grapple normal
                     ropeGrapplePoint = hit.point; //Gets grapple point for rope to go to
                     grapplePoint = hit.point + (grappleNormal * 0.4f); //Set grapple point to raycast hit point + normal + x offset
                     grappleDirection = grapplePoint - (Vector2)gunHolder.position; //Get grapple distance vector
                     grappleRope.enabled = true; //Starts grappleRope script
-                }
             }
+            else
+            {
+                grappleNormal = hit.normal; //Gets grapple normal
+                ropeGrapplePoint = hit.point; //Gets grapple point for rope to go to
+                grapplePoint = hit.point + (grappleNormal * 0.4f); //Set grapple point to raycast hit point + normal + x offset
+                grappleDirection = grapplePoint - (Vector2)gunHolder.position; //Get grapple distance vector
+                grappleRope.enabled = true; //Starts grappleRope script
+
+                //Sets grapple failed to true
+                grappleRope.grappleFailed = true;
+            }
+        }
+        else
+        {
+            ropeGrapplePoint = distanceVector.normalized * maxDistance; //Gets grapple point for rope to go to
+            grappleDirection = ropeGrapplePoint - (Vector2)gunHolder.position; //Get grapple distance vector
+
+            grappleRope.enabled = true; //Starts grappleRope script
+
+            //Sets grapple failed to true
+            grappleRope.grappleFailed = true;
         }
     }
 
@@ -159,19 +177,30 @@ public class GrapplingGun : MonoBehaviour
     }
 
     //Resets everything for next grapple
-    private void resetGrapple()
+    public void resetGrapple()
     { 
         //Turn rope and springjoint back off
         grappleRope.enabled = false;
         springJoint2D.enabled = false;
 
-        rb2.velocity = new Vector2(Vector2.Reflect(grappleDirection, grappleNormal).x, rb2.velocity.y);
+        //If not grapple failed
+        if (!grappleRope.grappleFailed)
+        {
+            //Add reflect movement
+            rb2.velocity = new Vector2(Vector2.Reflect(grappleDirection, grappleNormal).x, rb2.velocity.y);
+        }
+        else
+        {
+            //Tunr off grapple failed
+            grappleRope.grappleFailed = false;
+        }
 
         //Resets currentLaunchSpeed
         currentLaunchSpeed = startLaunchSpeed;
 
-        //Turns off grappling
+        //Flips grappling and grappling failed
         grappling = false;
+        grappleRope.grappleFailed = false;
 
         //Turns on player movement
         pm.enabled = true;

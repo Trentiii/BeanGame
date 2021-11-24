@@ -408,7 +408,7 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.5
+      time: 0.93091935
       value: 1
       inSlope: 0.047346592
       outSlope: 0.047346592
@@ -428,7 +428,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  ropeProgressionSpeed: 7
+  ropeProgressionSpeed: 0.2
+  retracted: 1
+  grappleEnded: 0
 --- !u!120 &1325706999412944578
 LineRenderer:
   m_ObjectHideFlags: 0
