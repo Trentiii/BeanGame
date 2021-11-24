@@ -5,32 +5,29 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
 
+    [Header("Layers")]
     [Tooltip("Ground layer reference")]
-    [SerializeField]
-    private LayerMask whatIsGround;
+    [SerializeField] private LayerMask whatIsGround;
 
     //--Serialized floats
+    //--Movement
+    [Header("Movement")]
     [Tooltip("Speed of the player defualt movement")]
-    [SerializeField]
-    private float movementSpeed = 4;
-    [Tooltip("Force of the player's jump")]
-    [SerializeField]
-    private float jumpForce;
-    [Tooltip("How long the jump press will be saved")]
-    [SerializeField]
-    private float jumpInputHoldTime = 0.3f;
-    [Tooltip("Radius size for ground check sphere")]
-    [SerializeField]
-    private float groundCheckRadius;
+    [SerializeField] private float movementSpeed = 4;
     [Tooltip("Time it takes for the player to slow down")]
-    [SerializeField]
-    private float slowDownTime;
+    [SerializeField] private float slowDownTime = 0.5f;
+    [Tooltip("How much friction is apply to the player")]
+    [SerializeField] private float frictionAmount = 1.2f;
+    //--Jumping
+    [Header("Jumping")]
+    [Tooltip("Force of the player's jump")]
+    [SerializeField] private float jumpForce = 5;
+    [Tooltip("How long the jump press will be saved")]
+    [SerializeField] private float jumpInputHoldTime = 0.15f;
+    [Tooltip("Radius size for ground check sphere")]
+    [SerializeField] private float groundCheckRadius = 0.3f;
     [Tooltip("Player fall speed multiplyer")]
-    [SerializeField]
-    private float fallMultiplier;
-
-    //Holds if player is grounded
-    public bool grounded;
+    [SerializeField] private float fallMultiplier = 1;
 
     //Holds current facing (1 = right)
     private int facingDirection = 1;
@@ -54,8 +51,8 @@ public class PlayerMovement : MonoBehaviour
     private bool turnAroundSlowLeft = false;
     //Holds if the player is in turn around slow right
     private bool turnAroundSlowRight = false;
-    //Holds if jump is needed next fixed update
-    private bool jumpNeeded = false;
+    //Holds if player is grounded
+    private bool grounded;
 
     //--Private Vector2s
     //Temporally Holds new velocitys
@@ -92,10 +89,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //Activate the ground check, movment, slope check, and the two managers
+        //Activate the ground check, movment, slower, and down speed managers
         CheckGround();
         GetMovement();
-        //DownSpeedManager();
+        slower();
+        DownSpeedManager();
     }
 
     private void Jump()
@@ -125,14 +123,14 @@ public class PlayerMovement : MonoBehaviour
         if (grounded)
         {
             //Gets flat movement
-            newVelocity.Set(movementSpeed * xInput, rb2.velocity.y);
+            newVelocity.Set(movementSpeed * xInput, 0);
             //Sends newVelocity to ApplyMovement
             ApplyMovement(newVelocity);
         }
         else if (!grounded)
         {
             //Gets air movement
-            newVelocity.Set(movementSpeed * xInput, rb2.velocity.y);
+            newVelocity.Set(movementSpeed * xInput, 0);
             //Sends newVelocity to ApplyMovement
             ApplyMovement(newVelocity);
         }
@@ -164,7 +162,7 @@ public class PlayerMovement : MonoBehaviour
         if (turnAroundSlowLeft)
         {
             //Slows down x speed
-            velocityToUse.Set(velocityToUse.x * (turnAroundTimerLeft / slowDownTime), velocityToUse.y);
+            velocityToUse.Set(velocityToUse.x * (turnAroundTimerLeft / slowDownTime), 0);
 
             //increments turnAroundCounter
             turnAroundTimerLeft += Time.deltaTime;
@@ -180,7 +178,7 @@ public class PlayerMovement : MonoBehaviour
         else if (turnAroundSlowRight)
         {
             //Slows down x speed
-            velocityToUse.Set(velocityToUse.x * (turnAroundTimerRight / slowDownTime), velocityToUse.y);
+            velocityToUse.Set(velocityToUse.x * (turnAroundTimerRight / slowDownTime), 0);
 
             //increments turnAroundCounter
             turnAroundTimerRight += Time.deltaTime;
@@ -194,13 +192,23 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
+        //Checks if movement is way to large in one direction and the player is trying to move away from that (Fine to allow movement in full force when slowing down from grapple)
         if ((rb2.velocity.x > movementSpeed && velocityToUse.x < 0) || (rb2.velocity.x < -movementSpeed && velocityToUse.x > 0))
         {
+            //Add velocityToUse to velocity
             rb2.velocity += velocityToUse;
         }
-        else
+        //Checks if movement is opposite of the current velocity (Fine to allow movement in full force when reversing)
+        else if ((velocityToUse.x <= 0 && rb2.velocity.x > 0) || (velocityToUse.x <= 0 && rb2.velocity.x > 0))
         {
-            rb2.velocity = velocityToUse;
+            //Add velocityToUse to velocity
+            rb2.velocity += velocityToUse;
+        }
+        //If movement is within normal bounds
+        else if(Mathf.Abs(rb2.velocity.x) < Mathf.Abs(movementSpeed))
+        {
+            //Add half of velocityToUse to velocity
+            rb2.velocity += velocityToUse/2;
         }
 
         //Gets old xInput
@@ -218,7 +226,6 @@ public class PlayerMovement : MonoBehaviour
     {
         //Logs xInput to varible
         xInput = Input.GetAxisRaw("Horizontal");
-        
 
         //Flips player
         if (xInput == -facingDirection)
@@ -234,17 +241,34 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    //Slows the player (friction replacement)
+    private void slower()
+    {
+        //Checks if not moveing and on ground
+        if (xInput == 0 && grounded)
+        {
+            //Divides current velocity by friction amount
+            rb2.velocity = new Vector2((rb2.velocity / frictionAmount).x, rb2.velocity.y);
+        }
+    }
+
     //Manages downaward speed
     private void DownSpeedManager()
     {
         //Speeds up normal fall or low jump fall
         if (rb2.velocity.y < 0 && !grounded)
         {
-            rb2.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+            rb2.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier ) * Time.deltaTime;
         }
         else if (rb2.velocity.y > 0 && !Input.GetButton("Jump") && !grounded)
         {
-            rb2.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+            rb2.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier) * Time.deltaTime;
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        //Draws ground check sphere while game is running
+        if(groundCheckTrans != null) Gizmos.DrawWireSphere(groundCheckTrans.position, groundCheckRadius);
     }
 }

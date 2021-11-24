@@ -640,6 +640,11 @@ PrefabInstance:
       propertyPath: m_lineRenderer
       value: 
       objectReference: {fileID: 1773357606}
+    - target: {fileID: 7393178443343035169, guid: 2c4306f4a6128c641a0e85a4f9bba750,
+        type: 3}
+      propertyPath: velocityResetEnd
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2c4306f4a6128c641a0e85a4f9bba750, type: 3}
 --- !u!1 &1728004221

@@ -15,20 +15,27 @@ public class GrapplingGun : MonoBehaviour
     [Tooltip("Max shoot distance for the grapple")]
     [SerializeField] private float maxDistance = 15;
 
-    [Header("Launching:")]
-    [Tooltip("Holds start speed of grapple")]
-    public float startLaunchSpeed = 2.54f;
-    [Tooltip("Holds ending speed of grapple")]
-    public float endLaunchSpeed = 7;
-
     [Header("Launching")]
+    [Tooltip("If letting go of right click will cancel the grapple early")]
+    [SerializeField] private bool cancelable = false;
+    [Tooltip("Distance from grapple point to be considered done")]
+    [SerializeField] private float finalDistance = 0.8f;
+    [Tooltip("Holds start speed of grapple")]
+    [SerializeField] private float startLaunchSpeed = 2.54f;
+    [Tooltip("Holds ending speed of grapple")]
+    [SerializeField] private float endLaunchSpeed = 7;
     [Tooltip("Hold max speed for all movement")]
     [SerializeField] private float maxSpeed = 10;
 
     //--Public varibles--
-    [HideInInspector] public Vector2 grapplePoint; //Holds point to grapple too
+    [HideInInspector] public Vector2 ropeGrapplePoint; //Holds point for the rope to grapple too
     [HideInInspector] public Vector2 grappleDirection; //Holds vector towards grapple point
-    [HideInInspector] public float currentLaunchSpeed; //Holds currentLanchSpeed
+    [HideInInspector] public float currentLaunchSpeed; //Holds currentLaunchSpeed
+
+    //--Private varibles--
+    private bool grappling = false;
+    private Vector2 grapplePoint; //Holds point to grapple too
+    private Vector2 grappleNormal; //Holds the normal of the grappled surface
 
     //--Private references--
     private Camera mCamera; //Holds main camera 
@@ -59,8 +66,11 @@ public class GrapplingGun : MonoBehaviour
         rb2.velocity = new Vector2(Mathf.Clamp(rb2.velocity.x, -maxSpeed, maxSpeed), Mathf.Clamp(rb2.velocity.y, -maxSpeed, maxSpeed));
 
         //If right click detected
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Mouse0) && !grappling)
         {
+            //Turns on grappling
+            grappling = true;
+
             //Sets start launch speed
             currentLaunchSpeed = startLaunchSpeed;
 
@@ -70,21 +80,25 @@ public class GrapplingGun : MonoBehaviour
             //Turns off player movement
             pm.enabled = false;
         }
-        else if (Input.GetKey(KeyCode.Mouse0)) //If right click is currently held down
+        else if (cancelable && Input.GetKeyUp(KeyCode.Mouse0)) //If right click was let go
+        {
+            //Start resetGrapple
+            resetGrapple();
+        }
+        else if (!cancelable && grappling && !Input.GetKey(KeyCode.Mouse0) && ((grapplePoint - (Vector2)gunHolder.position).magnitude < finalDistance)) //If right click was let go and grapple is done
+        {
+            //Start resetGrapple
+            resetGrapple();
+        }
+
+        //If grappling
+        if (grappling)
         {
             //Starts speedUp
             speedUp();
         }
-        else if (Input.GetKeyUp(KeyCode.Mouse0)) //If right click was let go
-        {
-            //Turn rope and springjoint back off
-            grappleRope.enabled = false;
-            springJoint2D.enabled = false;
-
-            //Turns on player movement
-            pm.enabled = true;
-        }
     }
+
 
     //Gets point to grapple too
     void setGrapplePoint()
@@ -96,15 +110,17 @@ public class GrapplingGun : MonoBehaviour
         if (Physics2D.Raycast(transform.position, distanceVector.normalized))
         {
             //Get that hit
-            RaycastHit2D _hit = Physics2D.Raycast(transform.position, distanceVector.normalized);
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, distanceVector.normalized);
 
             //If that hit is on a grapplable layer
-            if (_hit.transform.gameObject.layer == grappableLayerNumber || grappleToAll)
+            if (hit.transform.gameObject.layer == grappableLayerNumber || grappleToAll)
             {
                 //If distance is less than max
-                if (Vector2.Distance(_hit.point, transform.position) <= maxDistance || !hasMaxDistance)
+                if (Vector2.Distance(hit.point, transform.position) <= maxDistance || !hasMaxDistance)
                 {
-                    grapplePoint = _hit.point; //Set grapple point to raycast hit point 
+                    grappleNormal = hit.normal; //Gets grapple normal
+                    ropeGrapplePoint = hit.point; //Gets grapple point for rope to go to
+                    grapplePoint = hit.point + (grappleNormal * 0.4f); //Set grapple point to raycast hit point + normal + x offset
                     grappleDirection = grapplePoint - (Vector2)gunHolder.position; //Get grapple distance vector
                     grappleRope.enabled = true; //Starts grappleRope script
                 }
@@ -117,18 +133,6 @@ public class GrapplingGun : MonoBehaviour
     {
         springJoint2D.connectedAnchor = grapplePoint; //Sets spring joint start to end of grapple
         springJoint2D.enabled = true; //Turns on spring joint
-    }
-
-    //Draws max distance circle
-    private void OnDrawGizmosSelected()
-    {
-        //If there is a maxdistance
-        if (hasMaxDistance)
-        {
-            //Draw a circle the size of maxdistance
-            Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(transform.position, maxDistance);
-        }
     }
 
     //Speeds up grapple based on current positon
@@ -151,6 +155,37 @@ public class GrapplingGun : MonoBehaviour
         else
         {
             springJoint2D.frequency = currentLaunchSpeed; //Sets spring joint pull speed to launchspeed
+        }
+    }
+
+    //Resets everything for next grapple
+    private void resetGrapple()
+    { 
+        //Turn rope and springjoint back off
+        grappleRope.enabled = false;
+        springJoint2D.enabled = false;
+
+        rb2.velocity = new Vector2(Vector2.Reflect(grappleDirection, grappleNormal).x, rb2.velocity.y);
+
+        //Resets currentLaunchSpeed
+        currentLaunchSpeed = startLaunchSpeed;
+
+        //Turns off grappling
+        grappling = false;
+
+        //Turns on player movement
+        pm.enabled = true;
+    }
+
+    //Draws max distance circle
+    private void OnDrawGizmosSelected()
+    {
+        //If there is a maxdistance
+        if (hasMaxDistance)
+        {
+            //Draw a circle the size of maxdistance
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(transform.position, maxDistance);
         }
     }
 }

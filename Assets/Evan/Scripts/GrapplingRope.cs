@@ -15,7 +15,7 @@ public class GrapplingRope : MonoBehaviour
     [Range(0.01f, 10)] [SerializeField] private float StartWaveSize = 1;
 
     [Header("Rope Progression:")]
-   // [Tooltip("Holds how r")]
+    [Tooltip("Holds how fast the rope visually moves in a curve")]
     public AnimationCurve ropeProgressionCurve;
     [SerializeField] [Range(1, 50)] private float ropeProgressionSpeed = 7;
 
@@ -85,7 +85,7 @@ public class GrapplingRope : MonoBehaviour
         if (!straightLine)
         {
             //If last point it at grapplePoint
-            if (lineRenderer.GetPosition(precision - 1).x == grapplingGun.grapplePoint.x)
+            if (lineRenderer.GetPosition(precision - 1).x == grapplingGun.ropeGrapplePoint.x)
             {
                 //Set straightLine to true
                 straightLine = true;
@@ -141,10 +141,10 @@ public class GrapplingRope : MonoBehaviour
             float delta = (float)i / ((float)precision - 1f);  //Converts current position point to a precentage amount (i/max)
 
             //Gets current point offset from being straight (change perpendicular to the line)
-            Vector2 offset = Vector2.Perpendicular(grapplingGun.grappleDirection).normalized * ropeAnimationCurve.Evaluate(delta) * waveSize;
+            Vector2 offset = Vector2.Perpendicular(grapplingGun.grappleDirection).normalized * ropeAnimationCurve.Evaluate(delta) * (waveSize * (grapplingGun.grappleDirection.magnitude/ 5));
 
             //Gets target position that is delta precent along the line between the player and the grapple point (with offset added to make wave)
-            Vector2 targetPosition = Vector2.Lerp(grapplingGun.transform.position, grapplingGun.grapplePoint, delta) + offset; 
+            Vector2 targetPosition = Vector2.Lerp(grapplingGun.transform.position, grapplingGun.ropeGrapplePoint, delta) + offset; 
 
             //Pushes postition back towards player by the rope progression curve and progression speed
             Vector2 currentPosition = Vector2.Lerp(grapplingGun.transform.position, targetPosition, ropeProgressionCurve.Evaluate(moveTime) * ropeProgressionSpeed);
@@ -158,6 +158,6 @@ public class GrapplingRope : MonoBehaviour
     void drawRopeNoWaves()
     {
         lineRenderer.SetPosition(0, grapplingGun.transform.position); //Sets rope position 0 to the player
-        lineRenderer.SetPosition(1, grapplingGun.grapplePoint); //Sets rope position 1 to the grapplePoint
+        lineRenderer.SetPosition(1, grapplingGun.ropeGrapplePoint); //Sets rope position 1 to the grapplePoint
     }
 }
