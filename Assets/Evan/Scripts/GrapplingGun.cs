@@ -114,8 +114,6 @@ public class GrapplingGun : MonoBehaviour
         //Finds distance from lanch point to mouse
         Vector2 distanceVector = mCamera.ScreenToWorldPoint(Input.mousePosition) - gunHolder.position;
 
-        Debug.DrawRay(transform.position, distanceVector.normalized, Color.red, 1);
-
         //If raycast from grapple stop towards grapple end hits something
         if (Physics2D.Raycast(transform.position, distanceVector.normalized))
         {

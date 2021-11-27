@@ -5,7 +5,7 @@ public class GrapplingRope : MonoBehaviour
     //--Editable varibles--
     [Header("General Settings:")]
     [Tooltip("The number of points the line renderer uses to draw the wave")]
-    public int precision = 60;
+    public int precision = 80;
     [Tooltip("The speed that the line's wave straightens out")]
     [Range(0, 20)] [SerializeField] private float straightenLineSpeed = 12;
 
@@ -32,6 +32,7 @@ public class GrapplingRope : MonoBehaviour
     private float moveTime = 0; //Holds the time spent moving during the grapple
     private bool isGrappling = true; //Holds if the player is currently grappling
     private bool straightLine = true; //Holds if the line is currently straight
+    private AnimationCurve currentRopeCurve = new AnimationCurve(); //Holds rope curve for this grapple
 
     //--Private references--
     private GrapplingGun grapplingGun; //Holds grapplingGunScript
@@ -54,6 +55,41 @@ public class GrapplingRope : MonoBehaviour
         lineRenderer.positionCount = precision; //Sets number of line renderer point to precision
         waveSize = startWaveSize; //Sets starting wave size
         straightLine = false; //Resets straightLine
+
+        //Sets currentRopeCurve to ropeAnimationCurve
+        currentRopeCurve.keys = ropeAnimationCurve.keys;
+
+        //----- Random curve start------
+        //Sets flipper to either -1 or 1
+        float flipper;
+        if (Random.Range(-1, 1) == 0)
+        {
+            flipper = 1;
+        }
+        else
+        {
+            flipper = -1;
+        }
+
+        //Gets a random float
+        float globalRandom = Random.Range(0.75f, 1.75f);
+
+        //Get all the animation curve key frames
+        Keyframe[] keys = currentRopeCurve.keys;
+
+
+        //Goes through all the keyframes but the last few
+        for (int i = 0; i <= currentRopeCurve.length - (1 + (int)(currentRopeCurve.length / 5)); i++)
+        {
+            Keyframe keyframe = keys[i]; //Get keyframe i
+            keyframe.value *= (flipper * globalRandom * Random.Range(0.9f, 1.1f)); //Scale it based on flipper, globalRandom, and a new random
+            keyframe.value = Mathf.Clamp(keyframe.value, -0.35f, 0.35f); //Clamp this new value
+            keys[i] = keyframe; //Set key i to this edited keyframe
+        }
+
+        //Set currentRopeCurve to this new list of keys
+        currentRopeCurve.keys = keys;
+        //------ Random curve end-------
 
         //Start LinePointsToFirePoint
         linePointsToFirePoint();
@@ -181,7 +217,7 @@ public class GrapplingRope : MonoBehaviour
             float delta = (float)i / ((float)precision - 1f);  //Converts current position point to a precentage amount (i/max)
 
             //Gets current point offset from being straight (change perpendicular to the line)
-            Vector2 offset = Vector2.Perpendicular(grapplingGun.grappleDirection).normalized * ropeAnimationCurve.Evaluate(delta) * Mathf.Clamp(waveSize * (grapplingGun.grappleDirection.magnitude/ 5), 0, maxWaveSize);
+            Vector2 offset = Vector2.Perpendicular(grapplingGun.grappleDirection).normalized * currentRopeCurve.Evaluate(delta) * Mathf.Clamp(waveSize * (grapplingGun.grappleDirection.magnitude/ 5), 0, maxWaveSize);
 
             //Gets target position that is delta precent along the line between the player and the grapple point (with offset added to make wave)
             Vector2 targetPosition = Vector2.Lerp(grapplingGun.transform.position, grapplingGun.ropeGrapplePoint, delta) + offset;

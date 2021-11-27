@@ -78,7 +78,6 @@ MonoBehaviour:
   grappableLayerNumber: 9
   hasMaxDistance: 1
   maxDistance: 9
-  cancelable: 0
   finalDistance: 0.1
   startLaunchSpeed: 1
   endLaunchSpeed: 8
@@ -296,7 +295,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e24a826d33b0464fa0e5f6322ae63fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  precision: 60
+  precision: 80
   straightenLineSpeed: 12
   ropeAnimationCurve:
     serializedVersion: 2
@@ -313,29 +312,29 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0.100716054
       value: -0.0012060106
-      inSlope: -0.024485283
-      outSlope: -0.024485283
+      inSlope: -0.023657123
+      outSlope: -0.023657123
       tangentMode: 136
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.19701803
-      value: -0.2527569
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      time: 0.203915
+      value: -0.26972467
+      inSlope: 3.328299
+      outSlope: 3.328299
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.33333334
+      outWeight: 0.4519769
     - serializedVersion: 3
-      time: 0.26732802
-      value: 0.23350799
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      time: 0.3093202
+      value: 0.28285873
+      inSlope: -0.5703594
+      outSlope: -0.5703594
+      tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
+      inWeight: 0.34653893
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 0.4112547
@@ -374,10 +373,10 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.8611041
-      value: 0.0020809844
-      inSlope: -0.03019381
-      outSlope: -0.03019381
+      time: 0.8728228
+      value: -0.03806489
+      inSlope: 0
+      outSlope: 0
       tangentMode: 136
       weightedMode: 0
       inWeight: 0.33333334
