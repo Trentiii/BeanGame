@@ -5,7 +5,7 @@ public class GrapplingRope : MonoBehaviour
     //--Editable varibles--
     [Header("General Settings:")]
     [Tooltip("The number of points the line renderer uses to draw the wave")]
-    public int precision = 40;
+    public int precision = 60;
     [Tooltip("The speed that the line's wave straightens out")]
     [Range(0, 20)] [SerializeField] private float straightenLineSpeed = 12;
 
@@ -13,17 +13,19 @@ public class GrapplingRope : MonoBehaviour
     [Tooltip("Holds the shape of the wave animation")]
     public AnimationCurve ropeAnimationCurve;
     [Tooltip("Holds how large the wave animation is before it starts shrinking")]
-    [Range(0.01f, 10)] [SerializeField] private float StartWaveSize = 1;
+    [Range(0.01f, 10)] [SerializeField] private float startWaveSize = 1;
+    [Tooltip("Holds what the max size for the wave will be")]
+    [Range(0.01f, 10)] [SerializeField] private float maxWaveSize = 9;
 
     [Header("Rope Progression:")]
     [Tooltip("Holds how fast the rope visually moves in a curve")]
     public AnimationCurve ropeProgressionCurve;
-    [SerializeField] [Range(0.05f, 5)] private float ropeProgressionSpeed = 7;
+    [SerializeField] [Range(0.05f, 5)] private float ropeProgressionSpeed = 0.2f;
 
     //--Public varibles
-     public bool retracted = true; //Holds if rope is fully retracted
-     public bool grappleEnded = false; //Holds if grapple has ended
-     public bool grappleFailed = false; //Holds if grapple has failed
+    [HideInInspector] public bool retracted = true; //Holds if rope is fully retracted
+    [HideInInspector] public bool grappleEnded = false; //Holds if grapple has ended
+    [HideInInspector] public bool grappleFailed = false; //Holds if grapple has failed
 
     //--Private varibles--
     private float waveSize = 0; //Holds current wave size
@@ -35,6 +37,7 @@ public class GrapplingRope : MonoBehaviour
     private GrapplingGun grapplingGun; //Holds grapplingGunScript
     private LineRenderer lineRenderer; //Holds line renderer
     private Transform gunHolder; //Holds top parent
+    private PlayerMovement pm; //Holds player movement script
 
     private void OnEnable()
     {
@@ -44,11 +47,12 @@ public class GrapplingRope : MonoBehaviour
             grapplingGun = transform.parent.GetComponent<GrapplingGun>();
             lineRenderer = GetComponent<LineRenderer>();
             gunHolder = transform.parent.parent;
+            pm = gunHolder.GetComponent<PlayerMovement>();
         }
 
         moveTime = 0; //Resets move time
         lineRenderer.positionCount = precision; //Sets number of line renderer point to precision
-        waveSize = StartWaveSize; //Sets starting wave size
+        waveSize = startWaveSize; //Sets starting wave size
         straightLine = false; //Resets straightLine
 
         //Start LinePointsToFirePoint
@@ -85,6 +89,12 @@ public class GrapplingRope : MonoBehaviour
         else
         {   //Adds time to movetime
             moveTime -= Time.deltaTime;
+        }
+
+        if (straightLine && !grappleEnded)
+        {
+            //Turn of playerMovement
+            pm.enabled = false;
         }
 
         //Starts drawRope
@@ -166,12 +176,12 @@ public class GrapplingRope : MonoBehaviour
     private void drawRopeWaves()
     {
         //For all line renderer points
-        for (int i = 0; i < precision; i++)
+        for (int i = 0; i < lineRenderer.positionCount; i++)
         {
             float delta = (float)i / ((float)precision - 1f);  //Converts current position point to a precentage amount (i/max)
 
             //Gets current point offset from being straight (change perpendicular to the line)
-            Vector2 offset = Vector2.Perpendicular(grapplingGun.grappleDirection).normalized * ropeAnimationCurve.Evaluate(delta) * (waveSize * (grapplingGun.grappleDirection.magnitude/ 5));
+            Vector2 offset = Vector2.Perpendicular(grapplingGun.grappleDirection).normalized * ropeAnimationCurve.Evaluate(delta) * Mathf.Clamp(waveSize * (grapplingGun.grappleDirection.magnitude/ 5), 0, maxWaveSize);
 
             //Gets target position that is delta precent along the line between the player and the grapple point (with offset added to make wave)
             Vector2 targetPosition = Vector2.Lerp(grapplingGun.transform.position, grapplingGun.ropeGrapplePoint, delta) + offset;
@@ -194,24 +204,8 @@ public class GrapplingRope : MonoBehaviour
     //Retracks the rope
     private void retractRope()
     {
-
-        //For all line renderer points
-        for (int i = 0; i < lineRenderer.positionCount; i++)
-        {
-            float delta = (float)i / ((float)precision - 1f);  //Converts current position point to a precentage amount (i/max)
-
-            //Gets current point offset from being straight (change perpendicular to the line)
-            Vector2 offset = Vector2.Perpendicular(grapplingGun.grappleDirection).normalized * ropeAnimationCurve.Evaluate(delta) * (waveSize * (grapplingGun.grappleDirection.magnitude / 5));
-
-            //Gets target position that is delta precent along the line between the player and the grapple point (with offset added to make wave)
-            Vector2 targetPosition = Vector2.Lerp(grapplingGun.transform.position, grapplingGun.ropeGrapplePoint, delta) + offset;
-
-            //Pushes postition back towards grapplePoint by the rope progression curve / ropeProgressionSpeed
-            Vector2 currentPosition = Vector2.Lerp(grapplingGun.transform.position, targetPosition, ropeProgressionCurve.Evaluate(moveTime / ropeProgressionSpeed));
-
-            //Sets position in the line renderer
-            lineRenderer.SetPosition(i, currentPosition);
-        }
+        //Starts drawRope waves
+        drawRopeWaves();
 
         //Check if points are back at player
         if (((Vector2)lineRenderer.GetPosition(lineRenderer.positionCount - 1) - (Vector2)gunHolder.position).magnitude < 0.5)

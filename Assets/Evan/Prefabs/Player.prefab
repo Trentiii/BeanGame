@@ -77,7 +77,7 @@ MonoBehaviour:
   grappleToAll: 1
   grappableLayerNumber: 9
   hasMaxDistance: 1
-  maxDistance: 15
+  maxDistance: 9
   cancelable: 0
   finalDistance: 0.1
   startLaunchSpeed: 1
@@ -394,7 +394,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  StartWaveSize: 2
+  startWaveSize: 1
+  maxWaveSize: 9
   ropeProgressionCurve:
     serializedVersion: 2
     m_Curve:
@@ -431,6 +432,7 @@ MonoBehaviour:
   ropeProgressionSpeed: 0.2
   retracted: 1
   grappleEnded: 0
+  grappleFailed: 0
 --- !u!120 &1325706999412944578
 LineRenderer:
   m_ObjectHideFlags: 0

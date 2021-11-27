@@ -5,25 +5,25 @@ public class GrapplingGun : MonoBehaviour
     //--Editable varibles--
     [Header("Layers Settings:")]
     [Tooltip("If you are able to grapple to all layers")]
-    [SerializeField] private bool grappleToAll = false;
+    [SerializeField] private bool grappleToAll = true;
     [Tooltip("Holds grapple layer number if needed")]
     [SerializeField] private int grappableLayerNumber = 9;
 
     [Header("Distance:")]
     [Tooltip("If grapple has a max distance value")]
-    [SerializeField] private bool hasMaxDistance = false;
+    [SerializeField] private bool hasMaxDistance = true;
     [Tooltip("Max shoot distance for the grapple")]
-    [SerializeField] private float maxDistance = 15;
+    [SerializeField] private float maxDistance = 9;
 
     [Header("Launching")]
-    [Tooltip("If letting go of right click will cancel the grapple early")]
-    [SerializeField] private bool cancelable = false;
+    //[Tooltip("If letting go of right click will cancel the grapple early")]
+    //[SerializeField] private bool cancelable = false;
     [Tooltip("Distance from grapple point to be considered done")]
-    [SerializeField] private float finalDistance = 0.8f;
+    [SerializeField] private float finalDistance = 0.1f;
     [Tooltip("Holds start speed of grapple")]
-    [SerializeField] private float startLaunchSpeed = 2.54f;
+    [SerializeField] private float startLaunchSpeed = 1f;
     [Tooltip("Holds ending speed of grapple")]
-    [SerializeField] private float endLaunchSpeed = 7;
+    [SerializeField] private float endLaunchSpeed = 8;
     [Tooltip("Hold max speed for all movement")]
     [SerializeField] private float maxSpeed = 10;
 
@@ -34,6 +34,7 @@ public class GrapplingGun : MonoBehaviour
 
     //--Private varibles--
     private bool grappling = false;
+    private bool heldAtEnd = false;
     private Vector2 grapplePoint; //Holds point to grapple too
     private Vector2 grappleNormal; //Holds the normal of the grappled surface
 
@@ -79,21 +80,27 @@ public class GrapplingGun : MonoBehaviour
             setGrapplePoint();
 
             //Turns off player movement
-            pm.enabled = false;
+            //pm.enabled = false;
         }
-        else if (cancelable && Input.GetKeyUp(KeyCode.Mouse0)) //If right click was let go
+        //else if (cancelable && Input.GetKeyUp(KeyCode.Mouse0)) //If right click was let go
+        //{
+        //    //Sets grapple to ended
+        //    grappleRope.grappleEnded = true;
+        //}
+        else if (/*!cancelable &&*/ grappling && !Input.GetKey(KeyCode.Mouse0) && ((grapplePoint - (Vector2)gunHolder.position).magnitude < finalDistance)) //If right click was let go and grapple is done
         {
             //Sets grapple to ended
             grappleRope.grappleEnded = true;
         }
-        else if (!cancelable && grappling && !Input.GetKey(KeyCode.Mouse0) && ((grapplePoint - (Vector2)gunHolder.position).magnitude < finalDistance)) //If right click was let go and grapple is done
+        else if (grappling && Input.GetKey(KeyCode.Mouse0) && ((grapplePoint - (Vector2)gunHolder.position).magnitude < finalDistance)) //If right click is held and grapple is done
         {
-            //Sets grapple to ended
-            grappleRope.grappleEnded = true;
+            //Set heldAtEnd to true
+            heldAtEnd = true;
         }
 
-        //If grappling
-        if (grappling)
+
+            //If grappling
+            if (grappling)
         {
             //Starts speedUp
             speedUp();
@@ -106,6 +113,8 @@ public class GrapplingGun : MonoBehaviour
     {
         //Finds distance from lanch point to mouse
         Vector2 distanceVector = mCamera.ScreenToWorldPoint(Input.mousePosition) - gunHolder.position;
+
+        Debug.DrawRay(transform.position, distanceVector.normalized, Color.red, 1);
 
         //If raycast from grapple stop towards grapple end hits something
         if (Physics2D.Raycast(transform.position, distanceVector.normalized))
@@ -124,26 +133,27 @@ public class GrapplingGun : MonoBehaviour
             }
             else
             {
-                grappleNormal = hit.normal; //Gets grapple normal
-                ropeGrapplePoint = hit.point; //Gets grapple point for rope to go to
-                grapplePoint = hit.point + (grappleNormal * 0.4f); //Set grapple point to raycast hit point + normal + x offset
-                grappleDirection = grapplePoint - (Vector2)gunHolder.position; //Get grapple distance vector
-                grappleRope.enabled = true; //Starts grappleRope script
-
-                //Sets grapple failed to true
-                grappleRope.grappleFailed = true;
+                //Starts grappleFailed and passes it distanceVector
+                grappleFailed(distanceVector);
             }
         }
         else
         {
-            ropeGrapplePoint = distanceVector.normalized * maxDistance; //Gets grapple point for rope to go to
-            grappleDirection = ropeGrapplePoint - (Vector2)gunHolder.position; //Get grapple distance vector
-
-            grappleRope.enabled = true; //Starts grappleRope script
-
-            //Sets grapple failed to true
-            grappleRope.grappleFailed = true;
+            //Starts grappleFailed and passes it distanceVector
+            grappleFailed(distanceVector);
         }
+    }
+
+    //If grapple failed to set grapplePoint
+    private void grappleFailed(Vector2 currentDistanceVector)
+    {
+        ropeGrapplePoint = (Vector2)gunHolder.position + (currentDistanceVector.normalized * maxDistance); //Gets grapple point for rope to go to
+        grappleDirection = ropeGrapplePoint - (Vector2)gunHolder.position; //Get grapple distance vector
+
+        grappleRope.enabled = true; //Starts grappleRope script
+
+        //Sets grapple failed to true
+        grappleRope.grappleFailed = true;
     }
 
     //Does grapple movement
@@ -184,10 +194,12 @@ public class GrapplingGun : MonoBehaviour
         springJoint2D.enabled = false;
 
         //If not grapple failed
-        if (!grappleRope.grappleFailed)
+        if (!grappleRope.grappleFailed && !heldAtEnd)
         {
             //Add reflect movement
-            rb2.velocity = new Vector2(Vector2.Reflect(grappleDirection, grappleNormal).x, rb2.velocity.y);
+            //rb2.velocity = new Vector2(Vector2.Reflect(grappleDirection, grappleNormal).x, rb2.velocity.y);
+
+            rb2.velocity = new Vector2(grappleDirection.normalized.x * 7, rb2.velocity.y);
         }
         else
         {
@@ -195,10 +207,13 @@ public class GrapplingGun : MonoBehaviour
             grappleRope.grappleFailed = false;
         }
 
+        //Resets heldAtEnd
+        heldAtEnd = false;
+
         //Resets currentLaunchSpeed
         currentLaunchSpeed = startLaunchSpeed;
 
-        //Flips grappling and grappling failed
+        //Resets grappling and grappling failed
         grappling = false;
         grappleRope.grappleFailed = false;
 

@@ -13,7 +13,7 @@ public class PlayerMovement : MonoBehaviour
     //--Movement
     [Header("Movement")]
     [Tooltip("Speed of the player defualt movement")]
-    [SerializeField] private float movementSpeed = 4;
+    [SerializeField] private float movementSpeed = 6;
     [Tooltip("Time it takes for the player to slow down")]
     [SerializeField] private float slowDownTime = 0.5f;
     [Tooltip("How much friction is apply to the player")]
@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     //--Jumping
     [Header("Jumping")]
     [Tooltip("Force of the player's jump")]
-    [SerializeField] private float jumpForce = 5;
+    [SerializeField] private float jumpForce = 6;
     [Tooltip("How long the jump press will be saved")]
     [SerializeField] private float jumpInputHoldTime = 0.15f;
     [Tooltip("Radius size for ground check sphere")]
