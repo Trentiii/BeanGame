@@ -27,6 +27,17 @@ public class GrapplingGun : MonoBehaviour
     [Tooltip("Hold max speed for all movement")]
     [SerializeField] private float maxSpeed = 10;
 
+    enum stuckSolvers // your custom enumeration
+    {
+        clipSolver,
+        stopSolver,
+    };
+
+    [Header("Stuck Solver")]
+    [Tooltip("Holds which method of fixing softlocks to use")]
+    [SerializeField] stuckSolvers solverType;
+
+
     //--Public varibles--
     [HideInInspector] public Vector2 ropeGrapplePoint; //Holds point for the rope to grapple too
     [HideInInspector] public Vector2 grappleDirection; //Holds vector towards grapple point
@@ -41,10 +52,12 @@ public class GrapplingGun : MonoBehaviour
     //--Private references--
     private Camera mCamera; //Holds main camera 
     private Transform gunHolder; //Holds parent
+    private Transform grappleFinder; //Holds GrappleFinder
     private GrapplingRope grappleRope; //Holds grappleRope script
     private SpringJoint2D springJoint2D; //Holds springJoint
     private Rigidbody2D rb2; //Holds rigibody2d
     private PlayerMovement pm; //Holds playerMovement script
+    private Collider2D c2d;
 
     private void Start()
     {
@@ -55,10 +68,13 @@ public class GrapplingGun : MonoBehaviour
         rb2 = gunHolder.GetComponent<Rigidbody2D>();
         mCamera = Camera.main;
         pm = gunHolder.GetComponent<PlayerMovement>();
+        grappleFinder = gunHolder.parent.GetChild(1);
+        c2d = gunHolder.GetComponent<Collider2D>();
 
-        //Sets rope and spring joint to off by default
+        //Sets rope, spring joint, and grappleFinder to off by default
         grappleRope.enabled = false;
         springJoint2D.enabled = false;
+        grappleFinder.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -78,16 +94,8 @@ public class GrapplingGun : MonoBehaviour
 
             //Start setGrapplePoint
             setGrapplePoint();
-
-            //Turns off player movement
-            //pm.enabled = false;
         }
-        //else if (cancelable && Input.GetKeyUp(KeyCode.Mouse0)) //If right click was let go
-        //{
-        //    //Sets grapple to ended
-        //    grappleRope.grappleEnded = true;
-        //}
-        else if (/*!cancelable &&*/ grappling && !Input.GetKey(KeyCode.Mouse0) && ((grapplePoint - (Vector2)gunHolder.position).magnitude < finalDistance)) //If right click was let go and grapple is done
+        else if (grappling && !Input.GetKey(KeyCode.Mouse0) && ((grapplePoint - (Vector2)gunHolder.position).magnitude < finalDistance)) //If right click was let go and grapple is done
         {
             //Sets grapple to ended
             grappleRope.grappleEnded = true;
@@ -98,12 +106,33 @@ public class GrapplingGun : MonoBehaviour
             heldAtEnd = true;
         }
 
-
-            //If grappling
-            if (grappling)
+        //If grappling
+        if (grappling)
         {
             //Starts speedUp
             speedUp();
+
+            //Sets grappleFinder to end of the grapple
+            grappleFinder.transform.position = grapplePoint;
+
+            //Does raycast to grapplePoint
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, grapplePoint - (Vector2)transform.position);
+
+            if (hit.transform != null && springJoint2D.enabled && hit.transform.name != "GrappleFinder" && (grapplePoint - (Vector2)transform.position).magnitude > 1.05f && hit.distance < 1.05f)
+            {
+                if (solverType == stuckSolvers.clipSolver)
+                {
+                    c2d.enabled = false;
+                }
+                else if (solverType == stuckSolvers.stopSolver)
+                {
+                    grappleRope.grappleEnded = true;
+                }
+            }
+            else if(solverType == stuckSolvers.clipSolver)
+            {
+                c2d.enabled = true;
+            }
         }
     }
 
@@ -123,11 +152,14 @@ public class GrapplingGun : MonoBehaviour
             //If that hit is on a grapplable layer and if distance is less than max
             if ((hit.transform.gameObject.layer == grappableLayerNumber || grappleToAll) && (Vector2.Distance(hit.point, transform.position) <= maxDistance || !hasMaxDistance))
             {
-                    grappleNormal = hit.normal; //Gets grapple normal
-                    ropeGrapplePoint = hit.point; //Gets grapple point for rope to go to
-                    grapplePoint = hit.point + (grappleNormal * 0.4f); //Set grapple point to raycast hit point + normal + x offset
-                    grappleDirection = grapplePoint - (Vector2)gunHolder.position; //Get grapple distance vector
-                    grappleRope.enabled = true; //Starts grappleRope script
+                grappleNormal = hit.normal; //Gets grapple normal
+                ropeGrapplePoint = hit.point; //Gets grapple point for rope to go to
+                grapplePoint = hit.point + (grappleNormal * 0.4f); //Set grapple point to raycast hit point + normal + x offset
+                grappleDirection = grapplePoint - (Vector2)gunHolder.position; //Get grapple distance vector
+                grappleRope.enabled = true; //Starts grappleRope script
+
+                //Turns on grappleFinder
+                grappleFinder.gameObject.SetActive(true);
             }
             else
             {
@@ -197,7 +229,7 @@ public class GrapplingGun : MonoBehaviour
             //Add reflect movement
             //rb2.velocity = new Vector2(Vector2.Reflect(grappleDirection, grappleNormal).x, rb2.velocity.y);
 
-            rb2.velocity = new Vector2(grappleDirection.normalized.x * 7, rb2.velocity.y);
+            rb2.velocity = new Vector2(grappleDirection.normalized.x * grappleDirection.magnitude, rb2.velocity.y);
         }
         else
         {
@@ -215,8 +247,14 @@ public class GrapplingGun : MonoBehaviour
         grappling = false;
         grappleRope.grappleFailed = false;
 
+        //Turns on collision
+        c2d.enabled = true;
+
         //Turns on player movement
         pm.enabled = true;
+
+        //Turns off grappleFinder
+        grappleFinder.gameObject.SetActive(false);
     }
 
     //Draws max distance circle
