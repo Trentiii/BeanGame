@@ -29,11 +29,11 @@ public class GrapplingRope : MonoBehaviour
     [HideInInspector] public bool retracted = true; //Holds if rope is fully retracted
     [HideInInspector] public bool grappleEnded = false; //Holds if grapple has ended
     [HideInInspector] public bool grappleFailed = false; //Holds if grapple has failed
+    [HideInInspector] public bool isGrappling = true; //Holds if the player is currently grappling
 
     //--Private varibles--
     private float waveSize = 0; //Holds current wave size
     private float moveTime = 0; //Holds the time spent moving during the grapple
-    private bool isGrappling = true; //Holds if the player is currently grappling
     private bool straightLine = true; //Holds if the line is currently straight
     private AnimationCurve currentRopeCurve = new AnimationCurve(); //Holds rope curve for this grapple
 
@@ -120,12 +120,17 @@ public class GrapplingRope : MonoBehaviour
 
     private void Update()
     {
-        if (!grappleEnded)
+        //If the grapple has not ended and not stuck
+        if ((!grappleEnded && !grapplingGun.stuckOnWall))
         {
-            //Adds time to movetime
-            moveTime += Time.deltaTime;
+            //If not at the end of the grapple
+            if(!((grapplingGun.grapplePoint - (Vector2)gunHolder.position).magnitude < grapplingGun.finalDistance))
+            {
+                //Adds time to movetime
+                moveTime += Time.deltaTime;
+            }
         }
-        else
+        else if(grappleEnded) //If grapple has ended
         {   //Adds time to movetime
             moveTime -= Time.deltaTime;
         }
@@ -135,26 +140,6 @@ public class GrapplingRope : MonoBehaviour
             //Turn of playerMovement
             pm.enabled = false;
         }
-
-        /*
-        Vector2[] colliderPoints = new Vector2[precision];
-        Vector2[] colliderPoints2 = new Vector2[precision * 2];
-        PolygonCollider2D pc = GetComponent<PolygonCollider2D>();
-
-        for (int i = 0; i < lineRenderer.positionCount; i++)
-        {
-            colliderPoints[i] = lineRenderer.GetPosition(i);
-
-            float halfWidth = lineRenderer.startWidth / 2f;
-            Vector2 rightPoint = colliderPoints[i];
-            Vector2 leftPoint = colliderPoints[i];
-            rightPoint.x -= halfWidth;
-            leftPoint.x += halfWidth;
-            colliderPoints2[i] = rightPoint;
-            colliderPoints2[i + precision] = leftPoint;
-        }
-        pc.points = colliderPoints2;
-        */
 
         //Starts drawRope
         drawRope();

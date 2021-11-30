@@ -458,10 +458,12 @@ MonoBehaviour:
   startLaunchSpeed: 1
   endLaunchSpeed: 8
   maxSpeed: 10
-  solverType: 1
+  solverType: 2
   ropeGrapplePoint: {x: 0, y: 0}
+  grapplePoint: {x: 0, y: 0}
   grappleDirection: {x: 0, y: 0}
   currentLaunchSpeed: 0
+  stuckOnWall: 0
 --- !u!1 &8561325172998655941
 GameObject:
   m_ObjectHideFlags: 0
@@ -643,6 +645,7 @@ MonoBehaviour:
   retracted: 1
   grappleEnded: 0
   grappleFailed: 0
+  isGrappling: 1
 --- !u!120 &6445338493017285033
 LineRenderer:
   m_ObjectHideFlags: 0
