@@ -1,5 +1,8 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
+[RequireComponent(typeof(LineRenderer))]
 public class GrapplingRope : MonoBehaviour
 {
     //--Editable varibles--
@@ -133,6 +136,26 @@ public class GrapplingRope : MonoBehaviour
             pm.enabled = false;
         }
 
+        /*
+        Vector2[] colliderPoints = new Vector2[precision];
+        Vector2[] colliderPoints2 = new Vector2[precision * 2];
+        PolygonCollider2D pc = GetComponent<PolygonCollider2D>();
+
+        for (int i = 0; i < lineRenderer.positionCount; i++)
+        {
+            colliderPoints[i] = lineRenderer.GetPosition(i);
+
+            float halfWidth = lineRenderer.startWidth / 2f;
+            Vector2 rightPoint = colliderPoints[i];
+            Vector2 leftPoint = colliderPoints[i];
+            rightPoint.x -= halfWidth;
+            leftPoint.x += halfWidth;
+            colliderPoints2[i] = rightPoint;
+            colliderPoints2[i + precision] = leftPoint;
+        }
+        pc.points = colliderPoints2;
+        */
+
         //Starts drawRope
         drawRope();
     }
@@ -177,27 +200,19 @@ public class GrapplingRope : MonoBehaviour
                     //Set isGrappling to true
                     isGrappling = true;
                 }
+
+                //Start drawRopeWaves
+                drawRopeWaves();
+
                 if (waveSize > 0) //If wavesize is greater than 0
                 {
                     //Shrink wave size by time times shrink speed
                     waveSize -= Time.deltaTime * straightenLineSpeed;
-
-                    //Start drawRopeWaves
-                    drawRopeWaves();
                 }
                 else //If grappling and wave size is <= 0
                 {
                     //Set waveSize to exactly 0
                     waveSize = 0;
-
-                    //Set the rope position count to 2 if not already
-                    if (lineRenderer.positionCount != 2)
-                    {
-                        lineRenderer.positionCount = 2;
-                    }
-
-                    //Start drawRopeNoWaves
-                    drawRopeNoWaves();
                 }
             }
         }
@@ -228,13 +243,6 @@ public class GrapplingRope : MonoBehaviour
             //Sets position in the line renderer
             lineRenderer.SetPosition(i, currentPosition);
         }
-    }
-
-    //Draws the rope with no waves
-    private void drawRopeNoWaves()
-    {
-        lineRenderer.SetPosition(0, grapplingGun.transform.position); //Sets rope position 0 to the player
-        lineRenderer.SetPosition(1, grapplingGun.ropeGrapplePoint); //Sets rope position 1 to the grapplePoint
     }
 
     //Retracks the rope
