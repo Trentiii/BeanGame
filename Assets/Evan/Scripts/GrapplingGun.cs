@@ -171,6 +171,11 @@ public class GrapplingGun : MonoBehaviour
             //If that hit is on a grapplable layer and if distance is less than max
             if ((hit.transform.gameObject.layer == grappableLayerNumber || grappleToAll) && (Vector2.Distance(hit.point, transform.position) <= maxDistance || !hasMaxDistance))
             {
+                if (hit.transform.gameObject.layer == 11)
+                {
+                    Debug.Log("hi");
+                }
+
                 grappleNormal = hit.normal; //Gets grapple normal
                 ropeGrapplePoint = hit.point; //Gets grapple point for rope to go to
                 grapplePoint = hit.point + (grappleNormal * 0.4f); //Set grapple point to raycast hit point + normal + x offset
