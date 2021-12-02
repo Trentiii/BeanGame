@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
+    public Animator animator;
     float coyoteRemember = 0;
     [SerializeField]
     float coyoteTime = 0.25f;
@@ -34,7 +35,18 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        animator.SetFloat("speed", Mathf.Abs(horizontal));
         horizontal = Input.GetAxisRaw("Horizontal");
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            animator.SetBool("tongue", false);
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            animator.SetBool("tongue", true);
+        }    
 
         if (Input.GetButtonDown("Jump") && IsGrounded() == true && extraJumps > 0) // Jump Function
         {
