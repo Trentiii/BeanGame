@@ -15,6 +15,14 @@ public class Enemy : MonoBehaviour
     public GameObject projectile2;
     public Transform player;
 
+    public enum States
+    {
+        idle, 
+        chasing,
+        shooting
+    }
+
+    public States Currentstate = States.idle;
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;

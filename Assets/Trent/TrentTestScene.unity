@@ -231,7 +231,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 353923240}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: BulletParent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -732,7 +732,7 @@ GameObject:
   - component: {fileID: 1221683398}
   - component: {fileID: 1221683397}
   - component: {fileID: 1221683400}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Flying Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -862,13 +862,13 @@ GameObject:
   - component: {fileID: 1551634651}
   - component: {fileID: 1551634654}
   - component: {fileID: 1551634650}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Enemy 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!50 &1551634650
 Rigidbody2D:
   serializedVersion: 4
@@ -910,6 +910,7 @@ MonoBehaviour:
     type: 3}
   projectile2: {fileID: 0}
   player: {fileID: 770000169}
+  Currentstate: 0
 --- !u!212 &1551634652
 SpriteRenderer:
   m_ObjectHideFlags: 0
