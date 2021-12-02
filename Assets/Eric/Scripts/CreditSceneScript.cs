@@ -31,13 +31,9 @@ public class CreditSceneScript : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
-        {
             nextSlide();
-        }
         if (CurrentSlide == Slide.Olivia + 1)
-        {
             CurrentSlide = Slide.Trent;
-        }
 
         switch (CurrentSlide)
         {
@@ -76,7 +72,6 @@ public class CreditSceneScript : MonoBehaviour
             default:
                 break;
         }
-        //Make current slide as the current panel
     }
 
     private void nextSlide()
