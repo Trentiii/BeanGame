@@ -31,14 +31,15 @@ public class PlayerMovement : MonoBehaviour
     [Tooltip("Player fall speed multiplyer")]
     [SerializeField] private float fallMultiplier = 1;
 
+    //Holds x-input
+    [HideInInspector] public float xInput;
+
     //Holds current facing (1 = right)
     private int facingDirection = 1;
     //Holds loction for ground check sphere
     private Transform groundCheckTrans;
 
     //--Private floats
-    //Holds x-input
-    private float xInput;
     //Holds last xInput
     private float oldxInput;
     //Holds current turn around times count for left

@@ -123,6 +123,7 @@ GameObject:
   - component: {fileID: 3249461157889825430}
   - component: {fileID: 4300584592326550031}
   - component: {fileID: 6264392148938739801}
+  - component: {fileID: 1916959341999600621}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -276,6 +277,21 @@ MonoBehaviour:
   jumpInputHoldTime: 0.15
   groundCheckRadius: 0.3
   fallMultiplier: 1
+  xInput: 0
+--- !u!114 &1916959341999600621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4497496609119615003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 286714485a49e4a45a539fbce7a1dd36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  template: {fileID: 1465608515374075962, guid: 4154c18dcd2c57c448e9bf83b6f47a92,
+    type: 3}
 --- !u!1 &7498409683834483489
 GameObject:
   m_ObjectHideFlags: 0
@@ -464,6 +480,8 @@ MonoBehaviour:
   grappleDirection: {x: 0, y: 0}
   currentLaunchSpeed: 0
   stuckOnWall: 0
+  eating: 0
+  grappling: 0
 --- !u!1 &8561325172998655941
 GameObject:
   m_ObjectHideFlags: 0
@@ -646,6 +664,7 @@ MonoBehaviour:
   grappleEnded: 0
   grappleFailed: 0
   isGrappling: 1
+  straightLine: 1
 --- !u!120 &6445338493017285033
 LineRenderer:
   m_ObjectHideFlags: 0

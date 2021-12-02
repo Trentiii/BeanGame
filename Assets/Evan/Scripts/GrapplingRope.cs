@@ -30,11 +30,11 @@ public class GrapplingRope : MonoBehaviour
     [HideInInspector] public bool grappleEnded = false; //Holds if grapple has ended
     [HideInInspector] public bool grappleFailed = false; //Holds if grapple has failed
     [HideInInspector] public bool isGrappling = true; //Holds if the player is currently grappling
+    [HideInInspector] public bool straightLine = true; //Holds if the line is currently straight
 
     //--Private varibles--
     private float waveSize = 0; //Holds current wave size
     private float moveTime = 0; //Holds the time spent moving during the grapple
-    private bool straightLine = true; //Holds if the line is currently straight
     private AnimationCurve currentRopeCurve = new AnimationCurve(); //Holds rope curve for this grapple
 
     //--Private references--
