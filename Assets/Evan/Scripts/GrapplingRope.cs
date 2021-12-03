@@ -42,6 +42,7 @@ public class GrapplingRope : MonoBehaviour
     private LineRenderer lineRenderer; //Holds line renderer
     private Transform gunHolder; //Holds top parent
     private PlayerMovement pm; //Holds player movement script
+    private GrappleAttacking ga; //Holds player attacking script
 
     private void OnEnable()
     {
@@ -52,6 +53,7 @@ public class GrapplingRope : MonoBehaviour
             lineRenderer = GetComponent<LineRenderer>();
             gunHolder = transform.parent.parent;
             pm = gunHolder.GetComponent<PlayerMovement>();
+            ga = gunHolder.GetComponent<GrappleAttacking>();
         }
 
         moveTime = 0; //Resets move time
@@ -135,7 +137,8 @@ public class GrapplingRope : MonoBehaviour
             moveTime -= Time.deltaTime;
         }
 
-        if (straightLine && !grappleEnded)
+        //If straightLine is on, grapple has not ended and not eating
+        if (straightLine && !grappleEnded && !ga.eating)
         {
             //Turn of playerMovement
             pm.enabled = false;

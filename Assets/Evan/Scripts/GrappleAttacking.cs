@@ -7,8 +7,11 @@ public class GrappleAttacking : MonoBehaviour
     //--Editable varibles--
     public GameObject template;
 
+    //--Public varibles--
+    public bool eating;
+
     //--Private varibles--
-    GameObject enemy;
+    GameObject clone;
 
     //--Private references--
     GrapplingGun gg;
@@ -26,7 +29,7 @@ public class GrappleAttacking : MonoBehaviour
         //Error check refereces
         if (cloneHolder == null)
         {
-            Debug.LogError("No CloneHolder found in scene, please add an empty gameobject named \"CloneHolder\"");
+            Debug.LogError("No CloneHolder found in scene, please add/enable an empty gameobject named \"CloneHolder\"");
         }
     }
 
@@ -35,19 +38,20 @@ public class GrappleAttacking : MonoBehaviour
         //If collided with enemy
         if (collision.gameObject.layer == 11)
         {
-            enemy = collision.gameObject;
+            GameObject enemy = collision.gameObject;
 
-            gg.eating = true;
-            gg.setAttackPoint(collision.transform.position);
-            StartCoroutine(eating());
+            eating = true;
+            gg.setAttackPoint(enemy.transform.position);
+            StartCoroutine(doEating(enemy));
         }
     }
 
-    private IEnumerator eating()
+    private IEnumerator doEating(GameObject enemy)
     {
         bool spawned = false;
-        GameObject clone;
+        clone = null;
 
+        //Extend tounge to enemy
         while (true)
         {
             if (gr.straightLine && !spawned)
@@ -64,6 +68,15 @@ public class GrappleAttacking : MonoBehaviour
             }
 
             yield return new WaitForEndOfFrame();
+        }
+
+        while ((clone.transform.position - transform.position).magnitude > 0.1f)
+        {
+            clone.transform.position = new Vector3(Mathf.Lerp(clone.transform.position.x, transform.position.x, Time.deltaTime * 40), Mathf.Lerp(clone.transform.position.y, transform.position.y, Time.deltaTime * 40), 0);
+             gg.setAttackPoint(clone.transform.position);
+            yield return new WaitForEndOfFrame();
+
+            Debug.Log((clone.transform.position - transform.position).magnitude > 0.1f);
         }
     }
 }

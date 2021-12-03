@@ -188,7 +188,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: c99d1a24c46e1ff4aabf12a49184f095, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.54337585, g: 1, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -292,6 +292,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   template: {fileID: 1465608515374075962, guid: 4154c18dcd2c57c448e9bf83b6f47a92,
     type: 3}
+  eating: 0
 --- !u!1 &7498409683834483489
 GameObject:
   m_ObjectHideFlags: 0
@@ -480,7 +481,6 @@ MonoBehaviour:
   grappleDirection: {x: 0, y: 0}
   currentLaunchSpeed: 0
   stuckOnWall: 0
-  eating: 0
   grappling: 0
 --- !u!1 &8561325172998655941
 GameObject:

@@ -45,7 +45,6 @@ public class GrapplingGun : MonoBehaviour
     [HideInInspector] public Vector2 grappleDirection; //Holds vector towards grapple point
     [HideInInspector] public float currentLaunchSpeed; //Holds currentLaunchSpeed
     [HideInInspector] public bool stuckOnWall = false; //Holds if stuck on wall
-    [HideInInspector] public bool eating = false; //Holds if the player is eating something
     [HideInInspector] public bool grappling = false; //Holds if currently grappling
 
     //--Private varibles--
@@ -60,7 +59,8 @@ public class GrapplingGun : MonoBehaviour
     private SpringJoint2D springJoint2D; //Holds springJoint
     private Rigidbody2D rb2; //Holds rigibody2d
     private PlayerMovement pm; //Holds playerMovement script
-    private Collider2D c2d;
+    private Collider2D c2d; //Holds player collider
+    private GrappleAttacking ga; //Holds player attacking script
 
     private void Start()
     {
@@ -73,6 +73,7 @@ public class GrapplingGun : MonoBehaviour
         pm = gunHolder.GetComponent<PlayerMovement>();
         grappleFinder = gunHolder.parent.GetChild(1);
         c2d = gunHolder.GetComponent<Collider2D>();
+        ga = gunHolder.GetComponent<GrappleAttacking>();
 
         //Sets rope, spring joint, and grappleFinder to off by default
         grappleRope.enabled = false;
@@ -86,7 +87,7 @@ public class GrapplingGun : MonoBehaviour
         rb2.velocity = new Vector2(Mathf.Clamp(rb2.velocity.x, -maxSpeed, maxSpeed), Mathf.Clamp(rb2.velocity.y, -maxSpeed, maxSpeed));
 
         //Stops more grappling while eating
-        if (!eating)
+        if (ga.eating)
         {
             //If right click detected
             if (Input.GetKeyDown(KeyCode.Mouse0) && !grappling && grappleRope.retracted)
@@ -167,32 +168,22 @@ public class GrapplingGun : MonoBehaviour
         //Finds distance from lanch point to enemy
         Vector2 distanceVector = enemyPos - gunHolder.position;
 
-        //If raycast from grapple stop towards grapple end hits something
-        if (Physics2D.Raycast(transform.position, distanceVector.normalized))
+        Vector3 hit = enemyPos;
+
+        //If that hit is on a grapplable layer and if distance is less than max
+        if (Vector2.Distance(hit, transform.position) <= maxDistance || !hasMaxDistance)
         {
-            //Get that hit
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, distanceVector.normalized);
+            ropeGrapplePoint = hit; //Gets grapple point for rope to go to
+            grapplePoint = hit; //Gets point to grapple to
+            grappleDirection = grapplePoint - (Vector2)gunHolder.position; //Get grapple distance vector
+            grappleRope.enabled = true; //Starts grappleRope script
 
-            //If that hit is on a grapplable layer and if distance is less than max
-            if ((hit.transform.gameObject.layer == grappableLayerNumber || grappleToAll) && (Vector2.Distance(hit.point, transform.position) <= maxDistance || !hasMaxDistance))
-            {
-                grappleNormal = hit.normal; //Gets grapple normal
-                ropeGrapplePoint = hit.point; //Gets grapple point for rope to go to
-                grapplePoint = hit.point + (grappleNormal * 0.4f); //Set grapple point to raycast hit point + normal + x offset
-                grappleDirection = grapplePoint - (Vector2)gunHolder.position; //Get grapple distance vector
-                grappleRope.enabled = true; //Starts grappleRope script
-
-                //Turns on grappleFinder
-                grappleFinder.gameObject.SetActive(true);
-            }
-            else
-            {
-                Debug.LogError("Attacked enemy was too far away or on a non-grapple layer");
-            }
+            //Turns on grappleFinder
+            grappleFinder.gameObject.SetActive(true);
         }
         else
         {
-            Debug.LogError("No clear path to attacked enemy");
+            Debug.LogError("Attacked enemy was too far away");
         }
     }
 
@@ -254,7 +245,7 @@ public class GrapplingGun : MonoBehaviour
     public void grapple()
     {
         //Dont pull player when eating
-        if (!eating)
+        if (!ga.eating)
         {
             springJoint2D.connectedAnchor = grapplePoint; //Sets spring joint start to end of grapple
             springJoint2D.enabled = true; //Turns on spring joint
