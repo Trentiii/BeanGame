@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 
 public class GrappleAttacking : MonoBehaviour
 {
@@ -8,10 +9,11 @@ public class GrappleAttacking : MonoBehaviour
     public GameObject template;
 
     //--Public varibles--
-    public bool eating;
+    [HideInInspector] public bool eating;
+    [HideInInspector] public GameObject clone;
 
     //--Private varibles--
-    GameObject clone;
+    bool pulling = false;
 
     //--Private references--
     GrapplingGun gg;
@@ -24,13 +26,7 @@ public class GrappleAttacking : MonoBehaviour
         //Gets references
         gg = transform.GetChild(0).GetComponent<GrapplingGun>();
         gr = transform.GetChild(0).GetChild(0).GetComponent<GrapplingRope>();
-        cloneHolder = GameObject.Find("CloneHolder");
-
-        //Error check refereces
-        if (cloneHolder == null)
-        {
-            Debug.LogError("No CloneHolder found in scene, please add/enable an empty gameobject named \"CloneHolder\"");
-        }
+        cloneHolder = transform.GetChild(3).gameObject;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -38,11 +34,23 @@ public class GrappleAttacking : MonoBehaviour
         //If collided with enemy
         if (collision.gameObject.layer == 11)
         {
-            GameObject enemy = collision.gameObject;
+            startEating(collision.gameObject);
+        }
+    }
 
-            eating = true;
-            gg.setAttackPoint(enemy.transform.position);
-            StartCoroutine(doEating(enemy));
+    public void startEating(GameObject enemy)
+    {
+        eating = true;
+        gg.setAttackPoint(enemy.transform.position);
+        StartCoroutine(doEating(enemy));
+    }
+
+    private void Update()
+    {
+        if (pulling)
+        {
+            clone.transform.position = new Vector2(Mathf.Lerp(clone.transform.position.x, transform.position.x, Time.deltaTime * 30), Mathf.Lerp(clone.transform.position.y, transform.position.y, Time.deltaTime * 30));
+            gg.setAttackPoint(clone.transform.position);
         }
     }
 
@@ -70,13 +78,36 @@ public class GrappleAttacking : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        while ((clone.transform.position - transform.position).magnitude > 0.1f)
-        {
-            clone.transform.position = new Vector3(Mathf.Lerp(clone.transform.position.x, transform.position.x, Time.deltaTime * 40), Mathf.Lerp(clone.transform.position.y, transform.position.y, Time.deltaTime * 40), 0);
-             gg.setAttackPoint(clone.transform.position);
-            yield return new WaitForEndOfFrame();
+        ConstraintSource self = new ConstraintSource();
+        self.sourceTransform = transform;
 
-            Debug.Log((clone.transform.position - transform.position).magnitude > 0.1f);
+        pulling = true;
+        SpriteRenderer cSR = clone.GetComponent<SpriteRenderer>();
+
+        while (clone.transform.localScale.x > 0.05f)
+        {
+            if ((clone.transform.position - transform.position).magnitude < 10.04f)
+            {
+                clone.transform.localScale -= new Vector3(0.05f, 0.05f, 0);
+
+                cSR.color -= new Color(0.06f, 0.06f, 0.06f);
+                cSR.color = new Color(Mathf.Clamp(cSR.color.r, 0, 1), Mathf.Clamp(cSR.color.g, 0, 1), Mathf.Clamp(cSR.color.b, 0, 1));
+
+                yield return new WaitForEndOfFrame();
+                yield return new WaitForEndOfFrame();
+                yield return new WaitForEndOfFrame();
+                yield return new WaitForEndOfFrame();
+                yield return new WaitForEndOfFrame();
+                yield return new WaitForEndOfFrame();
+            }
+            else
+            {
+                yield return new WaitForEndOfFrame();
+            }
         }
+
+        gr.grappleEnded = true;
+        pulling = false;
+        Destroy(clone);
     }
 }

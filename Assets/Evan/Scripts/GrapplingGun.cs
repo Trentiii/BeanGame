@@ -50,6 +50,8 @@ public class GrapplingGun : MonoBehaviour
     //--Private varibles--
     private bool noBoost = false; //Holds if endBoost is needed
     private Vector2 grappleNormal; //Holds the normal of the grappled surface
+    private bool attacking = false; //Holds if this graplle is for attacking
+    private GameObject enemy; //Holds what the player attacked
 
     //--Private references--
     private Camera mCamera; //Holds main camera 
@@ -86,8 +88,10 @@ public class GrapplingGun : MonoBehaviour
         //Clamp velocity to maxSpeed
         rb2.velocity = new Vector2(Mathf.Clamp(rb2.velocity.x, -maxSpeed, maxSpeed), Mathf.Clamp(rb2.velocity.y, -maxSpeed, maxSpeed));
 
+        Debug.Log(ga.eating);
+
         //Stops more grappling while eating
-        if (ga.eating)
+        if (!ga.eating)
         {
             //If right click detected
             if (Input.GetKeyDown(KeyCode.Mouse0) && !grappling && grappleRope.retracted)
@@ -101,6 +105,22 @@ public class GrapplingGun : MonoBehaviour
 
                 //Start setGrapplePoint
                 setGrapplePoint();
+            }
+            else if (attacking && (grapplePoint - (Vector2)gunHolder.position).magnitude < finalDistance) //If grapple is done and attacking
+            {
+                //If enemy not already eaten
+                if (enemy != null)
+                {
+                    noBoost = true;
+                    pm.enabled = true; ;
+                    ga.eating = true;
+
+                    //Start startEating and pass it enemy
+                    ga.startEating(enemy);
+
+                    springJoint2D.enabled = false;
+                    rb2.velocity = new Vector2(grappleDirection.normalized.x * grappleDirection.magnitude, grappleDirection.normalized.y * grappleDirection.magnitude);
+                }
             }
             else if (solverType != stuckSolvers.anyTimeStopSolver && grappling && !Input.GetKey(KeyCode.Mouse0) && ((grapplePoint - (Vector2)gunHolder.position).magnitude < finalDistance)) //If right click was let go and grapple is done
             {
@@ -202,9 +222,12 @@ public class GrapplingGun : MonoBehaviour
             //If that hit is on a grapplable layer and if distance is less than max
             if ((hit.transform.gameObject.layer == grappableLayerNumber || grappleToAll) && (Vector2.Distance(hit.point, transform.position) <= maxDistance || !hasMaxDistance))
             {
+                //If grappled enemy layer
                 if (hit.transform.gameObject.layer == 11)
                 {
-                    Debug.Log("hi");
+                    //Set attacking to true and sets enemy to hit
+                    attacking = true;
+                    enemy = hit.transform.gameObject;
                 }
 
                 grappleNormal = hit.normal; //Gets grapple normal
@@ -264,14 +287,18 @@ public class GrapplingGun : MonoBehaviour
         //Sets current launch speed to starting launch speed times the movement precentage 
         currentLaunchSpeed = startLaunchSpeed + (endLaunchSpeed * movementPrecentage);
 
-        //If movement is done (only goes up to about 0.75 for some reason)
-        if (movementPrecentage > 0.7)
+        //If springjoint is on
+        if (springJoint2D.enabled)
         {
-            springJoint2D.frequency = 0; //Turns off pulling
-        }
-        else
-        {
-            springJoint2D.frequency = currentLaunchSpeed; //Sets spring joint pull speed to launchspeed
+            //If movement is done (only goes up to about 0.75 for some reason)
+            if (movementPrecentage > 0.7)
+            {
+                springJoint2D.frequency = 0; //Turns off pulling
+            }
+            else
+            {
+                springJoint2D.frequency = currentLaunchSpeed; //Sets spring joint pull speed to launchspeed
+            }
         }
     }
 
@@ -300,7 +327,8 @@ public class GrapplingGun : MonoBehaviour
         grappling = false;
         grappleRope.grappleFailed = false;
         stuckOnWall = false;
-
+        attacking = false;
+        ga.eating = false;
 
         //Turns on collision
         c2d.enabled = true;
