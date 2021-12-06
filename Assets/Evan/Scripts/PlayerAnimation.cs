@@ -33,14 +33,20 @@ public class PlayerAnimation : MonoBehaviour
             animator.SetBool("tongue", true);
         }
 
-        if (rb.velocity.y > 0.01)
+        //Jump Up
+        if (Input.GetButtonDown("Jump"))
         {
             animator.SetBool("Jump", true);
         }
-
-        if (rb.velocity.y < 0.01)
+        //Fall
+        if (Input.GetButtonDown("Jump") && rb.velocity.y < 0.01)
         {
-            animator.SetBool("Jump", false);
+            animator.SetBool("Fall", true);
+        }
+
+        if(cm.grounded == true)
+        {
+            animator.SetBool("Fall", false);
         }
     }
 }
