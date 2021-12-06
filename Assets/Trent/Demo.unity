@@ -1076,7 +1076,7 @@ MonoBehaviour:
     m_Bits: 256
   movementSpeed: 6
   slowDownTime: 0.5
-  frictionAmount: 1.2
+  frictionAmount: 10
   jumpForce: 6
   jumpInputHoldTime: 0.15
   groundCheckRadius: 0.3
@@ -1556,7 +1556,7 @@ MonoBehaviour:
   maxDistance: 9
   finalDistance: 0.1
   startLaunchSpeed: 1
-  endLaunchSpeed: 8
+  endLaunchSpeed: 6
   maxSpeed: 10
   solverType: 2
   ropeGrapplePoint: {x: 0, y: 0}
