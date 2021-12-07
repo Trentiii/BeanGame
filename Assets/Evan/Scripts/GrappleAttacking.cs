@@ -14,6 +14,7 @@ public class GrappleAttacking : MonoBehaviour
 
     //--Private varibles--
     bool pulling = false;
+    bool corRunning = false;
 
     //--Private references--
     GrapplingGun gg;
@@ -32,7 +33,7 @@ public class GrappleAttacking : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         //If collided with enemy
-        if (collision.gameObject.layer == 11)
+        if (collision.gameObject.layer == 11 && !corRunning)
         {
             startEating(collision.gameObject);
         }
@@ -56,6 +57,8 @@ public class GrappleAttacking : MonoBehaviour
 
     private IEnumerator doEating(GameObject enemy)
     {
+        corRunning = true;
+
         bool spawned = false;
         clone = null;
 
@@ -109,5 +112,7 @@ public class GrappleAttacking : MonoBehaviour
         gr.grappleEnded = true;
         pulling = false;
         Destroy(clone);
+
+        corRunning = false;
     }
 }
