@@ -4,24 +4,29 @@ using UnityEngine;
 
 public class PlayerAnimation : MonoBehaviour
 {
+    private float yVelocity;
     private Rigidbody2D rb;
-    GunCopy gc;
-    Animator animator;
-    CopyMove cm;
+    public GunCopy gc;
+    public Animator animator;
+    public CopyMove cm;
 
     // Start is called before the first frame update
     void Start()
     {
-        gc = transform.GetChild(0).GetComponent<GunCopy>();
-        cm = GetComponent<CopyMove>();
-        animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody2D>();
+        
+        
     }
 
     // Update is called once per frame
     void Update()
     {
+        yVelocity = rb.velocity.y;
+
+        animator.SetFloat("yv", (yVelocity));
         animator.SetFloat("speed", Mathf.Abs(cm.xInput));
-        Debug.Log(gc.grappling);
+        Debug.Log(animator.name);
+        
 
         if (!gc.grappling)
         {
@@ -38,15 +43,33 @@ public class PlayerAnimation : MonoBehaviour
         {
             animator.SetBool("Jump", true);
         }
+
+        if(yVelocity < 0.01)
+        {
+            animator.SetBool("Jump", false);
+        }
         //Fall
-        if (Input.GetButtonDown("Jump") && rb.velocity.y < 0.01)
+        /*if (rb.velocity.y < 0.01)
         {
             animator.SetBool("Fall", true);
-        }
+           // animator.SetBool("Jump", false);
+        }*/
 
-        if(cm.grounded == true)
+        
+       /* if (rb.velocity.y < 0.01)
         {
-            animator.SetBool("Fall", false);
+            
+            animator.SetBool("Jump", false);
+        }*/
+
+        if (cm.grounded == true)
+        {
+            animator.SetBool("grounded", true);
+            
+        }
+        if (cm.grounded == false)
+        {
+            animator.SetBool("grounded", false);
         }
     }
 }
