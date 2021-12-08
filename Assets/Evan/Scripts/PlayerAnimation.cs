@@ -39,9 +39,14 @@ public class PlayerAnimation : MonoBehaviour
         }
 
         //Jump Up
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             animator.SetBool("Jump", true);
+        }
+
+        if (yVelocity > 0.01)
+        {
+            animator.SetBool("MidJump", true);
         }
 
         if(yVelocity < 0.01)
@@ -61,6 +66,11 @@ public class PlayerAnimation : MonoBehaviour
             
             animator.SetBool("Jump", false);
         }*/
+
+        if(cm.grounded == true)
+        {
+            animator.SetBool("MidJump", false);
+        }
 
         if (cm.grounded == true)
         {
