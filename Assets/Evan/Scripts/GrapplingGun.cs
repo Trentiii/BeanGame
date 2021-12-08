@@ -50,7 +50,7 @@ public class GrapplingGun : MonoBehaviour
     //--Private varibles--
     private bool noBoost = false; //Holds if endBoost is needed
     private Vector2 grappleNormal; //Holds the normal of the grappled surface
-    private bool attacking = false; //Holds if this graplle is for attacking
+    public bool attacking = false; //Holds if this graplle is for attacking
     private GameObject enemy; //Holds what the player attacked
 
     //--Private references--
@@ -87,8 +87,6 @@ public class GrapplingGun : MonoBehaviour
     {
         //Clamp velocity to maxSpeed
         rb2.velocity = new Vector2(Mathf.Clamp(rb2.velocity.x, -maxSpeed, maxSpeed), Mathf.Clamp(rb2.velocity.y, -maxSpeed, maxSpeed));
-
-        Debug.Log(ga.eating);
 
         //Stops more grappling while eating
         if (!ga.eating)
