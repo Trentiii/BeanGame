@@ -35,67 +35,87 @@ public class GrappleAttacking : MonoBehaviour
         //If collided with enemy
         if (collision.gameObject.layer == 11 && !corRunning)
         {
+            //Starts eating
             startEating(collision.gameObject);
         }
     }
 
+    //Starts the enemy eating
     public void startEating(GameObject enemy)
     {
-        eating = true;
-        gg.setAttackPoint(enemy.transform.position);
-        StartCoroutine(doEating(enemy));
+        eating = true; //Sets eating to true
+        gg.setAttackPoint(enemy.transform.position); //Starts setAttackPoint
+        StartCoroutine(doEating(enemy)); //Start doEating coroutine and passes it enemy
     }
 
     private void Update()
     {
+        //If pulling
         if (pulling)
         {
+            //Lerps enemy towards player
             clone.transform.position = new Vector2(Mathf.Lerp(clone.transform.position.x, transform.position.x, Time.deltaTime * 30), Mathf.Lerp(clone.transform.position.y, transform.position.y, Time.deltaTime * 30));
-            gg.setAttackPoint(clone.transform.position);
+            gg.setAttackPoint(clone.transform.position); //Recalls setAttackPoint for new enemy position
         }
     }
 
     private IEnumerator doEating(GameObject enemy)
     {
+        //Sets corRunning to true
         corRunning = true;
 
+        //Holds if enemy copy has been spawned
         bool spawned = false;
-        clone = null;
+        clone = null; //Resets clone holder
 
         //Extend tounge to enemy
         while (true)
         {
+            //If straightline and not spawned yet
             if (gr.straightLine && !spawned)
             {
+                //Sets spawned to true
                 spawned = true;
+
+                //Spawns clone and sets sprite
                 clone = Instantiate(template, enemy.transform.position, enemy.transform.localRotation, cloneHolder.transform);
                 clone.GetComponent<SpriteRenderer>().sprite = enemy.GetComponent<SpriteRenderer>().sprite;
+
+                //Destroy original enemy
                 Destroy(enemy);                
             }
 
+            //If player is spawned
             if (spawned)
             {
+                //Leave loop
                 break;
             }
 
+            //Wait
             yield return new WaitForEndOfFrame();
         }
 
-        ConstraintSource self = new ConstraintSource();
-        self.sourceTransform = transform;
-
+        //Sets pulling to true
         pulling = true;
+
+        //Get sprite renderer of clone
         SpriteRenderer cSR = clone.GetComponent<SpriteRenderer>();
 
+        //While not shrunk
         while (clone.transform.localScale.x > 0.05f)
         {
+            //If close enough
             if ((clone.transform.position - transform.position).magnitude < 10.04f)
             {
+                //Shrink clone
                 clone.transform.localScale -= new Vector3(0.05f, 0.05f, 0);
 
+                //Fade to black
                 cSR.color -= new Color(0.06f, 0.06f, 0.06f);
                 cSR.color = new Color(Mathf.Clamp(cSR.color.r, 0, 1), Mathf.Clamp(cSR.color.g, 0, 1), Mathf.Clamp(cSR.color.b, 0, 1));
 
+                //Wait for 6 frames
                 yield return new WaitForEndOfFrame();
                 yield return new WaitForEndOfFrame();
                 yield return new WaitForEndOfFrame();
@@ -105,14 +125,21 @@ public class GrappleAttacking : MonoBehaviour
             }
             else
             {
+                //Wait for one frame
                 yield return new WaitForEndOfFrame();
             }
         }
 
+        //Set grapple ended to true
         gr.grappleEnded = true;
+
+        //Turn off pulling
         pulling = false;
+
+        //Destroy clone
         Destroy(clone);
 
+        //Turns off corRunning
         corRunning = false;
     }
 }

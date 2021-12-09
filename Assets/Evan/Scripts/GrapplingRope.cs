@@ -44,6 +44,8 @@ public class GrapplingRope : MonoBehaviour
     private PlayerMovement pm; //Holds player movement script
     private GrappleAttacking ga; //Holds player attacking script
 
+    private LineRenderer lineRenderer2;
+
     private void OnEnable()
     {
         //Gets references if not already gotten
@@ -51,6 +53,7 @@ public class GrapplingRope : MonoBehaviour
         {
             grapplingGun = transform.parent.GetComponent<GrapplingGun>();
             lineRenderer = GetComponent<LineRenderer>();
+            lineRenderer2 = transform.GetChild(0).GetComponent<LineRenderer>();
             gunHolder = transform.parent.parent;
             pm = gunHolder.GetComponent<PlayerMovement>();
             ga = gunHolder.GetComponent<GrappleAttacking>();
@@ -58,6 +61,7 @@ public class GrapplingRope : MonoBehaviour
 
         moveTime = 0; //Resets move time
         lineRenderer.positionCount = precision; //Sets number of line renderer point to precision
+        lineRenderer2.positionCount = lineRenderer.positionCount;
         waveSize = startWaveSize; //Sets starting wave size
         straightLine = false; //Resets straightLine
 
@@ -99,13 +103,15 @@ public class GrapplingRope : MonoBehaviour
         //Start LinePointsToFirePoint
         linePointsToFirePoint();
 
-        //Turns on line renderer
+        //Turns on line renderers
         lineRenderer.enabled = true;
+        lineRenderer2.enabled = true;
     }
 
     private void OnDisable()
     {
         lineRenderer.enabled = false; //Turns off line renderer
+        lineRenderer2.enabled = false;
         isGrappling = false; //Resets is grappling
     }
 
@@ -228,8 +234,9 @@ public class GrapplingRope : MonoBehaviour
             //Pushes postition back towards player by the rope progression curve / ropeProgressionSpeed
             Vector2 currentPosition = Vector2.Lerp(grapplingGun.transform.position, targetPosition, ropeProgressionCurve.Evaluate(moveTime / ropeProgressionSpeed));
 
-            //Sets position in the line renderer
+            //Sets position in the line renderers
             lineRenderer.SetPosition(i, currentPosition);
+            lineRenderer2.SetPosition(i, currentPosition);
         }
     }
 
