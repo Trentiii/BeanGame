@@ -4,82 +4,59 @@ using UnityEngine;
 
 public class PlayerAnimation : MonoBehaviour
 {
+    //Holds current y velocity
     private float yVelocity;
-    private Rigidbody2D rb;
-    public GunCopy gc;
-    public Animator animator;
-    public CopyMove cm;
+
+    //--Private references--
+    private Rigidbody2D rb2;
+    private GrapplingGun gg;
+    private PlayerMovement pm;
+    private Animator a;
 
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-        
-        
+        //Get references
+        rb2 = GetComponent<Rigidbody2D>();
+        gg = transform.GetChild(0).GetComponent<GrapplingGun>();
+        pm = GetComponent<PlayerMovement>();
+        a = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        yVelocity = rb.velocity.y;
+        //Get current yVelocity
+        yVelocity = rb2.velocity.y;
 
-        animator.SetFloat("yv", (yVelocity));
-        animator.SetFloat("speed", Mathf.Abs(cm.xInput));
-        Debug.Log(animator.name);
-        
+        a.SetFloat("yv", (yVelocity));
+        a.SetFloat("speed", Mathf.Abs(pm.xInput));       
 
-        if (!gc.grappling)
+        if (!gg.grappling)
         {
-            animator.SetBool("tongue", false);
+            a.SetBool("tongue", false);
         }
 
         if (Input.GetMouseButtonDown(0))
         {
-            animator.SetBool("tongue", true);
+            a.SetBool("tongue", true);
         }
 
-        //Jump Up
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            animator.SetBool("Jump", true);
+            a.SetTrigger("Jump");
         }
 
-        if (yVelocity > 0.01)
-        {
-            animator.SetBool("MidJump", true);
-        }
 
-        if(yVelocity < 0.01)
+        if (pm.grounded)
         {
-            animator.SetBool("Jump", false);
+            a.SetBool("MidJump", false);
+            a.SetBool("grounded", true);
         }
-        //Fall
-        /*if (rb.velocity.y < 0.01)
+        if (pm.grounded == false)
         {
-            animator.SetBool("Fall", true);
-           // animator.SetBool("Jump", false);
-        }*/
-
-        
-       /* if (rb.velocity.y < 0.01)
-        {
-            
-            animator.SetBool("Jump", false);
-        }*/
-
-        if(cm.grounded == true)
-        {
-            animator.SetBool("MidJump", false);
-        }
-
-        if (cm.grounded == true)
-        {
-            animator.SetBool("grounded", true);
-            
-        }
-        if (cm.grounded == false)
-        {
-            animator.SetBool("grounded", false);
+            a.SetBool("grounded", false);
         }
     }
 }

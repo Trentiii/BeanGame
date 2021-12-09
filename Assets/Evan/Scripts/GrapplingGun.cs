@@ -21,11 +21,13 @@ public class GrapplingGun : MonoBehaviour
     [Tooltip("Distance from grapple point to be considered done")]
     public float finalDistance = 0.1f;
     [Tooltip("Holds start speed of grapple")]
-    [SerializeField] private float startLaunchSpeed = 1f;
+    [SerializeField] private float startLaunchSpeed = 1.2f;
     [Tooltip("Holds ending speed of grapple")]
     [SerializeField] private float endLaunchSpeed = 8;
     [Tooltip("Hold max speed for all movement")]
     [SerializeField] private float maxSpeed = 10;
+    [Tooltip("Holds the delay for the grapple starting")]
+    [SerializeField] private float startDelay = 0.1f;
 
     enum stuckSolvers // your custom enumeration
     {
@@ -98,11 +100,8 @@ public class GrapplingGun : MonoBehaviour
                 grappling = true;
                 grappleRope.retracted = false;
 
-                //Sets start launch speed
-                currentLaunchSpeed = startLaunchSpeed;
-
-                //Start setGrapplePoint
-                setGrapplePoint();
+                //Starts startGrapple after startDelay
+                Invoke("startGrapple", startDelay);
             }
             else if (attacking && (grapplePoint - (Vector2)gunHolder.position).magnitude < finalDistance) //If grapple is done and attacking
             {
@@ -179,6 +178,14 @@ public class GrapplingGun : MonoBehaviour
         }
     }
 
+    private void startGrapple()
+    {
+        //Sets start launch speed
+        currentLaunchSpeed = startLaunchSpeed;
+
+        //Start setGrapplePoint
+        setGrapplePoint();
+    }
 
     //Gets point to grapple too
     public void setAttackPoint(Vector3 enemyPos)
