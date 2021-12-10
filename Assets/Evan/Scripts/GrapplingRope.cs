@@ -260,4 +260,20 @@ public class GrapplingRope : MonoBehaviour
             grapplingGun.resetGrapple();
         }
     }
+
+    public void fullReset()
+    {
+        //Resets all varibles
+        moveTime = 0;
+        lineRenderer.positionCount = precision;
+        lineRenderer2.positionCount = precision / 6;
+        waveSize = startWaveSize; 
+        straightLine = false;
+        retracted = true;
+        grappleEnded = false;
+        grappleFailed = false;
+        lineRenderer.enabled = false; 
+        lineRenderer2.enabled = false;
+        isGrappling = false;
+    }
 }

@@ -44,6 +44,7 @@ public class GrappleAttacking : MonoBehaviour
     public void startEating(GameObject enemy)
     {
         eating = true; //Sets eating to true
+        gg.attacking = true; //Set attacking to true
         gg.setAttackPoint(enemy.transform.position); //Starts setAttackPoint
         StartCoroutine(doEating(enemy)); //Start doEating coroutine and passes it enemy
     }
@@ -140,6 +141,15 @@ public class GrappleAttacking : MonoBehaviour
         Destroy(clone);
 
         //Turns off corRunning
+        corRunning = false;
+    }
+
+    public void fullReset()
+    {
+        //Reset all varibles
+        eating = false;
+        clone = null;
+        pulling = false;
         corRunning = false;
     }
 }
