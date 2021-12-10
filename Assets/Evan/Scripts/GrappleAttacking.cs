@@ -111,9 +111,9 @@ public class GrappleAttacking : MonoBehaviour
                 //Shrink clone
                 clone.transform.localScale -= new Vector3(0.05f, 0.05f, 0);
 
-                //Fade to black
-                cSR.color -= new Color(0.06f, 0.06f, 0.06f);
-                cSR.color = new Color(Mathf.Clamp(cSR.color.r, 0, 1), Mathf.Clamp(cSR.color.g, 0, 1), Mathf.Clamp(cSR.color.b, 0, 1));
+                //Fade to mouth background
+                cSR.color -= new Color(0.06f, 0.12f, 0.06f);
+                cSR.color = new Color(Mathf.Clamp(cSR.color.r, 0.53f, 1), Mathf.Clamp(cSR.color.g, 0.26f, 1), Mathf.Clamp(cSR.color.b, 0.435f, 1));
 
                 //Wait for 6 frames
                 yield return new WaitForEndOfFrame();

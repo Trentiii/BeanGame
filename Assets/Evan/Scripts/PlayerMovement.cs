@@ -33,6 +33,8 @@ public class PlayerMovement : MonoBehaviour
 
     //Holds x-input
     [HideInInspector] public float xInput;
+    //Holds if player is grounded
+    [HideInInspector] public bool grounded;
 
     //Holds current facing (1 = right)
     private int facingDirection = 1;
@@ -54,8 +56,6 @@ public class PlayerMovement : MonoBehaviour
     private bool turnAroundSlowLeft = false;
     //Holds if the player is in turn around slow right
     private bool turnAroundSlowRight = false;
-    //Holds if player is grounded
-    private bool grounded;
 
     //--Private Vector2s
     //Temporally Holds new velocitys

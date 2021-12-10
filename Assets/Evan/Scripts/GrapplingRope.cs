@@ -61,7 +61,7 @@ public class GrapplingRope : MonoBehaviour
 
         moveTime = 0; //Resets move time
         lineRenderer.positionCount = precision; //Sets number of line renderer point to precision
-        lineRenderer2.positionCount = lineRenderer.positionCount;
+        lineRenderer2.positionCount = precision / 6; //Sets reduced precision
         waveSize = startWaveSize; //Sets starting wave size
         straightLine = false; //Resets straightLine
 
@@ -236,6 +236,9 @@ public class GrapplingRope : MonoBehaviour
 
             //Sets position in the line renderers
             lineRenderer.SetPosition(i, currentPosition);
+
+            //If within smaller precision
+            if(i < precision / 6)
             lineRenderer2.SetPosition(i, currentPosition);
         }
     }
