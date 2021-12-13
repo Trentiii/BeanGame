@@ -29,34 +29,50 @@ public class PlayerAnimation : MonoBehaviour
         //Get current yVelocity
         yVelocity = rb2.velocity.y;
 
+        //Set yv and speed
         a.SetFloat("yv", (yVelocity));
         a.SetFloat("speed", Mathf.Abs(pm.xInput));       
 
-        if (!gg.grappling)
+        //If not grappling and not attacking
+        if (!gg.grappling && !gg.attacking)
         {
+            //Set tonuge to false
             a.SetBool("tongue", false);
         }
 
-        if (Input.GetMouseButtonDown(0))
+        //IF mouse is pressed or player attacking
+        if (Input.GetMouseButtonDown(0) || gg.attacking)
         {
+            //Set tonuge to true
             a.SetBool("tongue", true);
         }
 
-
+        //If space is pressed
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            //Start jump trigger
             a.SetTrigger("Jump");
         }
 
-
-        if (pm.grounded)
+        //If grounded
+        if (pm.grounded && pm.enabled)
         {
-            a.SetBool("MidJump", false);
+            //Set grounded to true
             a.SetBool("grounded", true);
         }
-        if (pm.grounded == false)
+        else
         {
+            //Set grounded to false
             a.SetBool("grounded", false);
+        }
+
+        if (a.GetCurrentAnimatorClipInfo(0)[0].clip.name == "NewPlayer_HoldFall")
+        {
+            a.SetBool("InLongFall", true);
+        }
+        else
+        {
+            a.SetBool("InLongFall", false);
         }
     }
 }

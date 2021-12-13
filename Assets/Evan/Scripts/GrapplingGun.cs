@@ -48,11 +48,11 @@ public class GrapplingGun : MonoBehaviour
     [HideInInspector] public float currentLaunchSpeed; //Holds currentLaunchSpeed
     [HideInInspector] public bool stuckOnWall = false; //Holds if stuck on wall
     [HideInInspector] public bool grappling = false; //Holds if currently grappling
+    [HideInInspector] public bool attacking = false; //Holds if this graplle is for attacking
 
     //--Private varibles--
     private bool noBoost = false; //Holds if endBoost is needed
     private Vector2 grappleNormal; //Holds the normal of the grappled surface
-    public bool attacking = false; //Holds if this graplle is for attacking
     private GameObject enemy; //Holds what the player attacked
 
     //--Private references--
@@ -170,7 +170,7 @@ public class GrapplingGun : MonoBehaviour
                     grappleRope.grappleEnded = true;
                 }
             }
-            else if(solverType == stuckSolvers.clipSolver) //If using clipsolver
+            else if (solverType == stuckSolvers.clipSolver) //If using clipsolver
             {
                 //Turn on collider
                 c2d.enabled = true;
@@ -190,9 +190,10 @@ public class GrapplingGun : MonoBehaviour
     //Gets point to grapple too
     public void setAttackPoint(Vector3 enemyPos)
     {
-        //Finds distance from lanch point to enemy
-        Vector2 distanceVector = enemyPos - gunHolder.position;
+        //Turn movement back on
+        pm.enabled = true;
 
+        //Get hit position
         Vector3 hit = enemyPos;
 
         //If that hit is on a grapplable layer and if distance is less than max
@@ -309,7 +310,7 @@ public class GrapplingGun : MonoBehaviour
 
     //Resets everything for next grapple
     public void resetGrapple()
-    { 
+    {
         //Turn rope and springjoint back off
         grappleRope.enabled = false;
         springJoint2D.enabled = false;
@@ -355,6 +356,12 @@ public class GrapplingGun : MonoBehaviour
             Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(transform.position, maxDistance);
         }
+    }
+
+    public void fullReset()
+    {
+        //Call resetGrapple
+        resetGrapple();
     }
 }
 
