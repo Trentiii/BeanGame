@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class NewFlyingEnemy : MonoBehaviour
 {
+    public LayerMask playerLayer;
+    private Rigidbody2D rb;
+    public LayerMask ground;
     public float speed;
     public float lineOfSight;
     private float playerDistance;
@@ -15,7 +18,7 @@ public class NewFlyingEnemy : MonoBehaviour
     public float startTimeBtwShots;
 
     public Transform player;
-    public GameObject ground;
+    public GameObject Ground;
     public GameObject projectile;
     public enum State
     {
@@ -33,8 +36,9 @@ public class NewFlyingEnemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        rb = GetComponent<Rigidbody2D>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        ground = GameObject.FindGameObjectWithTag("Ground").gameObject;
+        Ground = GameObject.FindGameObjectWithTag("Ground").gameObject;
         //ATTACKING 
         timeBtwShots = startTimeBtwShots;
     }
@@ -49,6 +53,7 @@ public class NewFlyingEnemy : MonoBehaviour
 
                 break;
             case State.patrolling:
+                Patrolling();
                 break;
             case State.attacking:
                 Attacking();
@@ -85,12 +90,39 @@ public class NewFlyingEnemy : MonoBehaviour
             currentState = State.idle;
         }
 
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, player.position, ground);
+        if (hit.collider == Ground)
+        {
+            Debug.Log("Stop");
+        }
+        /*
+        RaycastHit2D hitPlayer = Physics2D.Raycast(transform.position, player.position, 10f, playerLayer);
+        if (hitPlayer.collider == player)
+        {
+            currentState = State.following;
+            Debug.Log("Start");
+        }
+        */
+
+       /* RaycastHit2D hitGround = Physics2D.Raycast(transform.position, player.position, 10f);
+        if (hitGround.collider == GameObject.FindGameObjectWithTag("Ground"))
+        {
+            currentState = State.idle;
+            Debug.Log("Stop");
+        }
+      /*  else
+        {
+            currentState = State.following;
+        }*/
+
     }
     //What happens when Idling
     private void Idling()
     {
         //Tell animator to idle
         ani.SetTrigger("Idling");
+        speed = 0;
+        rb.velocity = new Vector2(speed, rb.velocity.y);
         
 
     }
@@ -100,6 +132,7 @@ public class NewFlyingEnemy : MonoBehaviour
     {
         //Play flying towards animation and get within certain distance
         ani.SetTrigger("Following");
+        speed = 5;
         transform.position = Vector2.MoveTowards(this.transform.position, player.position, speed * Time.deltaTime);
     }
     //What happens when attacking
@@ -156,6 +189,9 @@ public class NewFlyingEnemy : MonoBehaviour
         //Radius for retreating
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, retreatDistance);
+        //Raycast ground detection
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(transform.position, player.position);
         
 
     }
