@@ -16,6 +16,7 @@ public class PlayerHealth : MonoBehaviour
     private GrapplingGun gg;
     private GrapplingRope gr;
     private GrappleAttacking ga;
+    private Animation a;
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +26,7 @@ public class PlayerHealth : MonoBehaviour
         gg = transform.GetChild(0).GetComponent<GrapplingGun>();
         gr = transform.GetChild(0).GetChild(0).GetComponent<GrapplingRope>();
         ga = GetComponent<GrappleAttacking>();
+        a = GetComponent<Animation>();
 
         //Sets defualt health
         playerHealth = maxHealth;
@@ -47,7 +49,6 @@ public class PlayerHealth : MonoBehaviour
         gg.fullReset();
         gr.fullReset();
         ga.fullReset();
-
 
         //Reset postion and velocity
         rb2.velocity = Vector2.zero;
