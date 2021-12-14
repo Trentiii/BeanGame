@@ -99,13 +99,13 @@ public class NewFlyingEnemy : MonoBehaviour
         }
         else if(playerDistance > lineOfSight)
         {
-            currentState = State.idle;
+            currentState = State.patrolling;
         }
 
         RaycastHit2D hit = Physics2D.Raycast(transform.position, player.position - transform.position);
         if (hit.transform.gameObject.layer == 8)
         {
-            currentState = State.idle;
+            currentState = State.patrolling;
             
         }
         /*
@@ -132,7 +132,7 @@ public class NewFlyingEnemy : MonoBehaviour
     //What happens when Idling
     private void Idling()
     {
-        idling = true;
+        
         //Tell animator to idle
         ani.SetTrigger("Idling");
         speed = 0;
@@ -140,11 +140,8 @@ public class NewFlyingEnemy : MonoBehaviour
         
         hover = Vector2.up * Mathf.Sin(Time.time * 2) / 15;
 
-        while (idling)
-        {
-            new WaitForSeconds(1.0f);
-            currentState = State.patrolling;
-        }
+       
+        
         
 
     }
