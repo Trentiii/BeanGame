@@ -75,4 +75,15 @@ public class PlayerAnimation : MonoBehaviour
             a.SetBool("InLongFall", false);
         }
     }
+
+    public void fullReset()
+    {
+        //Reset parameters
+        a.SetFloat("yv", 0);
+        a.SetFloat("speed", 0);
+        a.SetBool("tongue", false);
+        a.ResetTrigger("Jump");
+        a.SetBool("grounded", false);
+        a.SetBool("InLongFall", false);
+    }
 }
