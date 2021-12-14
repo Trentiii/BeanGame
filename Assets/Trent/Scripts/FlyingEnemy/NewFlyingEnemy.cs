@@ -6,6 +6,14 @@ public class NewFlyingEnemy : MonoBehaviour
 {
     public LayerMask playerLayer;
     private Rigidbody2D rb;
+    private float waitTime;
+    public float startWaitTime;
+    public Transform[] moveSpots;
+
+    private bool idling;
+    
+    private int randomSpot;
+    Vector2 hover;
     public LayerMask ground;
     public float speed;
     public float lineOfSight;
@@ -36,6 +44,10 @@ public class NewFlyingEnemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        waitTime = startWaitTime;
+        
+        randomSpot = Random.Range(0, moveSpots.Length);
+        hover = Vector2.zero;
         rb = GetComponent<Rigidbody2D>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
         Ground = GameObject.FindGameObjectWithTag("Ground").gameObject;
@@ -90,10 +102,11 @@ public class NewFlyingEnemy : MonoBehaviour
             currentState = State.idle;
         }
 
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, player.position, ground);
-        if (hit.collider == Ground)
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, player.position - transform.position);
+        if (hit.transform.gameObject.layer == 8)
         {
-            Debug.Log("Stop");
+            currentState = State.idle;
+            
         }
         /*
         RaycastHit2D hitPlayer = Physics2D.Raycast(transform.position, player.position, 10f, playerLayer);
@@ -119,10 +132,19 @@ public class NewFlyingEnemy : MonoBehaviour
     //What happens when Idling
     private void Idling()
     {
+        idling = true;
         //Tell animator to idle
         ani.SetTrigger("Idling");
         speed = 0;
         rb.velocity = new Vector2(speed, rb.velocity.y);
+        
+        hover = Vector2.up * Mathf.Sin(Time.time * 2) / 15;
+
+        while (idling)
+        {
+            new WaitForSeconds(1.0f);
+            currentState = State.patrolling;
+        }
         
 
     }
@@ -160,6 +182,20 @@ public class NewFlyingEnemy : MonoBehaviour
     //What happens when patrolling
     private void Patrolling()
     {
+        transform.position = Vector2.MoveTowards(transform.position, moveSpots[randomSpot].position, speed * Time.deltaTime);
+        if (Vector2.Distance(transform.position, moveSpots[randomSpot].position) < 0.2f)
+        {
+            if(waitTime <= 0)
+            {
+                
+                randomSpot = Random.Range(0, moveSpots.Length);
+                waitTime = startWaitTime;
+            }
+            else
+            {
+                waitTime -= Time.deltaTime;
+            }
+        }
         //Looks around the area for the player
         //Patroll between points
         ani.SetTrigger("Patrolling");
