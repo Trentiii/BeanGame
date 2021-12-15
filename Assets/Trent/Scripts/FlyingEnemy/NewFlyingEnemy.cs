@@ -50,7 +50,7 @@ public class NewFlyingEnemy : MonoBehaviour
         hover = Vector2.zero;
         rb = GetComponent<Rigidbody2D>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        Ground = GameObject.FindGameObjectWithTag("Ground").gameObject;
+        //Ground = GameObject.FindGameObjectWithTag("Ground").gameObject;
         //ATTACKING 
         timeBtwShots = startTimeBtwShots;
     }
