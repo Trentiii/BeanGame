@@ -55,6 +55,12 @@ public class PlayerHealth : MonoBehaviour
             death();
             dying = true;
         }
+
+        if (dying)
+        {
+            //Keep Vignette center on player
+            v.center.Override(new Vector3(0.5f, 0.5f, 0) - new Vector3(main.transform.localPosition.x / 20f, main.transform.localPosition.y / 20f, 0));
+        }
     }
 
     [ContextMenu("startDeath")]
@@ -88,11 +94,8 @@ public class PlayerHealth : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.25f);
 
         //While time is less than 2 run death effects
-        while (exposure > -20)
+        while (exposure > -15)
         {
-            //Keep Vignette center on player
-            v.center.Override(new Vector3(0.5f, 0.5f, 0) - new Vector3(main.transform.localPosition.x / 20f, main.transform.localPosition.y / 20f, 0));
-
             //Scale vignette over time
             v.intensity.Override(time * 1.5f);
 
@@ -105,17 +108,16 @@ public class PlayerHealth : MonoBehaviour
             }
 
             //Increment time
-            time += Time.unscaledDeltaTime;
+            time += Time.unscaledDeltaTime * 8;
 
             //Wait
-            yield return new WaitForSecondsRealtime(0.01f);
+            yield return new WaitForSecondsRealtime(0.04f);
         }
 
         //Reset postion and velocity and dying
         rb2.velocity = Vector2.zero;
         transform.position = Vector3.zero;
         cmf.dying = false;
-        dying = false;
 
         //Reset health
         playerHealth = maxHealth;
@@ -132,9 +134,6 @@ public class PlayerHealth : MonoBehaviour
         //While time is greater than 0 undo death effects
         while (intensity > 0)
         {
-            //Keep Vignette center on player
-            v.center.Override(new Vector3(0.5f, 0.5f, 0) - new Vector3(main.transform.localPosition.x / 20f, main.transform.localPosition.y / 20f, 0));
-
             //Undo color adjustments over time
             ca.postExposure.Override(Mathf.Clamp(time / 2f, -20, 0));
 
@@ -147,11 +146,13 @@ public class PlayerHealth : MonoBehaviour
             }
 
             //Increment time
-            time -= Time.unscaledDeltaTime;
+            time -= Time.unscaledDeltaTime * 8;
 
             //Wait
-            yield return new WaitForSecondsRealtime(0.02f);
+            yield return new WaitForSecondsRealtime(0.04f);
         }
+
+        dying = false;
     }
 
     //Handles damage
