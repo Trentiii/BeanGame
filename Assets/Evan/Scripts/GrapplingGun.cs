@@ -6,8 +6,6 @@ public class GrapplingGun : MonoBehaviour
     [Header("Layers Settings:")]
     [Tooltip("If you are able to grapple to all layers")]
     [SerializeField] private bool grappleToAll = true;
-    [Tooltip("Holds grapple layer number if needed")]
-    [SerializeField] private int grappableLayerNumber = 9;
 
     [Header("Distance:")]
     [Tooltip("If grapple has a max distance value")]
@@ -229,7 +227,7 @@ public class GrapplingGun : MonoBehaviour
             if (Vector2.Distance(hit.point, transform.position) <= maxDistance || !hasMaxDistance)
             {
                 //If that hit doesnt have the ungrapplable tag
-                if (hit.transform.tag != "Ungrapplable")
+                if (hit.transform.tag != "Ungrapplable" || grappleToAll)
                 {
                     //If grappled enemy layer
                     if (hit.transform.gameObject.layer == 11)

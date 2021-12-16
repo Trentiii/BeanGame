@@ -88,7 +88,7 @@ public class PlayerHealth : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.25f);
 
         //While time is less than 2 run death effects
-        while (time < 2)
+        while (exposure > -20)
         {
             //Keep Vignette center on player
             v.center.Override(new Vector3(0.5f, 0.5f, 0) - new Vector3(main.transform.localPosition.x / 20f, main.transform.localPosition.y / 20f, 0));
@@ -130,7 +130,7 @@ public class PlayerHealth : MonoBehaviour
         float intensity = 1; //Holds current intensity
 
         //While time is greater than 0 undo death effects
-        while (time >= 0)
+        while (intensity > 0)
         {
             //Keep Vignette center on player
             v.center.Override(new Vector3(0.5f, 0.5f, 0) - new Vector3(main.transform.localPosition.x / 20f, main.transform.localPosition.y / 20f, 0));
