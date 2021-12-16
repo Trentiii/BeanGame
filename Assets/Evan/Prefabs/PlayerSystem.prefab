@@ -707,8 +707,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48c40318640d047489a6e07b125f5bea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grappleToAll: 1
-  grappableLayerNumber: 9
+  grappleToAll: 0
   hasMaxDistance: 1
   maxDistance: 11
   finalDistance: 0.1
