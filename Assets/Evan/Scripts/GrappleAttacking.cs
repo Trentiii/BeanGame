@@ -7,6 +7,8 @@ public class GrappleAttacking : MonoBehaviour
 {
     //--Editable varibles--
     public GameObject template;
+    [Tooltip("Number of frames to wait during eating")]
+    [SerializeField] int eatWaitTime = 1;
 
     //--Public varibles--
     [HideInInspector] public bool eating;
@@ -30,10 +32,10 @@ public class GrappleAttacking : MonoBehaviour
         cloneHolder = transform.GetChild(3).gameObject;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
-        //If collided with enemy
-        if (collision.gameObject.layer == 11 && !corRunning)
+        //If collided with enemy (and not already running/ending)
+        if (collision.gameObject.layer == 11 && !corRunning && !gr.grappleEnded)
         {
             //Starts eating
             startEating(collision.gameObject);
@@ -116,13 +118,12 @@ public class GrappleAttacking : MonoBehaviour
                 cSR.color -= new Color(0.06f, 0.12f, 0.06f);
                 cSR.color = new Color(Mathf.Clamp(cSR.color.r, 0.53f, 1), Mathf.Clamp(cSR.color.g, 0.26f, 1), Mathf.Clamp(cSR.color.b, 0.435f, 1));
 
-                //Wait for 6 frames
-                yield return new WaitForEndOfFrame();
-                yield return new WaitForEndOfFrame();
-                yield return new WaitForEndOfFrame();
-                yield return new WaitForEndOfFrame();
-                yield return new WaitForEndOfFrame();
-                yield return new WaitForEndOfFrame();
+                //Wait for frames = eatWaitTime
+                for (int i = 0; i < eatWaitTime; i++)
+                {
+                    yield return new WaitForEndOfFrame();
+                }
+
             }
             else
             {

@@ -31,7 +31,7 @@ public class PlayerAnimation : MonoBehaviour
 
         //Set yv and speed
         a.SetFloat("yv", (yVelocity));
-        a.SetFloat("speed", Mathf.Abs(pm.xInput));       
+        a.SetFloat("speed", Mathf.Abs(pm.xInput));
 
         //If not grappling and not attacking
         if (!gg.grappling && !gg.attacking)

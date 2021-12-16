@@ -225,43 +225,61 @@ public class GrapplingGun : MonoBehaviour
             //Get that hit
             RaycastHit2D hit = Physics2D.Raycast(transform.position, distanceVector.normalized);
 
-            //If that hit is on a grapplable layer and if distance is less than max
-            if ((hit.transform.gameObject.layer == grappableLayerNumber || grappleToAll) && (Vector2.Distance(hit.point, transform.position) <= maxDistance || !hasMaxDistance))
+            //If that hit is not too far away
+            if (Vector2.Distance(hit.point, transform.position) <= maxDistance || !hasMaxDistance)
             {
-                //If grappled enemy layer
-                if (hit.transform.gameObject.layer == 11)
+                //If that hit doesnt have the ungrapplable tag
+                if (hit.transform.tag != "Ungrapplable")
                 {
-                    //Set attacking to true and sets enemy to hit
-                    attacking = true;
-                    enemy = hit.transform.gameObject;
+                    //If grappled enemy layer
+                    if (hit.transform.gameObject.layer == 11)
+                    {
+                        //Set attacking to true and sets enemy to hit
+                        attacking = true;
+                        enemy = hit.transform.gameObject;
+                    }
+
+                    grappleNormal = hit.normal; //Gets grapple normal
+                    ropeGrapplePoint = hit.point; //Gets grapple point for rope to go to
+                    grapplePoint = hit.point + (grappleNormal * 0.4f); //Set grapple point to raycast hit point + normal + x offset
+                    grappleDirection = grapplePoint - (Vector2)gunHolder.position; //Get grapple distance vector
+                    grappleRope.enabled = true; //Starts grappleRope script
+
+                    //Turns on grappleFinder
+                    grappleFinder.gameObject.SetActive(true);
                 }
-
-                grappleNormal = hit.normal; //Gets grapple normal
-                ropeGrapplePoint = hit.point; //Gets grapple point for rope to go to
-                grapplePoint = hit.point + (grappleNormal * 0.4f); //Set grapple point to raycast hit point + normal + x offset
-                grappleDirection = grapplePoint - (Vector2)gunHolder.position; //Get grapple distance vector
-                grappleRope.enabled = true; //Starts grappleRope script
-
-                //Turns on grappleFinder
-                grappleFinder.gameObject.SetActive(true);
+                else
+                {
+                    //Starts grappleFailed and passes it the distance to the hit
+                    grappleFailed(hit.point - (Vector2)transform.position, true);
+                }
             }
             else
             {
                 //Starts grappleFailed and passes it distanceVector
-                grappleFailed(distanceVector);
+                grappleFailed(distanceVector, false);
             }
         }
         else
         {
             //Starts grappleFailed and passes it distanceVector
-            grappleFailed(distanceVector);
+            grappleFailed(distanceVector, false);
         }
     }
 
     //If grapple failed to set grapplePoint
-    private void grappleFailed(Vector2 currentDistanceVector)
+    private void grappleFailed(Vector2 currentDistanceVector, bool goToHit)
     {
-        ropeGrapplePoint = (Vector2)gunHolder.position + (currentDistanceVector.normalized * maxDistance); //Gets grapple point for rope to go to
+        if (!goToHit)
+        {
+            //Gets grapple point at max distance
+            ropeGrapplePoint = (Vector2)gunHolder.position + (currentDistanceVector.normalized * maxDistance); 
+        }
+        else
+        {
+            //Gets grapple point at hit
+            ropeGrapplePoint = (Vector2)gunHolder.position + currentDistanceVector;
+        }
         grappleDirection = ropeGrapplePoint - (Vector2)gunHolder.position; //Get grapple distance vector
 
         grappleRope.enabled = true; //Starts grappleRope script
