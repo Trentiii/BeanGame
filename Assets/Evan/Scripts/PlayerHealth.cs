@@ -94,7 +94,7 @@ public class PlayerHealth : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.25f);
 
         //While time is less than 2 run death effects
-        while (exposure > -15)
+        while (exposure > -7)
         {
             //Scale vignette over time
             v.intensity.Override(time * 1.5f);
@@ -116,7 +116,7 @@ public class PlayerHealth : MonoBehaviour
 
         //Reset postion and velocity and dying
         rb2.velocity = Vector2.zero;
-        transform.position = Vector3.zero;
+        transform.position = currentCheckPoint.transform.position;
         cmf.dying = false;
 
         //Reset health
@@ -167,6 +167,11 @@ public class PlayerHealth : MonoBehaviour
         if (collision.tag == "Death")
         {
             playerHealth = 0;
+        }
+        else if (collision.tag == "Checkpoint")
+        {
+            currentCheckPoint = collision.transform;
+            currentCheckPoint.GetComponent<Collider2D>().enabled = false;
         }
     }
 }

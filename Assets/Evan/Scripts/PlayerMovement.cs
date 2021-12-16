@@ -26,8 +26,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpForce = 6;
     [Tooltip("How long the jump press will be saved")]
     [SerializeField] private float jumpInputHoldTime = 0.15f;
-    [Tooltip("Radius size for ground check sphere")]
-    [SerializeField] private float groundCheckRadius = 0.3f;
+    //[Tooltip("Radius size for ground check sphere")]
+    //[SerializeField] private float groundCheckRadius = 0.3f;
+    [Tooltip("Size for ground check box")]
+    [SerializeField] private Vector2 groundCheckSize = new Vector2(0.3f, 0.3f);
     [Tooltip("Player fall speed multiplyer")]
     [SerializeField] private float fallMultiplier = 1;
 
@@ -221,7 +223,8 @@ public class PlayerMovement : MonoBehaviour
     private void CheckGround()
     {
         //Checks for ground on LayerMask layer within a sphere
-        grounded = Physics2D.OverlapCircle(groundCheckTrans.position, groundCheckRadius, whatIsGround);
+        grounded = Physics2D.OverlapBox(groundCheckTrans.position, groundCheckSize, 0, whatIsGround); 
+        //Physics2D.OverlapCircle(groundCheckTrans.position, groundCheckRadius, whatIsGround);
     }
 
     //Checks for inputs
@@ -272,6 +275,7 @@ public class PlayerMovement : MonoBehaviour
     private void OnDrawGizmos()
     {
         //Draws ground check sphere while game is running
-        if(groundCheckTrans != null) Gizmos.DrawWireSphere(groundCheckTrans.position, groundCheckRadius);
+        if (groundCheckTrans != null) Gizmos.DrawWireCube(groundCheckTrans.position, groundCheckSize); 
+        //Gizmos.DrawWireSphere(groundCheckTrans.position, groundCheckRadius);
     }
 }

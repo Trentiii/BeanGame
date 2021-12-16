@@ -309,7 +309,7 @@ MonoBehaviour:
   frictionAmount: 1.2
   jumpForce: 6
   jumpInputHoldTime: 0.15
-  groundCheckRadius: 0.3
+  groundCheckSize: {x: 0.72, y: 0.5}
   fallMultiplier: 1
   xInput: 0
   grounded: 0
