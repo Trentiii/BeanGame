@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewFlyingEnemy : MonoBehaviour
+public class FarmerEnemy : MonoBehaviour
 {
     public LayerMask playerLayer;
     private Rigidbody2D rb;
@@ -11,7 +11,7 @@ public class NewFlyingEnemy : MonoBehaviour
     public Transform[] moveSpots;
 
     private bool idling;
-    
+
     private int randomSpot;
     Vector2 hover;
     public LayerMask ground;
@@ -28,6 +28,7 @@ public class NewFlyingEnemy : MonoBehaviour
     public Transform player;
     public GameObject Ground;
     public GameObject projectile;
+
     public enum State
     {
         idle,
@@ -39,20 +40,13 @@ public class NewFlyingEnemy : MonoBehaviour
 
     }
 
+
     public State currentState = State.patrolling;
-    public Animator ani;
+
     // Start is called before the first frame update
     void Start()
     {
-        waitTime = startWaitTime;
         
-        randomSpot = Random.Range(0, moveSpots.Length);
-        hover = Vector2.zero;
-        rb = GetComponent<Rigidbody2D>();
-        player = GameObject.FindGameObjectWithTag("Player").transform;
-        //Ground = GameObject.FindGameObjectWithTag("Ground").gameObject;
-        //ATTACKING 
-        timeBtwShots = startTimeBtwShots;
     }
 
     // Update is called once per frame
@@ -82,7 +76,7 @@ public class NewFlyingEnemy : MonoBehaviour
                 Debug.Log("State defaulted");
                 break;
         }
-       // groundDistance = Vector2.Distance(ground, transform.position);
+
         playerDistance = Vector2.Distance(player.position, transform.position);
         if (playerDistance < lineOfSight && playerDistance > attackDistance)
         {
@@ -97,7 +91,7 @@ public class NewFlyingEnemy : MonoBehaviour
         {
             currentState = State.retreat;
         }
-        else if(playerDistance > lineOfSight)
+        else if (playerDistance > lineOfSight)
         {
             currentState = State.patrolling;
         }
@@ -106,43 +100,18 @@ public class NewFlyingEnemy : MonoBehaviour
         if (hit.transform.gameObject.layer == 8)
         {
             currentState = State.patrolling;
-            
-        }
-        /*
-        RaycastHit2D hitPlayer = Physics2D.Raycast(transform.position, player.position, 10f, playerLayer);
-        if (hitPlayer.collider == player)
-        {
-            currentState = State.following;
-            Debug.Log("Start");
-        }
-        */
 
-       /* RaycastHit2D hitGround = Physics2D.Raycast(transform.position, player.position, 10f);
-        if (hitGround.collider == GameObject.FindGameObjectWithTag("Ground"))
-        {
-            currentState = State.idle;
-            Debug.Log("Stop");
         }
-      /*  else
-        {
-            currentState = State.following;
-        }*/
-
     }
-    //What happens when Idling
+
     private void Idling()
     {
-        
-        //Tell animator to idle
-        ani.SetTrigger("Idling");
-        speed = 0;
-        rb.velocity = new Vector2(speed, rb.velocity.y);
-        
-        hover = Vector2.up * Mathf.Sin(Time.time * 2) / 15;
 
        
-        
-        
+
+
+
+
 
     }
 
@@ -150,9 +119,8 @@ public class NewFlyingEnemy : MonoBehaviour
     private void Following()
     {
         //Play flying towards animation and get within certain distance
-        ani.SetTrigger("Following");
         speed = 5;
-        transform.position = Vector2.MoveTowards(this.transform.position, player.position, speed * Time.deltaTime);
+        transform.position = new Vector2(Vector2.MoveTowards(transform.position, player.position, speed * Time.deltaTime).x, transform.position.y);
     }
     //What happens when attacking
     private void Attacking()
@@ -160,8 +128,6 @@ public class NewFlyingEnemy : MonoBehaviour
         //Stop and shoot projectiles at player
         //Play attacking animation
         //Instantiate projectiles
-        ani.SetBool("Attacking", true);
-
         if (timeBtwShots <= 0)
         {
             GameObject Clone = Instantiate(projectile, transform.position, Quaternion.identity);
@@ -174,35 +140,23 @@ public class NewFlyingEnemy : MonoBehaviour
         {
             timeBtwShots -= Time.deltaTime;
         }
+
     }
 
     //What happens when patrolling
     private void Patrolling()
     {
-        transform.position = Vector2.MoveTowards(transform.position, moveSpots[randomSpot].position, speed * Time.deltaTime);
-        if (Vector2.Distance(transform.position, moveSpots[randomSpot].position) < 0.2f)
-        {
-            if(waitTime <= 0)
-            {
-                
-                randomSpot = Random.Range(0, moveSpots.Length);
-                waitTime = startWaitTime;
-            }
-            else
-            {
-                waitTime -= Time.deltaTime;
-            }
-        }
+       
+        
         //Looks around the area for the player
         //Patroll between points
-        ani.SetTrigger("Patrolling");
+        
     }
     //What happens when retreating
     private void Retreat()
     {
-        //Runs away when player gets into range
-        ani.SetBool("Retreating", true);
-        transform.position = (Vector2.MoveTowards(transform.position, player.position, -speed * Time.deltaTime));
+        transform.position = new Vector2(Vector2.MoveTowards(transform.position, player.position, -speed * Time.deltaTime).x, transform.position.y);
+        //transform.position = new Vector2(Vector2.MoveTowards(transform.position, player.position, -speed * Time.deltaTime).x, transform.position.y);
     }
 
     //What happens when grappled
@@ -225,7 +179,7 @@ public class NewFlyingEnemy : MonoBehaviour
         //Raycast ground detection
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(transform.position, player.position);
-        
+
 
     }
 }
