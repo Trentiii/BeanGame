@@ -14,9 +14,14 @@ public class SceneTransitionScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.R))
+            reloadScene();
     }
 
+    public void reloadScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
     public void nextScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
