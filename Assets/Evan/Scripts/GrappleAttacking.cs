@@ -5,6 +5,8 @@ using UnityEngine.Animations;
 
 public class GrappleAttacking : MonoBehaviour
 {
+    #region Variables
+
     //--Editable varibles--
     public GameObject template;
     [Tooltip("Number of frames to wait during eating")]
@@ -22,6 +24,8 @@ public class GrappleAttacking : MonoBehaviour
     GrapplingGun gg;
     GrapplingRope gr;
     GameObject cloneHolder;
+
+    #endregion
 
     // Start is called before the first frame update
     void Start()

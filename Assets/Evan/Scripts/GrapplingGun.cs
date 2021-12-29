@@ -2,6 +2,9 @@
 
 public class GrapplingGun : MonoBehaviour
 {
+
+    #region Variables
+
     //--Editable varibles--
     [Header("Layers Settings:")]
     [Tooltip("If you are able to grapple to all layers")]
@@ -63,6 +66,8 @@ public class GrapplingGun : MonoBehaviour
     private PlayerMovement pm; //Holds playerMovement script
     private Collider2D c2d; //Holds player collider
     private GrappleAttacking ga; //Holds player attacking script
+
+    #endregion
 
     private void Start()
     {

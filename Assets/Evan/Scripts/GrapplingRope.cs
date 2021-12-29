@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(LineRenderer))]
 public class GrapplingRope : MonoBehaviour
 {
+    #region Variables
+
     //--Editable varibles--
     [Header("General Settings:")]
     [Tooltip("The number of points the line renderer uses to draw the wave")]
@@ -45,6 +47,8 @@ public class GrapplingRope : MonoBehaviour
     private GrappleAttacking ga; //Holds player attacking script
 
     private LineRenderer lineRenderer2;
+
+    #endregion
 
     private void OnEnable()
     {

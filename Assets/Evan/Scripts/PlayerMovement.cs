@@ -7,6 +7,8 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
 
+    #region Variables
+
     [Header("Layers")]
     [Tooltip("Ground layer reference")]
     [SerializeField] private LayerMask whatIsGround;
@@ -68,6 +70,8 @@ public class PlayerMovement : MonoBehaviour
     //Component References
     private Rigidbody2D rb2;
     private SpriteRenderer sr;
+
+    #endregion
 
     // Start is called before the first frame update
     void Start()
