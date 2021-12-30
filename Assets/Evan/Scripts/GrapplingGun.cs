@@ -66,6 +66,7 @@ public class GrapplingGun : MonoBehaviour
     private PlayerMovement pm; //Holds playerMovement script
     private Collider2D c2d; //Holds player collider
     private GrappleAttacking ga; //Holds player attacking script
+    private AudioSource aS; //Holds audioSourse 
 
     #endregion
 
@@ -81,6 +82,7 @@ public class GrapplingGun : MonoBehaviour
         grappleFinder = gunHolder.parent.GetChild(1);
         c2d = gunHolder.GetComponent<Collider2D>();
         ga = gunHolder.GetComponent<GrappleAttacking>();
+        aS = GetComponent<AudioSource>();
 
         //Sets rope, spring joint, and grappleFinder to off by default
         grappleRope.enabled = false;
@@ -102,6 +104,10 @@ public class GrapplingGun : MonoBehaviour
                 //Flips grappling and retracted
                 grappling = true;
                 grappleRope.retracted = false;
+
+                //Randomize pitch and play tongue start sound
+                aS.pitch = Random.Range(0.95f, 1.1f);
+                aS.Play();
 
                 //Starts startGrapple after startDelay
                 Invoke("startGrapple", startDelay);
