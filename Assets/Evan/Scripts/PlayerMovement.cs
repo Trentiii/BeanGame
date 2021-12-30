@@ -214,10 +214,10 @@ public class PlayerMovement : MonoBehaviour
             rb2.velocity += velocityToUse;
         }
         //If movement is within normal bounds
-        else if(Mathf.Abs(rb2.velocity.x) < Mathf.Abs(movementSpeed))
+        else if (Mathf.Abs(rb2.velocity.x) <= Mathf.Abs(movementSpeed))
         {
             //Add half of velocityToUse to velocity
-            rb2.velocity += velocityToUse/2;
+            rb2.velocity += velocityToUse / 2;
         }
 
         //Gets old xInput
