@@ -246,6 +246,9 @@ public class GrapplingGun : MonoBehaviour
                         //Set attacking to true and sets enemy to hit
                         attacking = true;
                         enemy = hit.transform.gameObject;
+
+                        //Set enemy state
+                        enemy.GetComponent<NewFlyingEnemy>().currentState = NewFlyingEnemy.State.grappled;
                     }
 
                     grappleNormal = hit.normal; //Gets grapple normal

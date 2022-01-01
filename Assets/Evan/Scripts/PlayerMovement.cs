@@ -118,6 +118,10 @@ public class PlayerMovement : MonoBehaviour
             //Turns off counter
             jumpInputHoldCounter = 0;
 
+            //Randomize pitch and play jump sound
+            aS.pitch = Random.Range(0.95f, 1.1f);
+            aS.Play();
+
             //Adds jump force
             newForce.Set(0.0f, jumpForce + -rb2.velocity.y);
             rb2.AddForce(newForce, ForceMode2D.Impulse);
@@ -249,10 +253,6 @@ public class PlayerMovement : MonoBehaviour
         //Calls Jump() when jump is pressed or the input is currently being held
         if (Input.GetButtonDown("Jump") || jumpInputHoldCounter > 0)
         {
-            //Randomize pitch and play jump sound
-            aS.pitch = Random.Range(0.95f, 1.1f);
-            aS.Play();
-
             //Start jump
             jump();
         }

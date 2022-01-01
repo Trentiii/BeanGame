@@ -55,6 +55,9 @@ public class GrappleAttacking : MonoBehaviour
         aS.pitch = Random.Range(0.95f, 1.1f);
         aS.Play();
 
+        //Set enemy state
+        enemy.GetComponent<NewFlyingEnemy>().currentState = NewFlyingEnemy.State.grappled;
+
         eating = true; //Sets eating to true
         gg.attacking = true; //Set attacking to true
         gg.setAttackPoint(enemy.transform.position); //Starts setAttackPoint
