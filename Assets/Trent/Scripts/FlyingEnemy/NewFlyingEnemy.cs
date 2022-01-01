@@ -236,10 +236,10 @@ public class NewFlyingEnemy : MonoBehaviour
                 Vector3 targetXxPos = new Vector3(player.transform.position.x, 0, 0);
 
                 //shorthands for the formula
-                float R = Vector3.Distance(projectileXPos, targetXxPos);
+                float R = Mathf.Clamp(Vector3.Distance(projectileXPos, targetXxPos), -9, 9);
                 float G = Physics.gravity.y;
                 float tanAlpha = Mathf.Tan(mathLaunchAngle * Mathf.Deg2Rad);
-                float H = player.transform.position.y - Clone.transform.position.y;
+                float H = Mathf.Clamp(player.transform.position.y - Clone.transform.position.y, -2, 2);
 
                 //calculate the local space components of the velocity 
                 // required to land the projectile on the target object 
@@ -269,24 +269,16 @@ public class NewFlyingEnemy : MonoBehaviour
                 {
                     RaycastHit2D hit = Physics2D.Raycast(Clone.transform.position, globalVelocity, globalVelocity.magnitude / 3, ground);
                     Debug.DrawRay(Clone.transform.position, globalVelocity / 3, Color.black, 1);
-                    if (hit.transform != null && mathLaunchAngle > 0)
+                    if (hit.transform != null && mathLaunchAngle > 10)
                     {
                         Destroy(Clone);
-                        shootMath(mathLaunchAngle - 10);
+                        shootMath(Mathf.Clamp(mathLaunchAngle - 10, 10, 360));
                         break;
                     }
                     else
                     {
-                        if (globalVelocity.magnitude > 11)
-                        {
-                            Destroy(Clone);
-                            break;
-                        }
-                        else
-                        {
-                            Clone.GetComponent<Rigidbody2D>().AddForce(globalVelocity, ForceMode2D.Impulse);
-                            Destroy(Clone, 5);
-                        }
+                        Clone.GetComponent<Rigidbody2D>().AddForce(globalVelocity, ForceMode2D.Impulse);
+                        Destroy(Clone, 5);
                     }
                 }
                 else
