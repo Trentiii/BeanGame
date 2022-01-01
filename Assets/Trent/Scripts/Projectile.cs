@@ -4,25 +4,37 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    private Transform player;
 
-    // Start is called before the first frame update
-    void Start()
+    public float damage = 1;
+    public GameObject deatheffects;
+
+    bool remove = false;
+
+    private void Update()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        if (PlayerHealth.playerHealth <= 0)
+        {
+            remove = true;
+        }
 
+        if (remove && Time.timeScale > 0)
+        {
+            Destroy(gameObject);
+        }
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
         if(other.CompareTag("Player"))
         {
+
             DestroyProjectile();
 
             //Damage
+            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>().damage(damage);
         }
 
-        if (other.CompareTag("Ground"))
+        if (other.CompareTag("Ground") || other.CompareTag("Ungrapplable"))
         {
             DestroyProjectile();
         }
@@ -31,6 +43,7 @@ public class Projectile : MonoBehaviour
 
     void DestroyProjectile()
     {
+        Destroy(Instantiate(deatheffects, transform.position, Quaternion.identity), 0.5f);
         Destroy(gameObject);
     }
 

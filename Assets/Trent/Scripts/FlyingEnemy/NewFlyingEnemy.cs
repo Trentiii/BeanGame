@@ -232,11 +232,11 @@ public class NewFlyingEnemy : MonoBehaviour
 
                 if (i == 1)
                 {
-                    globalVelocity += new Vector3(0.5f, 0, 0);
+                    globalVelocity += new Vector3(0.15f * globalVelocity.magnitude, 0, 0);
                 }
                 else if (i == 2)
                 {
-                    globalVelocity += new Vector3(-0.5f, 0, 0);
+                    globalVelocity += new Vector3(-0.15f * globalVelocity.magnitude, 0, 0);
                 }
 
                 if (player.transform.position.x < Clone.transform.position.x)
@@ -256,8 +256,16 @@ public class NewFlyingEnemy : MonoBehaviour
                     }
                     else
                     {
-                        Clone.GetComponent<Rigidbody2D>().AddForce(globalVelocity, ForceMode2D.Impulse);
-                        Destroy(Clone, 5);
+                        if (globalVelocity.magnitude > 11)
+                        {
+                            Destroy(Clone);
+                            break;
+                        }
+                        else
+                        {
+                            Clone.GetComponent<Rigidbody2D>().AddForce(globalVelocity, ForceMode2D.Impulse);
+                            Destroy(Clone, 5);
+                        }
                     }
                 }
                 else

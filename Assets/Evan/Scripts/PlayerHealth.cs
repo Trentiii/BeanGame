@@ -53,6 +53,7 @@ public class PlayerHealth : MonoBehaviour
 
         //Sets defualt health
         playerHealth = maxHealth;
+        currentCheckPoint = GameObject.Find("StartPos").transform;
     }
 
     // Update is called once per frame
@@ -183,6 +184,8 @@ public class PlayerHealth : MonoBehaviour
 
     private IEnumerator damageEffects()
     {
+        ScreenShake.TriggerShake();
+
         //Sets priority
         v2.priority = 1;
         
@@ -190,7 +193,7 @@ public class PlayerHealth : MonoBehaviour
         float intensity = 0;
 
         //While intensity is below 0.3f
-        while (intensity < 0.3f)
+        while (intensity < 0.3f && !dying)
         {
             intensity += Time.deltaTime * 2; //Increase intensity
             vi2.intensity.Override(intensity); //Set intensity
@@ -200,7 +203,7 @@ public class PlayerHealth : MonoBehaviour
         //Set intensity to exactly 0.3f
         vi2.intensity.Override(0.3f);
 
-        while (intensity > 0)
+        while (intensity > 0 && !dying)
         {
             intensity -= Time.deltaTime / 5; //Decrease intensity
             vi2.intensity.Override(intensity); //Set intensity
