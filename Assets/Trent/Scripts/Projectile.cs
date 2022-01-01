@@ -9,10 +9,24 @@ public class Projectile : MonoBehaviour
     public GameObject deatheffects;
 
     bool remove = false;
+    private Transform cloneHolder;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        try
+        {
+            cloneHolder = GameObject.Find("CloneHolder").transform;
+        }
+        catch
+        {
+            Debug.LogError("Cannot find clone holder for bullet particles, please add/activate an empty gameobject titled \"CloneHolder\"");
+        }
+    }
 
     private void Update()
     {
-        if (PlayerHealth.playerHealth <= 0)
+        if (PlayerHealth.dying)
         {
             remove = true;
         }
@@ -43,7 +57,7 @@ public class Projectile : MonoBehaviour
 
     void DestroyProjectile()
     {
-        Destroy(Instantiate(deatheffects, transform.position, Quaternion.identity), 0.5f);
+        Destroy(Instantiate(deatheffects, transform.position, Quaternion.identity, cloneHolder), 0.5f);
         Destroy(gameObject);
     }
 

@@ -12,6 +12,7 @@ public class NewFlyingEnemy : MonoBehaviour
     public float LaunchAngle = 70;
     //public GameObject Ground;
 
+    private Transform cloneHolder;
     private float waitTime;
     private float playerDistance;
     //private int randomSpot;
@@ -37,6 +38,8 @@ public class NewFlyingEnemy : MonoBehaviour
     }
     public State currentState = State.patrolling;
 
+    bool remove = false;
+
     private Transform player;
     private Animator ani;
     private Rigidbody2D rb;
@@ -46,6 +49,15 @@ public class NewFlyingEnemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        try
+        {
+            cloneHolder = GameObject.Find("CloneHolder").transform;
+        }
+        catch
+        {
+            Debug.LogError("Cannot find clone holder for bullets, please add/activate an empty gameobject titled \"CloneHolder\"");
+        }
+
         rb = GetComponent<Rigidbody2D>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
         ani = GetComponent<Animator>();
@@ -60,6 +72,15 @@ public class NewFlyingEnemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (PlayerHealth.dying)
+        {
+            remove = true;
+        }
+        if (remove && Time.timeScale > 0)
+        {
+            Destroy(gameObject);
+        }
+
         rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -speed, speed), Mathf.Clamp(rb.velocity.y, -speed, speed));
 
         if (currentState != State.grappled)
@@ -208,7 +229,7 @@ public class NewFlyingEnemy : MonoBehaviour
             for (int i = 0; i < 3; i++)
             {
                 //Instantiate projectiles
-                GameObject Clone = Instantiate(projectile, transform.position + new Vector3(-0.25f, 0.7f, 0), Quaternion.identity);
+                GameObject Clone = Instantiate(projectile, transform.position + new Vector3(-0.25f, 0.7f, 0), Quaternion.identity, cloneHolder);
                 //GameObject Clone = Instantiate(projectile2, transform.position, Quaternion.identity);
 
                 Vector3 projectileXPos = new Vector3(Clone.transform.position.x, 0, 0);

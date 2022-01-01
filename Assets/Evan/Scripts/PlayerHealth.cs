@@ -14,9 +14,7 @@ public class PlayerHealth : MonoBehaviour
     //--Public varibles--
     [HideInInspector] public static float playerHealth; //Holds current player health
     [HideInInspector] public Transform currentCheckPoint; //Holds respawn point
-
-    //--Private varibles--
-    private bool dying = false;
+    [HideInInspector] public static bool dying = false; //Holds if dying
 
     //--Private references--
     private Rigidbody2D rb2;
@@ -53,6 +51,7 @@ public class PlayerHealth : MonoBehaviour
 
         //Sets defualt health
         playerHealth = maxHealth;
+        dying = false;
         currentCheckPoint = GameObject.Find("StartPos").transform;
     }
 
@@ -98,6 +97,9 @@ public class PlayerHealth : MonoBehaviour
     //Goes to checkpoint with effects
     private IEnumerator toCheckpointEffects()
     {
+        //Start screenshake
+        ScreenShake.TriggerShake(0.1f);
+
         //Sets priority
         v1.priority = 2;
 
@@ -184,7 +186,10 @@ public class PlayerHealth : MonoBehaviour
 
     private IEnumerator damageEffects()
     {
-        ScreenShake.TriggerShake();
+        //Start screenshake
+        ScreenShake.TriggerShake(0.25f);
+        
+
 
         //Sets priority
         v2.priority = 1;

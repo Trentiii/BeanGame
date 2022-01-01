@@ -8,7 +8,7 @@ public class ScreenShake : MonoBehaviour
     private static float shakeDuration = 0f;
 
     // A measure of magnitude for the shake. Tweak based on your preference
-    private float shakeMagnitude = 0.35f;
+    private static float shakeMagnitude = 0.25f;
 
     // A measure of how quickly the shake effect should evaporate
     private float dampingSpeed = 1.0f;
@@ -37,8 +37,9 @@ public class ScreenShake : MonoBehaviour
         }
     }
 
-    public static void TriggerShake()
+    public static void TriggerShake(float magmitude)
     {
+        shakeMagnitude = magmitude;
         shakeDuration = 0.2f;
     }
 }
