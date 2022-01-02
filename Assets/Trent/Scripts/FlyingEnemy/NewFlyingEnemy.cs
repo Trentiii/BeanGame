@@ -85,7 +85,7 @@ public class NewFlyingEnemy : MonoBehaviour
 
         if (currentState != State.grappled)
         {
-            if (!ani.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+            if (!ani.GetCurrentAnimatorStateInfo(0).IsName("Attack") && !ani.GetCurrentAnimatorStateInfo(0).IsName("Idle 0") )
             {
                 //Play attacking animation
                 ani.SetBool("Attacking", false);

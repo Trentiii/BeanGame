@@ -341,6 +341,13 @@ public class GrapplingGun : MonoBehaviour
     //Resets everything for next grapple
     public void resetGrapple()
     {
+        //Reset enemy animations if let go of enemy
+        if (enemy != null)
+        {
+            enemy.GetComponent<NewFlyingEnemy>().currentState = NewFlyingEnemy.State.idle;
+            enemy.GetComponent<Animator>().SetBool("Grappled", false);
+        }
+
         //Turn rope and springjoint back off
         grappleRope.enabled = false;
         springJoint2D.enabled = false;

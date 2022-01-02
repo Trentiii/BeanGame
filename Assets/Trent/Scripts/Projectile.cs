@@ -10,10 +10,13 @@ public class Projectile : MonoBehaviour
 
     bool remove = false;
     private Transform cloneHolder;
+    private Rigidbody2D rb2;
 
     // Start is called before the first frame update
     void Start()
     {
+        rb2 = GetComponent<Rigidbody2D>();
+
         try
         {
             cloneHolder = GameObject.Find("CloneHolder").transform;
@@ -26,6 +29,11 @@ public class Projectile : MonoBehaviour
 
     private void Update()
     {
+        var dir = rb2.velocity;
+        var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        var q = Quaternion.AngleAxis(angle, Vector3.forward);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, q, 360 * Time.deltaTime);
+
         if (PlayerHealth.dying)
         {
             remove = true;

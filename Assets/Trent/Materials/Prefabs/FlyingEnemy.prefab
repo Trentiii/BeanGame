@@ -134,6 +134,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  bulleteffects: {fileID: 2150728013849405766, guid: e18458efb16fa8d438c78c6403a13c06,
+    type: 3}
   currentState: 0
 --- !u!50 &939520452078511454
 Rigidbody2D:
