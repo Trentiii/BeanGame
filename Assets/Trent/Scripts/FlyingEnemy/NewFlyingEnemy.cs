@@ -278,12 +278,24 @@ public class NewFlyingEnemy : MonoBehaviour
                     else
                     {
                         Clone.GetComponent<Rigidbody2D>().AddForce(globalVelocity, ForceMode2D.Impulse);
+
+                        //Set starting angle of bullets
+                        var dir = globalVelocity;
+                        var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                        Clone.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);
+
                         Destroy(Clone, 5);
                     }
                 }
                 else
                 {
                     Clone.GetComponent<Rigidbody2D>().AddForce(globalVelocity, ForceMode2D.Impulse);
+
+                    //Set starting angle of bullets
+                    var dir = globalVelocity;
+                    var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                    Clone.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);
+
                     Destroy(Clone, 5);
                 }
             }
