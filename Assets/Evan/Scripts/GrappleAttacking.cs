@@ -55,8 +55,17 @@ public class GrappleAttacking : MonoBehaviour
         aS.pitch = Random.Range(0.95f, 1.1f);
         aS.Play();
 
-        //Set enemy state
-        enemy.GetComponent<NewFlyingEnemy>().currentState = NewFlyingEnemy.State.grappled;
+        //Definitly the intended use of a try catch lol
+        try
+        {
+            //Set flying enemy state
+            enemy.GetComponent<NewFlyingEnemy>().currentState = NewFlyingEnemy.State.grappled;
+        }
+        catch //If flying enemy setting errored
+        {
+            //Set farmer enemy state
+            enemy.GetComponent<FarmerEnemy>().currentState = FarmerEnemy.State.grappled;
+        }
 
         eating = true; //Sets eating to true
         gg.attacking = true; //Set attacking to true
