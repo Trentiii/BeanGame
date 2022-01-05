@@ -5,6 +5,8 @@ using UnityEngine.Animations;
 
 public class GrappleAttacking : MonoBehaviour
 {
+    #region Variables
+
     //--Editable varibles--
     public GameObject template;
     [Tooltip("Number of frames to wait during eating")]
@@ -20,14 +22,18 @@ public class GrappleAttacking : MonoBehaviour
 
     //--Private references--
     GrapplingGun gg;
+    AudioSource aS;
     GrapplingRope gr;
     GameObject cloneHolder;
+
+    #endregion
 
     // Start is called before the first frame update
     void Start()
     {
         //Gets references
         gg = transform.GetChild(0).GetComponent<GrapplingGun>();
+        aS = GetComponent<AudioSource>();
         gr = transform.GetChild(0).GetChild(0).GetComponent<GrapplingRope>();
         cloneHolder = transform.GetChild(3).gameObject;
     }
@@ -35,7 +41,7 @@ public class GrappleAttacking : MonoBehaviour
     private void OnCollisionStay2D(Collision2D collision)
     {
         //If collided with enemy (and not already running/ending)
-        if (collision.gameObject.layer == 11 && !corRunning && !gr.grappleEnded)
+        if (collision.gameObject.layer == 11 && !corRunning && !gr.grappleEnded && !gg.grappling)
         {
             //Starts eating
             startEating(collision.gameObject);
@@ -45,6 +51,22 @@ public class GrappleAttacking : MonoBehaviour
     //Starts the enemy eating
     public void startEating(GameObject enemy)
     {
+        //Randomize pitch and play eating sound
+        aS.pitch = Random.Range(0.95f, 1.1f);
+        aS.Play();
+
+        //Definitly the intended use of a try catch lol
+        try
+        {
+            //Set flying enemy state
+            enemy.GetComponent<NewFlyingEnemy>().currentState = NewFlyingEnemy.State.grappled;
+        }
+        catch //If flying enemy setting errored
+        {
+            //Set farmer enemy state
+            enemy.GetComponent<FarmerEnemy>().currentState = FarmerEnemy.State.grappled;
+        }
+
         eating = true; //Sets eating to true
         gg.attacking = true; //Set attacking to true
         gg.setAttackPoint(enemy.transform.position); //Starts setAttackPoint

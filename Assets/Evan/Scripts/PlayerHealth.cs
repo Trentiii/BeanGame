@@ -6,15 +6,15 @@ using UnityEngine.Rendering.Universal;
 
 public class PlayerHealth : MonoBehaviour
 {
+    #region Variables
+
     //--Editable varibles--
     public float maxHealth = 10; //Holds current max player health
 
     //--Public varibles--
     [HideInInspector] public static float playerHealth; //Holds current player health
     [HideInInspector] public Transform currentCheckPoint; //Holds respawn point
-
-    //--Private varibles--
-    private bool dying = false;
+    [HideInInspector] public static bool dying = false; //Holds if dying
 
     //--Private references--
     private Rigidbody2D rb2;
@@ -22,10 +22,15 @@ public class PlayerHealth : MonoBehaviour
     private GrapplingRope gr;
     private GrappleAttacking ga;
     private Animator a;
-    private Vignette v;
+    private Volume v1;
+    private Volume v2;
+    private Vignette vi;
+    private Vignette vi2;
     private ColorAdjustments ca;
     private Camera main;
     private CameraMouseFollow cmf;
+
+    #endregion
 
     // Start is called before the first frame update
     void Start()
@@ -36,13 +41,18 @@ public class PlayerHealth : MonoBehaviour
         gr = transform.GetChild(0).GetChild(0).GetComponent<GrapplingRope>();
         ga = GetComponent<GrappleAttacking>();
         a = GetComponent<Animator>();
-        GameObject.Find("DeathVolume").GetComponent<Volume>().profile.TryGet(out v);
+        v1 = GameObject.Find("DeathVolume").GetComponent<Volume>();
+        v2 = GameObject.Find("DamageVolume").GetComponent<Volume>();
+        v1.profile.TryGet(out vi);
+        v2.profile.TryGet(out vi2);
         GameObject.Find("DeathVolume").GetComponent<Volume>().profile.TryGet(out ca);
         main = Camera.main;
         cmf = main.GetComponent<CameraMouseFollow>();
 
         //Sets defualt health
         playerHealth = maxHealth;
+        dying = false;
+        currentCheckPoint = GameObject.Find("StartPos").transform;
     }
 
     // Update is called once per frame
@@ -59,7 +69,7 @@ public class PlayerHealth : MonoBehaviour
         if (dying)
         {
             //Keep Vignette center on player
-            v.center.Override(new Vector3(0.5f, 0.5f, 0) - new Vector3(main.transform.localPosition.x / 20f, main.transform.localPosition.y / 20f, 0));
+            vi.center.Override(new Vector3(0.5f, 0.5f, 0) - new Vector3(main.transform.localPosition.x / 20f, main.transform.localPosition.y / 20f, 0));
         }
     }
 
@@ -87,6 +97,12 @@ public class PlayerHealth : MonoBehaviour
     //Goes to checkpoint with effects
     private IEnumerator toCheckpointEffects()
     {
+        //Start screenshake
+        ScreenShake.TriggerShake(0.1f);
+
+        //Sets priority
+        v1.priority = 2;
+
         float time = 0; //Holds time to wait
         float exposure = 0; //Holds current exposure
 
@@ -97,7 +113,7 @@ public class PlayerHealth : MonoBehaviour
         while (exposure > -7)
         {
             //Scale vignette over time
-            v.intensity.Override(time * 1.5f);
+            vi.intensity.Override(time * 1.5f);
 
             //When vignette is done
             if (time * 1.5f > 1)
@@ -142,7 +158,7 @@ public class PlayerHealth : MonoBehaviour
             {
                 //Increment intensity and apply it to color vignette
                 intensity -= 0.20f;
-                v.intensity.Override(intensity);
+                vi.intensity.Override(intensity);
             }
 
             //Increment time
@@ -153,13 +169,57 @@ public class PlayerHealth : MonoBehaviour
         }
 
         dying = false;
+
+        //Resets priority
+        v1.priority = 0;
     }
 
     //Handles damage
-    public static void damage(float amount)
+    public void damage(float amount)
     {
         //Increments health by amount
         playerHealth -= amount;
+
+        //Starts player damage effects
+        StartCoroutine(damageEffects());
+    }
+
+    private IEnumerator damageEffects()
+    {
+        //Start screenshake
+        ScreenShake.TriggerShake(0.25f);
+        
+
+
+        //Sets priority
+        v2.priority = 1;
+        
+        //Holds current intenesity of the vignette
+        float intensity = 0;
+
+        //While intensity is below 0.3f
+        while (intensity < 0.3f && !dying)
+        {
+            intensity += Time.deltaTime * 2; //Increase intensity
+            vi2.intensity.Override(intensity); //Set intensity
+            yield return new WaitForEndOfFrame(); //Set intensity
+        }
+
+        //Set intensity to exactly 0.3f
+        vi2.intensity.Override(0.3f);
+
+        while (intensity > 0 && !dying)
+        {
+            intensity -= Time.deltaTime / 5; //Decrease intensity
+            vi2.intensity.Override(intensity); //Set intensity
+            yield return new WaitForEndOfFrame(); //Set intensity
+        }
+
+        //Set intensity to exactly 0
+        vi2.intensity.Override(0);
+
+        //Reset priority
+        v2.priority = 0;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

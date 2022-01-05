@@ -2,6 +2,9 @@
 
 public class GrapplingGun : MonoBehaviour
 {
+
+    #region Variables
+
     //--Editable varibles--
     [Header("Layers Settings:")]
     [Tooltip("If you are able to grapple to all layers")]
@@ -63,6 +66,9 @@ public class GrapplingGun : MonoBehaviour
     private PlayerMovement pm; //Holds playerMovement script
     private Collider2D c2d; //Holds player collider
     private GrappleAttacking ga; //Holds player attacking script
+    private AudioSource aS; //Holds audioSourse 
+
+    #endregion
 
     private void Start()
     {
@@ -76,6 +82,7 @@ public class GrapplingGun : MonoBehaviour
         grappleFinder = gunHolder.parent.GetChild(1);
         c2d = gunHolder.GetComponent<Collider2D>();
         ga = gunHolder.GetComponent<GrappleAttacking>();
+        aS = GetComponent<AudioSource>();
 
         //Sets rope, spring joint, and grappleFinder to off by default
         grappleRope.enabled = false;
@@ -97,6 +104,10 @@ public class GrapplingGun : MonoBehaviour
                 //Flips grappling and retracted
                 grappling = true;
                 grappleRope.retracted = false;
+
+                //Randomize pitch and play tongue start sound
+                aS.pitch = Random.Range(0.95f, 1.1f);
+                aS.Play();
 
                 //Starts startGrapple after startDelay
                 Invoke("startGrapple", startDelay);
@@ -235,6 +246,18 @@ public class GrapplingGun : MonoBehaviour
                         //Set attacking to true and sets enemy to hit
                         attacking = true;
                         enemy = hit.transform.gameObject;
+
+                        //Definitly the intended use of a try catch lol
+                        try
+                        {
+                            //Set flying enemy state
+                            enemy.GetComponent<NewFlyingEnemy>().currentState = NewFlyingEnemy.State.grappled;
+                        }
+                        catch //If flying enemy setting errored
+                        {
+                            //Set farmer enemy state
+                            enemy.GetComponent<FarmerEnemy>().currentState = FarmerEnemy.State.grappled;
+                        }
                     }
 
                     grappleNormal = hit.normal; //Gets grapple normal
@@ -327,6 +350,23 @@ public class GrapplingGun : MonoBehaviour
     //Resets everything for next grapple
     public void resetGrapple()
     {
+        //Reset enemy animations if let go of enemy
+        if (enemy != null)
+        {
+            //Definitly the intended use of a try catch lol
+            try
+            {
+                //Set flying enemy state
+                enemy.GetComponent<NewFlyingEnemy>().currentState = NewFlyingEnemy.State.idle;
+            }
+            catch //If flying enemy setting errored
+            {
+                //Set farmer enemy state
+                enemy.GetComponent<FarmerEnemy>().currentState = FarmerEnemy.State.idle;
+            }
+            enemy.GetComponent<Animator>().SetBool("Grappled", false);
+        }
+
         //Turn rope and springjoint back off
         grappleRope.enabled = false;
         springJoint2D.enabled = false;

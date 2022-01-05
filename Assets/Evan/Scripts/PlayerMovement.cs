@@ -7,6 +7,8 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
 
+    #region Variables
+
     [Header("Layers")]
     [Tooltip("Ground layer reference")]
     [SerializeField] private LayerMask whatIsGround;
@@ -68,6 +70,9 @@ public class PlayerMovement : MonoBehaviour
     //Component References
     private Rigidbody2D rb2;
     private SpriteRenderer sr;
+    private AudioSource aS;
+
+    #endregion
 
     // Start is called before the first frame update
     void Start()
@@ -75,6 +80,7 @@ public class PlayerMovement : MonoBehaviour
         //Get component References
         rb2 = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
+        aS = GetComponents<AudioSource>()[1];
 
         groundCheckTrans = transform.GetChild(1);
     }
@@ -83,7 +89,7 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         //Activate input check
-        CheckInput();
+        checkInput();
 
         //Increments timers
         if (jumpInputHoldCounter > 0)
@@ -95,13 +101,13 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         //Activate the ground check, movment, slower, and down speed managers
-        CheckGround();
-        GetMovement();
+        checkGround();
+        getMovement();
         slower();
         DownSpeedManager();
     }
 
-    private void Jump()
+    private void jump()
     {
         //Jumps if grounded is true
         if (grounded)
@@ -111,6 +117,10 @@ public class PlayerMovement : MonoBehaviour
 
             //Turns off counter
             jumpInputHoldCounter = 0;
+
+            //Randomize pitch and play jump sound
+            aS.pitch = Random.Range(0.95f, 1.1f);
+            aS.Play();
 
             //Adds jump force
             newForce.Set(0.0f, jumpForce + -rb2.velocity.y);
@@ -123,25 +133,25 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void GetMovement()
+    private void getMovement()
     {
         if (grounded)
         {
             //Gets flat movement
             newVelocity.Set(movementSpeed * xInput, 0);
             //Sends newVelocity to ApplyMovement
-            ApplyMovement(newVelocity);
+            applyMovement(newVelocity);
         }
         else if (!grounded)
         {
             //Gets air movement
             newVelocity.Set(movementSpeed * xInput, 0);
             //Sends newVelocity to ApplyMovement
-            ApplyMovement(newVelocity);
+            applyMovement(newVelocity);
         }
     }
 
-    public void ApplyMovement(Vector2 velocityToUse)
+    public void applyMovement(Vector2 velocityToUse)
     {
         //Checks for changes in xInput
         if ((oldxInput != xInput && xInput != 0.0f) && xInput == -1f)
@@ -210,17 +220,17 @@ public class PlayerMovement : MonoBehaviour
             rb2.velocity += velocityToUse;
         }
         //If movement is within normal bounds
-        else if(Mathf.Abs(rb2.velocity.x) < Mathf.Abs(movementSpeed))
+        else if (Mathf.Abs(rb2.velocity.x) <= Mathf.Abs(movementSpeed))
         {
             //Add half of velocityToUse to velocity
-            rb2.velocity += velocityToUse/2;
+            rb2.velocity += velocityToUse / 2;
         }
 
         //Gets old xInput
         oldxInput = xInput;
     }
 
-    private void CheckGround()
+    private void checkGround()
     {
         //Checks for ground on LayerMask layer within a sphere
         grounded = Physics2D.OverlapBox(groundCheckTrans.position, groundCheckSize, 0, whatIsGround); 
@@ -228,7 +238,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     //Checks for inputs
-    private void CheckInput()
+    private void checkInput()
     {
         //Logs xInput to varible
         xInput = Input.GetAxisRaw("Horizontal");
@@ -243,7 +253,8 @@ public class PlayerMovement : MonoBehaviour
         //Calls Jump() when jump is pressed or the input is currently being held
         if (Input.GetButtonDown("Jump") || jumpInputHoldCounter > 0)
         {
-            Jump();
+            //Start jump
+            jump();
         }
     }
 

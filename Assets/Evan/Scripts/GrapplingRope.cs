@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(LineRenderer))]
 public class GrapplingRope : MonoBehaviour
 {
+    #region Variables
+
     //--Editable varibles--
     [Header("General Settings:")]
     [Tooltip("The number of points the line renderer uses to draw the wave")]
@@ -35,6 +37,7 @@ public class GrapplingRope : MonoBehaviour
     //--Private varibles--
     private float waveSize = 0; //Holds current wave size
     private float moveTime = 0; //Holds the time spent moving during the grapple
+    bool first = true; //Holds if first frame of retracting
     private AnimationCurve currentRopeCurve = new AnimationCurve(); //Holds rope curve for this grapple
 
     //--Private references--
@@ -43,8 +46,11 @@ public class GrapplingRope : MonoBehaviour
     private Transform gunHolder; //Holds top parent
     private PlayerMovement pm; //Holds player movement script
     private GrappleAttacking ga; //Holds player attacking script
+    private AudioSource aS; //Holds audioSource
 
     private LineRenderer lineRenderer2;
+
+    #endregion
 
     private void OnEnable()
     {
@@ -57,6 +63,7 @@ public class GrapplingRope : MonoBehaviour
             gunHolder = transform.parent.parent;
             pm = gunHolder.GetComponent<PlayerMovement>();
             ga = gunHolder.GetComponent<GrappleAttacking>();
+            aS = GetComponent<AudioSource>();
         }
 
         moveTime = 0; //Resets move time
@@ -246,15 +253,27 @@ public class GrapplingRope : MonoBehaviour
     //Retracks the rope
     private void retractRope()
     {
+        //If first frame of retraction and not attacking
+        if (first && !grapplingGun.attacking)
+        {
+            //Randomize pitch and play retraction sound
+            aS.pitch = Random.Range(0.95f, 1.1f);
+            aS.Play();
+
+            //Set first to false
+            first = false;
+        }
+
         //Starts drawRope waves
         drawRopeWaves();
 
         //Check if points are back at player
         if (((Vector2)lineRenderer.GetPosition(lineRenderer.positionCount - 1) - (Vector2)gunHolder.position).magnitude < 0.5)
         {
-            //Reset retracted and grapple ended
+            //Reset variables
             retracted = true;
             grappleEnded = false;
+            first = true;
 
             //Start resetGrapple
             grapplingGun.resetGrapple();
@@ -263,7 +282,7 @@ public class GrapplingRope : MonoBehaviour
 
     public void fullReset()
     {
-        //Resets all varibles
+        //Resets all variables
         moveTime = 0;
         lineRenderer.positionCount = precision;
         lineRenderer2.positionCount = precision / 6;
@@ -275,5 +294,6 @@ public class GrapplingRope : MonoBehaviour
         lineRenderer.enabled = false; 
         lineRenderer2.enabled = false;
         isGrappling = false;
+        first = true;
     }
 }

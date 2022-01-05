@@ -18,6 +18,10 @@ public class SceneTransitionScript : MonoBehaviour
             reloadScene();
     }
 
+    public void reloadScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
     public void nextScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
