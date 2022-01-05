@@ -48,7 +48,14 @@ public class EnemySpawning : MonoBehaviour
     {
         //Summon enemy
         GameObject clone = Instantiate(enemyPrefabs[(int)spawnedEnemy], transform.position, Quaternion.identity, enemyCloneHolder);
-        if (spawnedEnemy == 0) clone.GetComponent<NewFlyingEnemy>().moveSpots = patrolPoints; //Give it patrol points
+        if ((int)spawnedEnemy == 0) //Give flyer patrol points
+        {
+            clone.GetComponent<NewFlyingEnemy>().moveSpots = patrolPoints;
+        } 
+        else if ((int)spawnedEnemy == 1) //Give farmer patrol points
+        { 
+            clone.GetComponent<FarmerEnemy>().moveSpots = patrolPoints; 
+        }
     }
 
     // Update is called once per frame

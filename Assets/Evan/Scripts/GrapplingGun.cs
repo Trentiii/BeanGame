@@ -353,7 +353,17 @@ public class GrapplingGun : MonoBehaviour
         //Reset enemy animations if let go of enemy
         if (enemy != null)
         {
-            enemy.GetComponent<NewFlyingEnemy>().currentState = NewFlyingEnemy.State.idle;
+            //Definitly the intended use of a try catch lol
+            try
+            {
+                //Set flying enemy state
+                enemy.GetComponent<NewFlyingEnemy>().currentState = NewFlyingEnemy.State.idle;
+            }
+            catch //If flying enemy setting errored
+            {
+                //Set farmer enemy state
+                enemy.GetComponent<FarmerEnemy>().currentState = FarmerEnemy.State.idle;
+            }
             enemy.GetComponent<Animator>().SetBool("Grappled", false);
         }
 

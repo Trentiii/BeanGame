@@ -87,9 +87,9 @@ public class FarmerEnemy : MonoBehaviour
 
         if (currentState != State.grappled)
         {
-            if (!ani.GetCurrentAnimatorStateInfo(0).IsName("Attack") && !ani.GetCurrentAnimatorStateInfo(0).IsName("Idle 0"))
+            if (!ani.GetCurrentAnimatorStateInfo(0).IsName("Attack") && currentState != State.attacking)
             {
-                //Play attacking animation
+                //Stop attacking animation
                 ani.SetBool("Attacking", false);
             }
 
@@ -157,7 +157,7 @@ public class FarmerEnemy : MonoBehaviour
     private void Idling()
     {
         //Tell animator to idle
-        ani.SetTrigger("Idling");
+        ani.SetTrigger("Idle");
         speed = 0;
         rb.velocity = new Vector2(speed, rb.velocity.y);
     }
@@ -165,34 +165,40 @@ public class FarmerEnemy : MonoBehaviour
     //What happens when following player
     private void Following()
     {
-        //Play moving towards animation and get within certain distance
-        ani.SetTrigger("Following");
         speed = 3;
 
-        facer(player.position - transform.position);
-        transform.position = new Vector2(Vector2.MoveTowards(this.transform.position, player.position, speed * Time.deltaTime).x, transform.position.y);
+        Vector2 dir = player.position - transform.position;
+        facer(dir);
+
+        if (groundChecker(dir))
+        {
+            //Play moving towards animation and get within certain distance
+            ani.SetTrigger("Moving");
+            transform.position = new Vector2(Vector2.MoveTowards(this.transform.position, player.position, speed * Time.deltaTime).x, transform.position.y);
+        }
+        else
+        {
+            ani.SetTrigger("Idle");
+        }
     }
     //What happens when attacking
     private void Attacking()
     {
+        Vector2 direction = player.transform.position - transform.position;
+        facer(direction);
+
         //Stop and shoot projectiles at player
         //Play attacking animation
-        if (!ani.GetCurrentAnimatorStateInfo(0).IsName("Attack") && !ani.GetCurrentAnimatorStateInfo(0).IsName("Idle 0"))
-        {
-            ani.SetTrigger("AttackStart");
-        }
-
         ani.SetBool("Attacking", true);
     }
 
-    [ContextMenu("test")]
     public void Shoot()
     {
         Vector2 direction = player.transform.position - transform.position;
 
         for (int i = 0; i < bullets; i++)
         {
-            GameObject Clone = Instantiate(projectile, transform.position + new Vector3(-0.3f, 0.5f, 0), Quaternion.identity, cloneHolder);
+            GameObject Clone = Instantiate(projectile, transform.position + new Vector3(-0.5f, 0.6f, 0), Quaternion.identity, cloneHolder);
             Clone.GetComponent<Rigidbody2D>().AddForce(direction.normalized * bulletSpeed + new Vector2(Random.Range(-1.5f, 1.0f), Random.Range(-1.5f, 1.2f)) , ForceMode2D.Impulse);
             Destroy(Clone, 5);
         }
@@ -207,7 +213,6 @@ public class FarmerEnemy : MonoBehaviour
         {
             if (waitTime <= 0)
             {
-                //randomSpot = Random.Range(0, moveSpots.Length);
                 if (nextSpot < moveSpots.Length - 1)
                 {
                     nextSpot++;
@@ -222,25 +227,58 @@ public class FarmerEnemy : MonoBehaviour
             else
             {
                 waitTime -= Time.deltaTime;
+                ani.SetTrigger("Idle");
             }
         }
-        //Looks around the area for the player
-        //Patrol between points
-
-        if (!ani.GetCurrentAnimatorStateInfo(0).IsName("Patrol"))
+        else
         {
-            ani.SetTrigger("Patrolling");
+            //Looks around the area for the player
+            //Patrol between points
+            ani.SetTrigger("Moving");
         }
     }
     //What happens when retreating
     private void Retreat()
     {
-        speed = 2.5f;
-        facer(player.position - transform.position);
-        transform.position = new Vector2(Vector2.MoveTowards(transform.position, player.position, -speed * Time.deltaTime).x, transform.position.y);
+        Vector2 dir = -(player.position - transform.position);
 
-        //Also attack while flee-ing
-        Attacking();
+        if (groundChecker(dir))
+        {
+            speed = 3;
+
+            facer(dir);
+
+            if (groundChecker(dir))
+            {
+                transform.position = new Vector2(Vector2.MoveTowards(transform.position, player.position, -speed * Time.deltaTime).x, transform.position.y);
+            }
+            else
+            {
+                ani.SetTrigger("Idle");
+            }
+        }
+        else
+        {
+            ani.SetBool("Attacking", true);
+        }
+    }
+
+    private bool groundChecker(Vector2 direction)
+    {
+        RaycastHit2D hit;
+
+        if (direction.x < 0)
+        {
+            Debug.DrawRay(transform.position + new Vector3(-0.3f, 0.5f, 0), -(transform.up + transform.right).normalized * 1.5f);
+            hit = Physics2D.Raycast(transform.position + new Vector3(-0.3f, 0.5f, 0), -(transform.up + transform.right).normalized * 1.5f, 1.5f, ground);
+        }
+        else
+        {
+            Debug.DrawRay(transform.position + new Vector3(-0.3f, 0.5f, 0), -(transform.up - transform.right).normalized * 1.5f);
+            hit = Physics2D.Raycast(transform.position + new Vector3(-0.3f, 0.5f, 0), -(transform.up - transform.right).normalized * 1.5f, 1.5f, ground);
+        }
+
+        return hit.transform != null;
     }
 
     private void facer(Vector2 direction)
@@ -274,6 +312,5 @@ public class FarmerEnemy : MonoBehaviour
         //Raycast ground detection
         Gizmos.color = Color.yellow;
         if (player != null) Gizmos.DrawLine(transform.position, player.position);
-
     }
 }
