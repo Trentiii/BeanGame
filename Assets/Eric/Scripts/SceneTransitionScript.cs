@@ -15,7 +15,7 @@ public class SceneTransitionScript : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
-            reloadScene();
+            reloadThisScene();
     }
 
     public void reloadScene()
@@ -30,7 +30,11 @@ public class SceneTransitionScript : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
-
+    public void quitGame()
+    {
+        Debug.Log("quitting");
+        Application.Quit();
+    }
 
     public void creditScene()
     {
