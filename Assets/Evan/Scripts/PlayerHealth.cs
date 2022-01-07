@@ -31,11 +31,12 @@ public class PlayerHealth : MonoBehaviour
     private CameraMouseFollow cmf;
 
     #endregion
-
+    
     // Start is called before the first frame update
     void Start()
     {
-        //Gets references
+        //Gets references 
+        //bool healing = gameObject.GetComponent<GrappleAttacking>().eating;
         rb2 = GetComponent<Rigidbody2D>();
         gg = transform.GetChild(0).GetComponent<GrapplingGun>();
         gr = transform.GetChild(0).GetChild(0).GetComponent<GrapplingRope>();
@@ -71,6 +72,8 @@ public class PlayerHealth : MonoBehaviour
             //Keep Vignette center on player
             vi.center.Override(new Vector3(0.5f, 0.5f, 0) - new Vector3(main.transform.localPosition.x / 20f, main.transform.localPosition.y / 20f, 0));
         }
+
+        
     }
 
     [ContextMenu("startDeath")]
@@ -182,6 +185,17 @@ public class PlayerHealth : MonoBehaviour
 
         //Starts player damage effects
         StartCoroutine(damageEffects());
+    }
+
+    public void heal()
+    {
+        bool healing = gameObject.GetComponent<GrappleAttacking>().destroyed;
+
+        if (healing == true)
+        {
+            Debug.Log("Works");
+            playerHealth = maxHealth;
+        }
     }
 
     private IEnumerator damageEffects()
