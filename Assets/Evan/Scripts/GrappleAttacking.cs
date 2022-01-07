@@ -27,11 +27,13 @@ public class GrappleAttacking : MonoBehaviour
     GameObject cloneHolder;
 
     #endregion
+    public bool destroyed;
 
     // Start is called before the first frame update
     void Start()
     {
         //Gets references
+        
         gg = transform.GetChild(0).GetComponent<GrapplingGun>();
         aS = GetComponent<AudioSource>();
         gr = transform.GetChild(0).GetChild(0).GetComponent<GrapplingRope>();
@@ -51,6 +53,9 @@ public class GrappleAttacking : MonoBehaviour
     //Starts the enemy eating
     public void startEating(GameObject enemy)
     {
+        
+        
+
         //Randomize pitch and play eating sound
         aS.pitch = Random.Range(0.95f, 1.1f);
         aS.Play();
@@ -107,7 +112,11 @@ public class GrappleAttacking : MonoBehaviour
                 clone.GetComponent<SpriteRenderer>().sprite = enemy.GetComponent<SpriteRenderer>().sprite;
 
                 //Destroy original enemy
-                Destroy(enemy);                
+                Destroy(enemy);
+
+                
+                
+                
             }
 
             //If player is spawned
@@ -165,6 +174,12 @@ public class GrappleAttacking : MonoBehaviour
 
         //Turns off corRunning
         corRunning = false;
+    }
+
+    public void DestroyEnemy()
+    {
+       // GameObject 
+      //  if(ga)
     }
 
     public void fullReset()
