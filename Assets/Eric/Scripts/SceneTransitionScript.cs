@@ -5,10 +5,13 @@ using UnityEngine.SceneManagement;
 
 public class SceneTransitionScript : MonoBehaviour
 {
+
+    Faucet f;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        f = GameObject.Find("Faucet").GetComponent<Faucet>();
     }
 
     // Update is called once per frame
@@ -20,15 +23,18 @@ public class SceneTransitionScript : MonoBehaviour
 
     public void reloadScene()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        f.transitionToIndex(SceneManager.GetActiveScene().buildIndex);
     }
     public void nextScene()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        f.transitionToIndex(SceneManager.GetActiveScene().buildIndex + 1);
     }
     public void reloadThisScene()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        f.transitionToIndex(SceneManager.GetActiveScene().buildIndex);
     }
     public void quitGame()
     {
@@ -38,12 +44,14 @@ public class SceneTransitionScript : MonoBehaviour
 
     public void creditScene()
     {
-        SceneManager.LoadScene("CreditScene");
+        //SceneManager.LoadScene("CreditScene");
+        f.transitionToIndex(2);
     }
 
     public void mainMenuScene()
     {
-        SceneManager.LoadScene("MainMenuScene");
+        //SceneManager.LoadScene("MainMenuScene");
+        f.transitionToIndex(0);
     }
 }
 

@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class Transitioner : MonoBehaviour
 {
-    public GameObject obj;
+    private GameObject obj;
 
     private Scene currentScene;
 
@@ -15,6 +15,8 @@ public class Transitioner : MonoBehaviour
     {
         mainCamera= Camera.main.gameObject;
         globalLight = GameObject.Find("Global Light 2D");
+
+        obj = GameObject.Find("TransitionHolder");
     }
 
     public void startloadScene(int index)

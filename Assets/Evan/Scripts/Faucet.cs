@@ -27,6 +27,13 @@ public class Faucet : MonoBehaviour
         t = GameObject.Find("Transitioner").GetComponent<Transitioner>();
     }
 
+    public void transitionToIndex(int index)
+    {
+        //Set started to true
+        started = true;
+        sceneIndex = index;
+    }
+
     public void transitionToMainMenu()
     {
         //Set started to true
@@ -126,6 +133,15 @@ public class Faucet : MonoBehaviour
             Clone = Instantiate(particle, transform);
             Clone.transform.position += new Vector3(0.5f, 0, 0);
             Clone.GetComponent<Rigidbody2D>().velocity = new Vector2(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f));
+
+            Clone = Instantiate(particle, transform);
+            Clone.transform.position += new Vector3(-0.5f, 0, 0);
+            Clone.GetComponent<Rigidbody2D>().velocity = new Vector2(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f));
+
+
+            Clone = Instantiate(particle, transform);
+            Clone.transform.position += new Vector3(0.5f, 0, 0);
+            Clone.GetComponent<Rigidbody2D>().velocity = new Vector2(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f));
         }
         else if (once) //If not running and once is still true
         {
@@ -147,8 +163,8 @@ public class Faucet : MonoBehaviour
             cMF.speed = speed;
 
 
-        //Start destroyer in 1 second
-        Invoke("destroyer", 1);
+        //Start destroyer in 2 second
+        Invoke("destroyer", 2);
     }
 
     private void destroyer()
