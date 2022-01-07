@@ -7,7 +7,7 @@ public class CameraMouseFollow : MonoBehaviour
     [Tooltip("Scales how much the camaera will move with the mouse")]
     [SerializeField] float scrollDist = 5;
     [Tooltip("Speed at which the camera moves")]
-    [SerializeField] float speed = 9;
+    public float speed = 9;
 
     [HideInInspector] public bool dying = false;
 

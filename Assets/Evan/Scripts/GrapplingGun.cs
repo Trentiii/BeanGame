@@ -49,7 +49,8 @@ public class GrapplingGun : MonoBehaviour
     [HideInInspector] public float currentLaunchSpeed; //Holds currentLaunchSpeed
     [HideInInspector] public bool stuckOnWall = false; //Holds if stuck on wall
     [HideInInspector] public bool grappling = false; //Holds if currently grappling
-    [HideInInspector] public bool attacking = false; //Holds if this graplle is for attacking
+    [HideInInspector] public bool attacking = false; //Holds if this grapple is for attacking
+    [HideInInspector] public bool stopped = false; //Holds if this grappling is stopped
 
     //--Private varibles--
     private bool noBoost = false; //Holds if endBoost is needed
@@ -91,99 +92,108 @@ public class GrapplingGun : MonoBehaviour
     }
 
     private void Update()
-    {
-        //Clamp velocity to maxSpeed
-        rb2.velocity = new Vector2(Mathf.Clamp(rb2.velocity.x, -maxSpeed, maxSpeed), Mathf.Clamp(rb2.velocity.y, -maxSpeed, maxSpeed));
-
-        //Stops more grappling while eating
-        if (!ga.eating)
+    {   //If not stopped
+        if (!stopped)
         {
-            //If right click detected
-            if (Input.GetKeyDown(KeyCode.Mouse0) && !grappling && grappleRope.retracted)
-            {
-                //Flips grappling and retracted
-                grappling = true;
-                grappleRope.retracted = false;
+            //Clamp velocity to maxSpeed
+            rb2.velocity = new Vector2(Mathf.Clamp(rb2.velocity.x, -maxSpeed, maxSpeed), Mathf.Clamp(rb2.velocity.y, -maxSpeed, maxSpeed));
 
-                //Randomize pitch and play tongue start sound
-                aS.pitch = Random.Range(0.95f, 1.1f);
-                aS.Play();
-
-                //Starts startGrapple after startDelay
-                Invoke("startGrapple", startDelay);
-            }
-            else if (attacking && (grapplePoint - (Vector2)gunHolder.position).magnitude < finalDistance) //If grapple is done and attacking
+            //Stops more grappling while eating
+            if (!ga.eating)
             {
-                //If enemy not already eaten
-                if (enemy != null)
+                //If right click detected
+                if (Input.GetKeyDown(KeyCode.Mouse0) && !grappling && grappleRope.retracted)
                 {
-                    noBoost = true;
-                    pm.enabled = true; ;
-                    ga.eating = true;
+                    //Flips grappling and retracted
+                    grappling = true;
+                    grappleRope.retracted = false;
 
-                    //Start startEating and pass it enemy
-                    ga.startEating(enemy);
+                    //Randomize pitch and play tongue start sound
+                    aS.pitch = Random.Range(0.95f, 1.1f);
+                    aS.Play();
 
-                    springJoint2D.enabled = false;
-                    rb2.velocity = new Vector2(grappleDirection.normalized.x * grappleDirection.magnitude, grappleDirection.normalized.y * grappleDirection.magnitude);
+                    //Starts startGrapple after startDelay
+                    Invoke("startGrapple", startDelay);
                 }
-            }
-            else if (solverType != stuckSolvers.anyTimeStopSolver && grappling && !Input.GetKey(KeyCode.Mouse0) && ((grapplePoint - (Vector2)gunHolder.position).magnitude < finalDistance)) //If right click was let go and grapple is done
-            {
-                //Sets grapple to ended
-                grappleRope.grappleEnded = true;
-            }
-            else if (solverType == stuckSolvers.anyTimeStopSolver && grappling && !Input.GetKey(KeyCode.Mouse0)) ///If right click was let go and anytime stop is active
-            {
-                //Sets grapple to ended
-                grappleRope.grappleEnded = true;
-
-                if (!grappleRope.isGrappling)
+                else if (attacking && (grapplePoint - (Vector2)gunHolder.position).magnitude < finalDistance) //If grapple is done and attacking
                 {
-                    noBoost = true;
+                    //If enemy not already eaten
+                    if (enemy != null)
+                    {
+                        noBoost = true;
+                        pm.enabled = true; ;
+                        ga.eating = true;
+
+                        //Start startEating and pass it enemy
+                        ga.startEating(enemy);
+
+                        springJoint2D.enabled = false;
+                        rb2.velocity = new Vector2(grappleDirection.normalized.x * grappleDirection.magnitude, grappleDirection.normalized.y * grappleDirection.magnitude);
+                    }
                 }
-            }
-            else if (solverType != stuckSolvers.anyTimeStopSolver && grappling && Input.GetKey(KeyCode.Mouse0) && ((grapplePoint - (Vector2)gunHolder.position).magnitude < finalDistance)) //If right click is held and grapple is done
-            {
-                //Set noBoost to true
-                noBoost = true;
-            }
-        }
-
-        //If grappling
-        if (grappling)
-        {
-            //Starts speedUp
-            speedUp();
-
-            //Sets grappleFinder to end of the grapple
-            grappleFinder.transform.position = grapplePoint;
-
-            //Does raycast to grapplePoint
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, grapplePoint - (Vector2)transform.position);
-
-            //Checks if path to grappleFinder is blocked
-            if (hit.transform != null && springJoint2D.enabled && hit.transform.name != "GrappleFinder" && (grapplePoint - (Vector2)transform.position).magnitude > 1.05f && hit.distance < 1.05f)
-            {
-                //Sets stuckOnWall to truw
-                stuckOnWall = true;
-
-                if (solverType == stuckSolvers.clipSolver) //If using clipsolver
+                else if (solverType != stuckSolvers.anyTimeStopSolver && grappling && !Input.GetKey(KeyCode.Mouse0) && ((grapplePoint - (Vector2)gunHolder.position).magnitude < finalDistance)) //If right click was let go and grapple is done
                 {
-                    //Turn off collider
-                    c2d.enabled = false;
-                }
-                else if (solverType == stuckSolvers.stopSolver) //If using stopsolver
-                {
-                    //Set grapple to ended
+                    //Sets grapple to ended
                     grappleRope.grappleEnded = true;
                 }
+                else if (solverType == stuckSolvers.anyTimeStopSolver && grappling && !Input.GetKey(KeyCode.Mouse0)) ///If right click was let go and anytime stop is active
+                {
+                    //Sets grapple to ended
+                    grappleRope.grappleEnded = true;
+
+                    if (!grappleRope.isGrappling)
+                    {
+                        noBoost = true;
+                    }
+                }
+                else if (solverType != stuckSolvers.anyTimeStopSolver && grappling && Input.GetKey(KeyCode.Mouse0) && ((grapplePoint - (Vector2)gunHolder.position).magnitude < finalDistance)) //If right click is held and grapple is done
+                {
+                    //Set noBoost to true
+                    noBoost = true;
+                }
             }
-            else if (solverType == stuckSolvers.clipSolver) //If using clipsolver
+
+            //If grappling
+            if (grappling)
             {
-                //Turn on collider
-                c2d.enabled = true;
+                //Starts speedUp
+                speedUp();
+
+                //Sets grappleFinder to end of the grapple
+                grappleFinder.transform.position = grapplePoint;
+
+                //Does raycast to grapplePoint
+                RaycastHit2D hit = Physics2D.Raycast(transform.position, grapplePoint - (Vector2)transform.position);
+
+                //Checks if path to grappleFinder is blocked
+                if (hit.transform != null && springJoint2D.enabled && hit.transform.name != "GrappleFinder" && (grapplePoint - (Vector2)transform.position).magnitude > 1.05f && hit.distance < 1.05f)
+                {
+                    //Sets stuckOnWall to truw
+                    stuckOnWall = true;
+
+                    if (solverType == stuckSolvers.clipSolver) //If using clipsolver
+                    {
+                        //Turn off collider
+                        c2d.enabled = false;
+                    }
+                    else if (solverType == stuckSolvers.stopSolver) //If using stopsolver
+                    {
+                        //Set grapple to ended
+                        grappleRope.grappleEnded = true;
+                    }
+                }
+                else if (solverType == stuckSolvers.clipSolver) //If using clipsolver
+                {
+                    //Turn on collider
+                    c2d.enabled = true;
+                }
             }
+        }
+        else
+        {
+            //Stop grapples
+            fullReset();
+            grappleRope.fullReset();
         }
     }
 

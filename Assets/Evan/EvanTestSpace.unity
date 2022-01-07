@@ -814,6 +814,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1594943277}
   - component: {fileID: 1594943276}
+  - component: {fileID: 1594943278}
   m_Layer: 0
   m_Name: Global Light 2D
   m_TagString: Untagged
@@ -876,6 +877,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1594943278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1594943275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: e3f4aa5fa002f1241bbd8ec11403a770, type: 2}
 --- !u!1 &1604111191
 GameObject:
   m_ObjectHideFlags: 0
@@ -1489,7 +1507,7 @@ PrefabInstance:
     - target: {fileID: 8526415070940600668, guid: 4649bbdbe1df72d46a4085bef3e2c9b2,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4649bbdbe1df72d46a4085bef3e2c9b2, type: 3}

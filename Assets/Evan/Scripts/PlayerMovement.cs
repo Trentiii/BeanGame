@@ -39,6 +39,8 @@ public class PlayerMovement : MonoBehaviour
     [HideInInspector] public float xInput;
     //Holds if player is grounded
     [HideInInspector] public bool grounded;
+    //Holds if player stopped
+    [HideInInspector] public bool stopped;
 
     //Holds current facing (1 = right)
     private int facingDirection = 1;
@@ -88,23 +90,39 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Activate input check
-        checkInput();
-
-        //Increments timers
-        if (jumpInputHoldCounter > 0)
+        //If not stopped
+        if (!stopped)
         {
-            jumpInputHoldCounter -= Time.deltaTime;
+            //Activate input check
+            checkInput();
+
+            //Increments timers
+            if (jumpInputHoldCounter > 0)
+            {
+                jumpInputHoldCounter -= Time.deltaTime;
+            }
         }
     }
 
     private void FixedUpdate()
-    {
-        //Activate the ground check, movment, slower, and down speed managers
-        checkGround();
-        getMovement();
-        slower();
-        DownSpeedManager();
+    {   
+        //If not stopped
+        if (!stopped)
+        {
+            //Activate the ground check, movment, slower, and down speed managers
+            checkGround();
+            getMovement();
+            slower();
+            DownSpeedManager();
+        }
+        else
+        {
+            //Set grounded so idle animation plays
+            grounded = true;
+
+            //Stops x movement
+            rb2.velocity = new Vector2(0, rb2.velocity.y);
+        }
     }
 
     private void jump()
