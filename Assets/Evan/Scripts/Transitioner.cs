@@ -6,6 +6,8 @@ public class Transitioner : MonoBehaviour
 {
     public GameObject obj;
 
+    private Scene currentScene;
+
     GameObject mainCamera;
     GameObject globalLight;
 
@@ -25,6 +27,8 @@ public class Transitioner : MonoBehaviour
         Destroy(globalLight);
         Destroy(mainCamera);
 
+        currentScene = SceneManager.GetActiveScene();
+
         AsyncOperation scene = SceneManager.LoadSceneAsync(index, LoadSceneMode.Additive);
 
         //Wait until we are done loading the scene
@@ -33,9 +37,9 @@ public class Transitioner : MonoBehaviour
             yield return null;
         }
 
-        setupScene(2);
+        setupScene(index);
 
-        AsyncOperation unload = SceneManager.UnloadSceneAsync(0);
+        AsyncOperation unload = SceneManager.UnloadSceneAsync(currentScene);
     }
 
     void setupScene(int index)

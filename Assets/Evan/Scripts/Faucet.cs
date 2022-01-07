@@ -45,7 +45,7 @@ public class Faucet : MonoBehaviour
     {
         //Set started to true
         started = true;
-        sceneIndex = 2;
+        sceneIndex = 1;
     }
 
 
@@ -66,14 +66,27 @@ public class Faucet : MonoBehaviour
             //Flip once2
             once2 = false;
 
-            //Fiind player and stop movement
+            //Find player and stop movement
             GameObject player = GameObject.Find("Player");
-            pm = player.GetComponent<PlayerMovement>();
-            pm.stopped = true;
 
-            //Stop grappling
-            gg = player.transform.GetChild(0).GetComponent<GrapplingGun>();
-            gg.stopped = true;
+            try
+            {
+                pm = player.GetComponent<PlayerMovement>();
+            }
+            catch
+            { 
+                //Nothing lol
+            }
+
+            if (pm != null)
+            {
+                pm = player.GetComponent<PlayerMovement>();
+                pm.stopped = true;
+
+                //Stop grappling
+                gg = player.transform.GetChild(0).GetComponent<GrapplingGun>();
+                gg.stopped = true;
+            }
 
             //Stop camera follow and save value
             GameObject camera = Camera.main.gameObject;
@@ -125,10 +138,14 @@ public class Faucet : MonoBehaviour
     //Resets player
     private void resetPlayer()
     {
-        //Restart everything thayt was turned off
-        pm.stopped = false;
-        gg.stopped = false;
-        cMF.speed = speed;
+        if (pm != null)
+        {
+            //Restart everything thayt was turned off
+            pm.stopped = false;
+            gg.stopped = false;
+        }
+            cMF.speed = speed;
+
 
         //Start destroyer in 1 second
         Invoke("destroyer", 1);
