@@ -8,14 +8,16 @@ public class Faucet : MonoBehaviour
     bool running = true; //If faucet is running
     bool once = true; //Makes sure loading the next scene is only called once
     bool once2 = true; //Makes sure starting removing the liquid is only called once
+    bool once3 = true; //Makes sure everything is turned on only once
     bool started = false; //Holds if transition has started
     int sceneIndex; //Holds scene to load
     float speed; //Holds the speed of CameraMouseFollow
+    private GameObject floor; //Gameobject that is bottem of bucket
 
     public GameObject particle; //Holds particle to spawn
+    public Transitioner Transitioner; //Holds Transition in scene
 
     //Private refrences
-    private Transitioner t;
     private PlayerMovement pm;
     private GrapplingGun gg;
     private CameraMouseFollow cMF;
@@ -24,7 +26,10 @@ public class Faucet : MonoBehaviour
 
     private void Start()
     {
-        t = GameObject.Find("Transitioner").GetComponent<Transitioner>();
+        floor = transform.parent.GetChild(0).gameObject;
+
+        //Turn off floor
+        floor.SetActive(false);
     }
 
     public void transitionToIndex(int index)
@@ -61,6 +66,21 @@ public class Faucet : MonoBehaviour
         //If started run spawner
         if (started)
         {
+            if (once3)
+            {
+                //flip once3
+                once3 = false;
+
+                //Turn everything on
+                floor.SetActive(true);
+                transform.parent.GetChild(1).gameObject.SetActive(true);
+                transform.parent.GetChild(2).gameObject.SetActive(true);
+                transform.parent.GetChild(3).gameObject.SetActive(true);
+                transform.parent.GetChild(5).gameObject.SetActive(true);
+
+                GetComponent<BoxCollider2D>().enabled = true;
+            }
+
             spawner();
         }
     }
@@ -81,7 +101,7 @@ public class Faucet : MonoBehaviour
                 pm = player.GetComponent<PlayerMovement>();
             }
             catch
-            { 
+            {
                 //Nothing lol
             }
 
@@ -97,16 +117,30 @@ public class Faucet : MonoBehaviour
 
             //Stop camera follow and save value
             GameObject camera = Camera.main.gameObject;
-            cMF = camera.GetComponent<CameraMouseFollow>();
-            speed = cMF.speed;
-            cMF.speed = 0;
+
+            try
+            {
+                cMF = camera.GetComponent<CameraMouseFollow>();
+            }
+            catch
+            {
+                //Nothing lol
+            }
+
+            if (cMF != null)
+            {
+                speed = cMF.speed;
+                cMF.speed = 0;
+            }
 
             //Move parents to camera
             transform.parent.position = new Vector3(camera.transform.position.x, camera.transform.position.y, transform.parent.position.z);
-            Destroy(transform.parent.GetChild(0).gameObject); //Destroy bottom of bucket (What is holding the liquid)
+            Destroy(floor); //Destroy floor
 
-            //Call resetPlayer in 1 second
-            Invoke("resetPlayer", 1);
+            transform.parent.GetChild(6).gameObject.SetActive(false);
+
+            //Call resetPlayer with delay
+            Invoke("resetPlayer", 2);
         }
 
         //If faucet is running
@@ -147,20 +181,20 @@ public class Faucet : MonoBehaviour
         {
             //Flip once and start loading
             once = false;
-            t.startloadScene(sceneIndex);
+            Transitioner.startloadScene(sceneIndex);
         }
     }
 
     //Resets player
     private void resetPlayer()
     {
+        //Restart everything thayt was turned off
         if (pm != null)
         {
-            //Restart everything thayt was turned off
             pm.stopped = false;
             gg.stopped = false;
         }
-            cMF.speed = speed;
+        if(cMF != null) cMF.speed = speed;
 
 
         //Start destroyer in 2 second
