@@ -49,16 +49,16 @@ MonoBehaviour:
     m_Value: 0
   focusDistance:
     m_OverrideState: 1
-    m_Value: 46.8
+    m_Value: 84.29
     min: 0.1
   aperture:
     m_OverrideState: 1
-    m_Value: 18.2
+    m_Value: 12.7
     min: 1
     max: 32
   focalLength:
     m_OverrideState: 1
-    m_Value: 70
+    m_Value: 121
     min: 1
     max: 300
   bladeCount:
