@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -758,6 +758,11 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 5.082
       objectReference: {fileID: 0}
+    - target: {fileID: 3784338661055913512, guid: 0e1c5e2b004c8d14ab10f20dab0ea22b,
+        type: 3}
+      propertyPath: Transitioner
+      value: 
+      objectReference: {fileID: 6135492597200867178}
     - target: {fileID: 3784338661705217513, guid: 0e1c5e2b004c8d14ab10f20dab0ea22b,
         type: 3}
       propertyPath: m_RootOrder
@@ -820,6 +825,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0e1c5e2b004c8d14ab10f20dab0ea22b, type: 3}
+--- !u!1 &3784338660172018584 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3175410759515948747, guid: 0e1c5e2b004c8d14ab10f20dab0ea22b,
+    type: 3}
+  m_PrefabInstance: {fileID: 3784338660172018583}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6135492597200867177
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -892,5 +903,27 @@ PrefabInstance:
       propertyPath: obj
       value: 
       objectReference: {fileID: 1709426301}
+    - target: {fileID: 6135492599172922745, guid: 34150cf2abbddd14ebf251a49571b859,
+        type: 3}
+      propertyPath: backupCamera
+      value: 
+      objectReference: {fileID: 3784338660172018584}
+    - target: {fileID: 6135492599172922745, guid: 34150cf2abbddd14ebf251a49571b859,
+        type: 3}
+      propertyPath: TransitionHolder
+      value: 
+      objectReference: {fileID: 1709426301}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 34150cf2abbddd14ebf251a49571b859, type: 3}
+--- !u!114 &6135492597200867178 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6135492599172922745, guid: 34150cf2abbddd14ebf251a49571b859,
+    type: 3}
+  m_PrefabInstance: {fileID: 6135492597200867177}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07118653d29b2a042863eb6f54d2c662, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
