@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class NewFlyingEnemy : MonoBehaviour
 {
+    public bool destroyed;
     public float startWaitTime;
     public float speed;
     public float lineOfSight;
@@ -79,6 +80,7 @@ public class NewFlyingEnemy : MonoBehaviour
         if (remove && Time.timeScale > 0)
         {
             Destroy(gameObject);
+            destroyed = true;
         }
 
         rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -speed, speed), Mathf.Clamp(rb.velocity.y, -speed, speed));
@@ -355,6 +357,12 @@ public class NewFlyingEnemy : MonoBehaviour
     {
         //stop everything and play grappled animation
     }
+
+    /*public void OnDisable(this GameObject gameObject)
+    {
+        OnDisable(gameObject);
+        Debug.Log("Works");
+    }*/
 
     private void facer(Vector2 direction)
     {

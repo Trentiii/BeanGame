@@ -31,12 +31,17 @@ public class PlayerHealth : MonoBehaviour
     private CameraMouseFollow cmf;
 
     #endregion
+    private GameObject enemy;
+    private bool isHealing;
+    private bool destroyed;
     
     // Start is called before the first frame update
     void Start()
     {
         //Gets references 
         //bool healing = gameObject.GetComponent<GrappleAttacking>().eating;
+        //destroyed = 
+        enemy = GameObject.FindGameObjectWithTag("Enemy");
         rb2 = GetComponent<Rigidbody2D>();
         gg = transform.GetChild(0).GetComponent<GrapplingGun>();
         gr = transform.GetChild(0).GetChild(0).GetComponent<GrapplingRope>();
@@ -73,6 +78,19 @@ public class PlayerHealth : MonoBehaviour
             vi.center.Override(new Vector3(0.5f, 0.5f, 0) - new Vector3(main.transform.localPosition.x / 20f, main.transform.localPosition.y / 20f, 0));
         }
 
+        /* if (enemy == null)
+         {
+
+           // heal();
+             // Debug.Log("Works");
+             isHealing = true;
+             heal();
+             
+
+
+
+
+         }*/
         
     }
 
@@ -187,15 +205,48 @@ public class PlayerHealth : MonoBehaviour
         StartCoroutine(damageEffects());
     }
 
+    /*public bool Destroyed(GameObject enemy)
+    {
+        Destroyed();
+        heal();
+        return gameObject == null && !ReferenceEquals(gameObject, null);
+        
+    }*/
+
     public void heal()
     {
-        bool healing = gameObject.GetComponent<GrappleAttacking>().destroyed;
 
-        if (healing == true)
+        if(isHealing == true)
+        {
+            playerHealth = maxHealth;
+            isHealing = false;
+        }
+        
+        
+
+
+        
+
+        
+       
+    }
+
+    private void OnDisable(GameObject enemy)
+    {
+        if(enemy == null)
         {
             Debug.Log("Works");
-            playerHealth = maxHealth;
+            OnDisable(enemy);
         }
+        //OnDisable(enemy);
+       
+        /*if (enemy == null)
+        {
+            Debug.Log("Works");
+            heal();
+        }*/ 
+
+        
     }
 
     private IEnumerator damageEffects()
