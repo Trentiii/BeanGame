@@ -28,10 +28,13 @@ public class GrappleAttacking : MonoBehaviour
 
     #endregion
     public bool destroyed;
+    public GameObject door;
 
     // Start is called before the first frame update
     void Start()
     {
+
+       
         //Gets references
         
         gg = transform.GetChild(0).GetComponent<GrapplingGun>();
@@ -111,10 +114,12 @@ public class GrappleAttacking : MonoBehaviour
                 clone = Instantiate(template, enemy.transform.position, enemy.transform.localRotation, cloneHolder.transform);
                 clone.GetComponent<SpriteRenderer>().sprite = enemy.GetComponent<SpriteRenderer>().sprite;
 
+                door.GetComponent<Door>().EnemyCounter();
                 //Destroy original enemy
                 Destroy(enemy);
 
-                
+
+                PlayerHealth.heal();
                 
                 
             }

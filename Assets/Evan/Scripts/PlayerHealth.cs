@@ -213,22 +213,9 @@ public class PlayerHealth : MonoBehaviour
         
     }*/
 
-    public void heal()
+    public static void heal()
     {
-
-        if(isHealing == true)
-        {
-            playerHealth = maxHealth;
-            isHealing = false;
-        }
-        
-        
-
-
-        
-
-        
-       
+        playerHealth += 3;                           
     }
 
     private void OnDisable(GameObject enemy)
