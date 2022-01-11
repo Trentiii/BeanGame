@@ -28,14 +28,18 @@ public class PauseMenuScript : MonoBehaviour
         if (!Paused)
         {
             //play fading away animation
+            ani.SetBool("Paused", false);
             PausePanel.SetActive(false);
             GV.SetActive(false);
+            Time.timeScale = 1f;
         }
         if (Paused)
         {
             //play sliding in animation
+            ani.SetBool("Paused", true);
             PausePanel.SetActive(true);
             GV.SetActive(true);
+            Time.timeScale = 0f;
         }
     }
         
