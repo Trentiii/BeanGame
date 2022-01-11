@@ -23,28 +23,22 @@ public class PauseMenuScript : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            PauseGame();
+            Paused = !Paused;
         }
-    }
-
-    public void PauseGame()
-    {
-        if (Paused)
+        if (!Paused)
         {
             //play fading away animation
             PausePanel.SetActive(false);
             GV.SetActive(false);
         }
-        else
+        if (Paused)
         {
             //play sliding in animation
             PausePanel.SetActive(true);
             GV.SetActive(true);
         }
-
-        Paused = !Paused;
     }
-
+        
     public void creditsClicked()// if menu or credits clicked
     {
         MainCanvas.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceCamera;
@@ -61,6 +55,6 @@ public class PauseMenuScript : MonoBehaviour
 
     public void xButtonClicked() // might not be working
     {
-        PauseGame();
+        Paused = false;
     }
 }
