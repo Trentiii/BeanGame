@@ -18,6 +18,7 @@ public class FarmerEnemy : MonoBehaviour
     private int nextSpot = 0;
     private float sightAngle;
 
+    public GameObject screamHolder;
     public GameObject projectile;
     public LayerMask groundAndPlayer;
     public LayerMask ground;
@@ -41,6 +42,8 @@ public class FarmerEnemy : MonoBehaviour
     private Animator ani;
     private Rigidbody2D rb;
     private SpriteRenderer sr;
+    private AudioSource aS;
+    private AudioSource aS2;
 
     // Start is called before the first frame update
     void Start()
@@ -58,6 +61,8 @@ public class FarmerEnemy : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").transform;
         ani = GetComponent<Animator>();
         sr = GetComponent<SpriteRenderer>();
+        aS = GetComponent<AudioSource>();
+        aS2 = GetComponents<AudioSource>()[1];
 
         waitTime = startWaitTime;
     }
@@ -87,6 +92,8 @@ public class FarmerEnemy : MonoBehaviour
 
         if (currentState != State.grappled)
         {
+            if (aS.isPlaying) aS.Stop();
+
             if (!ani.GetCurrentAnimatorStateInfo(0).IsName("Attack") && currentState != State.attacking)
             {
                 //Stop attacking animation
@@ -150,9 +157,27 @@ public class FarmerEnemy : MonoBehaviour
             rb.velocity = new Vector2(0, 0);
 
             ani.SetBool("Grappled", true);
+
+            //If not screaming scream
+            if (!aS.isPlaying)
+            {
+                aS.Play();
+            }
         }
 
     }
+
+    void OnDisable()
+    {
+        //Create screamholder and start its scream at current sfx time
+        GameObject Clone = Instantiate(screamHolder, Vector3.zero, Quaternion.identity);
+        AudioSource cAS = Clone.GetComponent<AudioSource>();
+        cAS.pitch = aS.pitch;
+        cAS.time = aS.time;
+        cAS.Play();
+        Destroy(Clone, 1);
+    }
+
     //What happens when Idling
     private void Idling()
     {
@@ -194,8 +219,12 @@ public class FarmerEnemy : MonoBehaviour
 
     public void Shoot()
     {
-        Vector2 direction = player.transform.position - transform.position;
+        //Randomize pitch and play shoot sound
+        aS2.pitch = Random.Range(1.05f, 1.2f);
+        aS2.Play();
 
+        Vector2 direction = player.transform.position - transform.position;
+        
         for (int i = 0; i < bullets; i++)
         {
             GameObject Clone = Instantiate(projectile, transform.position + new Vector3(-0.5f, 0.6f, 0), Quaternion.identity, cloneHolder);

@@ -73,6 +73,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb2;
     private SpriteRenderer sr;
     private AudioSource aS;
+    private AudioSource aS2;
 
     #endregion
 
@@ -83,6 +84,7 @@ public class PlayerMovement : MonoBehaviour
         rb2 = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         aS = GetComponents<AudioSource>()[1];
+        aS2 = GetComponents<AudioSource>()[3];
 
         groundCheckTrans = transform.GetChild(1);
     }
@@ -137,7 +139,7 @@ public class PlayerMovement : MonoBehaviour
             jumpInputHoldCounter = 0;
 
             //Randomize pitch and play jump sound
-            aS.pitch = Random.Range(0.95f, 1.1f);
+            aS.pitch = Random.Range(1.05f, 1.2f);
             aS.Play();
 
             //Adds jump force
@@ -250,9 +252,18 @@ public class PlayerMovement : MonoBehaviour
 
     private void checkGround()
     {
+        bool oldGrounded = grounded;
+
         //Checks for ground on LayerMask layer within a sphere
-        grounded = Physics2D.OverlapBox(groundCheckTrans.position, groundCheckSize, 0, whatIsGround); 
+        grounded = Physics2D.OverlapBox(groundCheckTrans.position, groundCheckSize, 0, whatIsGround);
         //Physics2D.OverlapCircle(groundCheckTrans.position, groundCheckRadius, whatIsGround);
+
+        if (grounded && !oldGrounded && rb2.velocity.y < 0)
+        {
+            //Randomize pitch and play land sound
+            aS2.pitch = Random.Range(1.05f, 1.2f);
+            aS2.Play();
+        }
     }
 
     //Checks for inputs

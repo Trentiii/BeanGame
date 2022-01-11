@@ -21,6 +21,7 @@ public class NewFlyingEnemy : MonoBehaviour
     //private bool idling;
     //private float groundDistance;
 
+    public GameObject screamHolder;
     public GameObject projectile;
     public LayerMask groundAndPlayer;
     public LayerMask ground;
@@ -46,6 +47,8 @@ public class NewFlyingEnemy : MonoBehaviour
     private Rigidbody2D rb;
     private SpriteRenderer sr;
     private PolygonCollider2D pc2d;
+    private AudioSource aS;
+    private AudioSource aS2;
 
     // Start is called before the first frame update
     void Start()
@@ -64,6 +67,8 @@ public class NewFlyingEnemy : MonoBehaviour
         ani = GetComponent<Animator>();
         sr = GetComponent<SpriteRenderer>();
         pc2d = GetComponent<PolygonCollider2D>();
+        aS = GetComponent<AudioSource>();
+        aS2 = GetComponents<AudioSource>()[1];
         //Ground = GameObject.FindGameObjectWithTag("Ground").gameObject;
 
         waitTime = startWaitTime;
@@ -87,6 +92,8 @@ public class NewFlyingEnemy : MonoBehaviour
 
         if (currentState != State.grappled)
         {
+            if(aS.isPlaying) aS.Stop();
+
             if (!ani.GetCurrentAnimatorStateInfo(0).IsName("Attack") && !ani.GetCurrentAnimatorStateInfo(0).IsName("Idle 0") )
             {
                 //Play attacking animation
@@ -184,11 +191,29 @@ public class NewFlyingEnemy : MonoBehaviour
             rb.velocity = new Vector2(0, 0);
 
             ani.SetBool("Grappled", true);
+
+            //If not screaming scream
+            if (!aS.isPlaying)
+            {
+                aS.Play();
+            }
         }
 
     }
-    //What happens when Idling
-    private void Idling()
+
+    void OnDisable()
+    {
+        //Create screamholder and start its scream at current sfx time
+        GameObject Clone = Instantiate(screamHolder, Vector3.zero, Quaternion.identity);
+        AudioSource cAS = Clone.GetComponent<AudioSource>();
+        cAS.pitch = aS.pitch;
+        cAS.time = aS.time;
+        cAS.Play();
+        Destroy(Clone, 1);
+    }
+
+        //What happens when Idling
+        private void Idling()
     {       
         //Tell animator to idle
         ani.SetTrigger("Idling");
@@ -221,6 +246,9 @@ public class NewFlyingEnemy : MonoBehaviour
 
     public void Shoot()
     {
+        //Randomize pitch and play shoot sound
+        aS2.pitch = Random.Range(1f, 1.1f);
+        aS2.Play();
         shootMath(LaunchAngle);
     }
 

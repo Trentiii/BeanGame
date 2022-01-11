@@ -9,6 +9,7 @@ TagManager:
   - Ungrapplable
   - Checkpoint
   - Enemy
+  - ScreamHolders
   layers:
   - Default
   - TransparentFX

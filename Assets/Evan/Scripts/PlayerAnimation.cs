@@ -7,10 +7,14 @@ public class PlayerAnimation : MonoBehaviour
     //Holds current y velocity
     private float yVelocity;
 
+    private bool once = true;
+
     //--Private references--
     private Rigidbody2D rb2;
     private GrapplingGun gg;
     private PlayerMovement pm;
+    private PlayerHealth ph;
+    private AudioSource aS;
     private Animator a;
 
     // Start is called before the first frame update
@@ -21,6 +25,8 @@ public class PlayerAnimation : MonoBehaviour
         gg = transform.GetChild(0).GetComponent<GrapplingGun>();
         pm = GetComponent<PlayerMovement>();
         a = GetComponent<Animator>();
+        ph = GetComponent<PlayerHealth>();
+        aS = GetComponents<AudioSource>()[2];
     }
 
     // Update is called once per frame
@@ -74,6 +80,17 @@ public class PlayerAnimation : MonoBehaviour
         {
             a.SetBool("InLongFall", false);
         }
+
+        //Yes I know this part should be in player health
+        //But it was merge errored while I was working on this
+        if (PlayerHealth.dying && once)
+        {
+            once = false;
+
+            //Plays death sound
+            aS.Play();
+        }
+
     }
 
     public void fullReset()
@@ -85,5 +102,6 @@ public class PlayerAnimation : MonoBehaviour
         a.ResetTrigger("Jump");
         a.SetBool("grounded", false);
         a.SetBool("InLongFall", false);
+        once = true;
     }
 }

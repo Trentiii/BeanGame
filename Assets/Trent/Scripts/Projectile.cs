@@ -11,11 +11,15 @@ public class Projectile : MonoBehaviour
     bool remove = false;
     private Transform cloneHolder;
     private Rigidbody2D rb2;
+    private AudioSource aS;
+    private AudioSource aS2;
 
     // Start is called before the first frame update
     void Start()
     {
         rb2 = GetComponent<Rigidbody2D>();
+        aS = GetComponent<AudioSource>();
+        aS2 = GetComponents<AudioSource>()[1];
 
         try
         {
@@ -47,10 +51,10 @@ public class Projectile : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
 
-            DestroyProjectile();
+            DestroyProjectile(aS);
 
             //Damage
             GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>().damage(damage);
@@ -58,15 +62,22 @@ public class Projectile : MonoBehaviour
 
         if (other.CompareTag("Ground") || other.CompareTag("Ungrapplable"))
         {
-            DestroyProjectile();
+            DestroyProjectile(aS2);
         }
 
     }
 
-    void DestroyProjectile()
+    void DestroyProjectile(AudioSource currentAs)
     {
+        //Randomize pitch and play damage sound
+        currentAs.pitch = Random.Range(1.2f, 1.3f);
+        currentAs.Play();
+
         Destroy(Instantiate(deatheffects, transform.position, Quaternion.identity, cloneHolder), 0.5f);
-        Destroy(gameObject);
+
+        transform.position = new Vector3(0, -50, 0);
+
+        Destroy(gameObject, 0.25f);
     }
 
     
