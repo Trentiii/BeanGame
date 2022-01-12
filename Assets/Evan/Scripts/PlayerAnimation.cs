@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerAnimation : MonoBehaviour
 {
     public AnimatorOverrideController animationOverride;
+    public AudioClip[] grossSFX;
 
     [HideInInspector] public bool grown = false;
 
@@ -98,10 +99,22 @@ public class PlayerAnimation : MonoBehaviour
         speed = cMF.speed;
         cMF.speed = 2;
 
-        //-----------Start transformation and change animations-----------
+        //-----------Start transformation and change animations/sfx-----------
         a.SetBool("Transforming", true); //Set tranforming parameter
         a.Play("Base Layer.Transformation", 0); //Start transformation animation
+
         a.runtimeAnimatorController = animationOverride; //Override new animations
+
+        //Get jump sfx and swap out clip and volume
+        AudioSource jumpAS = GetComponents<AudioSource>()[1];
+        jumpAS.clip = grossSFX[0];
+        jumpAS.volume = 0.75f;
+
+        //Get death sfx and swap out clip
+        AudioSource deathAS = GetComponents<AudioSource>()[2];
+        deathAS.clip = grossSFX[1];
+        //jumpAS.volume = 0.75f;
+
         grown = true; //Set grow to true
 
         //Call transformingOff in 2.25 seconds

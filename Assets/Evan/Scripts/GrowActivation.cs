@@ -5,11 +5,13 @@ using UnityEngine;
 public class GrowActivation : MonoBehaviour
 {
     PlayerAnimation pa;
+    AudioSource aS;
 
     // Start is called before the first frame update
     void Start()
     {
         pa = GameObject.Find("Player").GetComponent<PlayerAnimation>();
+        aS = GetComponent<AudioSource>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -20,8 +22,10 @@ public class GrowActivation : MonoBehaviour
             //Start grow
             pa.grow();
 
+            aS.Play();
+
             //Destroy self
-            Destroy(gameObject);
+            Destroy(gameObject, 2.25f);
         }
     }
 }

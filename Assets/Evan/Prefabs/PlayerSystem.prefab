@@ -507,7 +507,6 @@ MonoBehaviour:
   eating: 0
   clone: {fileID: 0}
   destroyed: 0
-  door: {fileID: 0}
 --- !u!114 &2372370183271376371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -521,6 +520,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animationOverride: {fileID: 22100000, guid: b0c88b0ce4674f04ca09426099ebbbce, type: 2}
+  grossSFX:
+  - {fileID: 8300000, guid: b93ab50082983e347bc12f54381e76a5, type: 3}
+  - {fileID: 8300000, guid: 7cb006f034c27db4dae231be85c54e85, type: 3}
   grown: 0
 --- !u!114 &6950410409227684569
 MonoBehaviour:
@@ -1231,6 +1233,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scrollDist: 7
   speed: 9
+  centered: 0
   dying: 0
 --- !u!114 &5885027085120685992
 MonoBehaviour:
