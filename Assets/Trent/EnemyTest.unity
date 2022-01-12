@@ -822,23 +822,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97bc23215b9c8d3429fed3a140fcdc4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 512
   startWaitTime: 1
-  moveSpots: []
-  ground:
-    serializedVersion: 2
-    m_Bits: 256
   speed: 5
   lineOfSight: 7
   retreatDistance: 3
   attackDistance: 5
-  startTimeBtwShots: 3
-  player: {fileID: 2066298166}
-  Ground: {fileID: 0}
+  bullets: 10
+  bulletSpeed: 0
+  screamHolder: {fileID: 0}
   projectile: {fileID: 4921207389436139059, guid: 73174ca831db51c40badfc1dfae4f02b,
     type: 3}
+  groundAndPlayer:
+    serializedVersion: 2
+    m_Bits: 0
+  ground:
+    serializedVersion: 2
+    m_Bits: 256
+  moveSpots: []
   currentState: 2
 --- !u!212 &1229799602
 SpriteRenderer:
@@ -1510,6 +1510,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: FlyingEnemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 939520452078511428, guid: 94e18cb8cb75f174b8e90635c72e03fa,
+        type: 3}
+      propertyPath: m_TagString
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 939520452078511455, guid: 94e18cb8cb75f174b8e90635c72e03fa,
         type: 3}

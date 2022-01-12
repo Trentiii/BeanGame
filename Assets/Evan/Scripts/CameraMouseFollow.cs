@@ -9,6 +9,7 @@ public class CameraMouseFollow : MonoBehaviour
     [Tooltip("Speed at which the camera moves")]
     public float speed = 9;
 
+    [HideInInspector] public bool centered = false;
     [HideInInspector] public bool dying = false;
 
     // Update is called once per frame
@@ -17,8 +18,12 @@ public class CameraMouseFollow : MonoBehaviour
         //Get current mouse position
         Vector2 currentMousePos = Input.mousePosition;
 
-        //Turn that into a screen postion scaled by scrollDist
-        Vector3 wantedPoint = new Vector3(scrollDist * Mathf.Clamp(currentMousePos.x / Screen.width, 0, 1) - (scrollDist / 2), scrollDist * Mathf.Clamp(currentMousePos.y / Screen.height, 0, 1) - (scrollDist / 2), -20);
+        Vector3 wantedPoint = new Vector3(0.5f, 0.5f, -20); //Get center as defualt
+        if (!centered)
+        {
+            //Turn that into a screen postion scaled by scrollDist
+            wantedPoint = new Vector3(scrollDist * Mathf.Clamp(currentMousePos.x / Screen.width, 0, 1) - (scrollDist / 2), scrollDist * Mathf.Clamp(currentMousePos.y / Screen.height, 0, 1) - (scrollDist / 2), -20);
+        }
 
         if (!dying)
         {

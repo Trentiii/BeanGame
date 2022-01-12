@@ -39,6 +39,9 @@ public class GrapplingRope : MonoBehaviour
     private float moveTime = 0; //Holds the time spent moving during the grapple
     bool first = true; //Holds if first frame of retracting
     private AnimationCurve currentRopeCurve = new AnimationCurve(); //Holds rope curve for this grapple
+    private Transform rightPoint; //Holds rightPoint for tongue to start at when grown
+    private Transform leftPoint; //Holds leftPoint for tongue to start at when grown
+    private Vector2 startPoint; //Holds currentStartPoint
 
     //--Private references--
     private GrapplingGun grapplingGun; //Holds grapplingGunScript
@@ -47,6 +50,8 @@ public class GrapplingRope : MonoBehaviour
     private PlayerMovement pm; //Holds player movement script
     private GrappleAttacking ga; //Holds player attacking script
     private AudioSource aS; //Holds audioSource
+    private PlayerAnimation pa; //Holds PlayerAnimation script
+    private SpriteRenderer sr; //Holds SpriteRenderer
 
     private LineRenderer lineRenderer2;
 
@@ -64,6 +69,11 @@ public class GrapplingRope : MonoBehaviour
             pm = gunHolder.GetComponent<PlayerMovement>();
             ga = gunHolder.GetComponent<GrappleAttacking>();
             aS = GetComponent<AudioSource>();
+            pa = gunHolder.GetComponent<PlayerAnimation>();
+            sr = gunHolder.GetComponent<SpriteRenderer>();
+
+            leftPoint = transform.parent.GetChild(2);
+            rightPoint = transform.parent.GetChild(1);
         }
 
         moveTime = 0; //Resets move time
@@ -129,12 +139,31 @@ public class GrapplingRope : MonoBehaviour
         for (int i = 0; i < precision; i++)
         {
             //Set to defualt position
-            lineRenderer.SetPosition(i, grapplingGun.transform.position);
+            lineRenderer.SetPosition(i, startPoint);
         }
     }
 
     private void Update()
     {
+        //Sets startpoint of rope
+        if (pa.grown) //If grown
+        {
+            //Set start point beased on facing
+            if (sr.flipX)
+            {
+                startPoint = leftPoint.position;
+            }
+            else
+            {
+                startPoint = rightPoint.position;
+            }
+        }
+        else
+        {
+            //Start start point to center of sprite
+            startPoint = grapplingGun.transform.position;
+        }
+
         //If the grapple has not ended and not stuck
         if ((!grappleEnded && !grapplingGun.stuckOnWall))
         {
@@ -236,10 +265,10 @@ public class GrapplingRope : MonoBehaviour
             Vector2 offset = Vector2.Perpendicular(grapplingGun.grappleDirection).normalized * currentRopeCurve.Evaluate(delta) * Mathf.Clamp(waveSize * (grapplingGun.grappleDirection.magnitude/ 5), 0, maxWaveSize);
 
             //Gets target position that is delta precent along the line between the player and the grapple point (with offset added to make wave)
-            Vector2 targetPosition = Vector2.Lerp(grapplingGun.transform.position, grapplingGun.ropeGrapplePoint, delta) + offset;
+            Vector2 targetPosition = Vector2.Lerp(startPoint, grapplingGun.ropeGrapplePoint, delta) + offset;
 
             //Pushes postition back towards player by the rope progression curve / ropeProgressionSpeed
-            Vector2 currentPosition = Vector2.Lerp(grapplingGun.transform.position, targetPosition, ropeProgressionCurve.Evaluate(moveTime / ropeProgressionSpeed));
+            Vector2 currentPosition = Vector2.Lerp(startPoint, targetPosition, ropeProgressionCurve.Evaluate(moveTime / ropeProgressionSpeed));
 
             //Sets position in the line renderers
             lineRenderer.SetPosition(i, currentPosition);

@@ -29,19 +29,16 @@ public class PlayerHealth : MonoBehaviour
     private ColorAdjustments ca;
     private Camera main;
     private CameraMouseFollow cmf;
+    private AudioSource aS;
 
     #endregion
-    private GameObject enemy;
-    private bool isHealing;
-    private bool destroyed;
-    
+
     // Start is called before the first frame update
     void Start()
     {
         //Gets references 
         //bool healing = gameObject.GetComponent<GrappleAttacking>().eating;
         //destroyed = 
-        enemy = GameObject.FindGameObjectWithTag("Enemy");
         rb2 = GetComponent<Rigidbody2D>();
         gg = transform.GetChild(0).GetComponent<GrapplingGun>();
         gr = transform.GetChild(0).GetChild(0).GetComponent<GrapplingRope>();
@@ -54,6 +51,7 @@ public class PlayerHealth : MonoBehaviour
         GameObject.Find("DeathVolume").GetComponent<Volume>().profile.TryGet(out ca);
         main = Camera.main;
         cmf = main.GetComponent<CameraMouseFollow>();
+        aS = GetComponents<AudioSource>()[2];
 
         //Sets defualt health
         playerHealth = maxHealth;
@@ -77,21 +75,6 @@ public class PlayerHealth : MonoBehaviour
             //Keep Vignette center on player
             vi.center.Override(new Vector3(0.5f, 0.5f, 0) - new Vector3(main.transform.localPosition.x / 20f, main.transform.localPosition.y / 20f, 0));
         }
-
-        /* if (enemy == null)
-         {
-
-           // heal();
-             // Debug.Log("Works");
-             isHealing = true;
-             heal();
-             
-
-
-
-
-         }*/
-        
     }
 
     [ContextMenu("startDeath")]
@@ -121,6 +104,9 @@ public class PlayerHealth : MonoBehaviour
         //Start screenshake
         ScreenShake.TriggerShake(0.1f);
 
+        //Plays death sound
+        aS.Play();
+
         //Sets priority
         v1.priority = 2;
 
@@ -130,7 +116,7 @@ public class PlayerHealth : MonoBehaviour
         //Wait
         yield return new WaitForSecondsRealtime(0.25f);
 
-        //While time is less than 2 run death effects
+        //While exposure is greater than -7 run death effects
         while (exposure > -7)
         {
             //Scale vignette over time
@@ -205,30 +191,9 @@ public class PlayerHealth : MonoBehaviour
         StartCoroutine(damageEffects());
     }
 
-    /*public bool Destroyed(GameObject enemy)
+    public static void heal()
     {
-        Destroyed();
-        heal();
-        return gameObject == null && !ReferenceEquals(gameObject, null);
-        
-    }*/
-
-    public void heal()
-    {
-
-        if(isHealing == true)
-        {
-            playerHealth = maxHealth;
-            isHealing = false;
-        }
-        
-        
-
-
-        
-
-        
-       
+        playerHealth += 3;                           
     }
 
     private void OnDisable(GameObject enemy)

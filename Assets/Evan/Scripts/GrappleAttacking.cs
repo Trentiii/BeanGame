@@ -28,10 +28,13 @@ public class GrappleAttacking : MonoBehaviour
 
     #endregion
     public bool destroyed;
+    private GameObject door;
 
     // Start is called before the first frame update
     void Start()
     {
+        door = GameObject.FindGameObjectWithTag("Door");
+       
         //Gets references
         
         gg = transform.GetChild(0).GetComponent<GrapplingGun>();
@@ -111,12 +114,27 @@ public class GrappleAttacking : MonoBehaviour
                 clone = Instantiate(template, enemy.transform.position, enemy.transform.localRotation, cloneHolder.transform);
                 clone.GetComponent<SpriteRenderer>().sprite = enemy.GetComponent<SpriteRenderer>().sprite;
 
+                //Once again definitly the intended use of a try catch lol
+                try
+                {
+                    //Sets up scream sfx clone
+                    enemy.GetComponent<NewFlyingEnemy>().cloneSFXSetup();
+                }
+                catch //If flying enemy setting errored
+                {
+                    //Sets up scream sfx clone
+                    enemy.GetComponent<FarmerEnemy>().cloneSFXSetup();
+                }
+
+                //Activates enemy counter
+                
+                if(door != null) door.GetComponent<Door>().EnemyCounter(); //If statement so test scenes still work
+
                 //Destroy original enemy
                 Destroy(enemy);
 
-                
-                
-                
+                //Heals player
+                PlayerHealth.heal();                            
             }
 
             //If player is spawned
