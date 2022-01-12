@@ -16,14 +16,18 @@ public class ButtonSound : MonoBehaviour
 
     public void playHoverSound()
     {
-        soundPlayer.Stop(); //Stops other button sounds
+        //soundPlayer.Stop(); //Stops other button sounds
+        soundPlayer.pitch = 1.2f; //Sets pitch
+        soundPlayer.volume = 0.5f; //Sets volume
         soundPlayer.clip = hoverSound; //Sets sound to click sound
         soundPlayer.Play(); //Plays hover sound
     }
 
     public void playClickSound()
     {
-        soundPlayer.Stop(); //Stops other button sounds
+        //soundPlayer.Stop(); //Stops other button sounds
+        soundPlayer.pitch = 1.1f; //Sets pitch
+        soundPlayer.volume = 0.25f; //Sets volume
         soundPlayer.clip = clickSound; //Sets sound to click sound
         soundPlayer.Play(); //Plays sound
     }

@@ -44,8 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1c19ee79b07d2c4da993d665618723b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hoverSound: {fileID: 8300000, guid: 4c90e612a9f6e3b4e8e2c00e76de3adf, type: 3}
-  clickSound: {fileID: 8300000, guid: 2357f9b8996433649959428cba404753, type: 3}
+  hoverSound: {fileID: 8300000, guid: 92e11d41510cdb14cad3a807f2dabdca, type: 3}
+  clickSound: {fileID: 8300000, guid: 9f11ce8c719b4174f84a062d7161642a, type: 3}
 --- !u!82 &5511466976163424591
 AudioSource:
   m_ObjectHideFlags: 0
@@ -58,9 +58,9 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 4213941095484584573, guid: ca055de6e82650c468fdbbaeb062b6e5,
     type: 2}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
+  m_PlayOnAwake: 0
+  m_Volume: 0.25
+  m_Pitch: 1.2
   Loop: 0
   Mute: 0
   Spatialize: 0
