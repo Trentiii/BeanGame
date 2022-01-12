@@ -111,12 +111,23 @@ public class GrappleAttacking : MonoBehaviour
                 clone = Instantiate(template, enemy.transform.position, enemy.transform.localRotation, cloneHolder.transform);
                 clone.GetComponent<SpriteRenderer>().sprite = enemy.GetComponent<SpriteRenderer>().sprite;
 
+                //Once again definitly the intended use of a try catch lol
+                try
+                {
+                    //Sets up scream sfx clone
+                    enemy.GetComponent<NewFlyingEnemy>().cloneSFXSetup();
+                }
+                catch //If flying enemy setting errored
+                {
+                    //Sets up scream sfx clone
+                    enemy.GetComponent<FarmerEnemy>().cloneSFXSetup();
+                }
+
                 //Destroy original enemy
                 Destroy(enemy);
 
-                
-                
-                
+                //Heals player
+                PlayerHealth.heal();
             }
 
             //If player is spawned
@@ -174,12 +185,6 @@ public class GrappleAttacking : MonoBehaviour
 
         //Turns off corRunning
         corRunning = false;
-    }
-
-    public void DestroyEnemy()
-    {
-       // GameObject 
-      //  if(ga)
     }
 
     public void fullReset()

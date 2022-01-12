@@ -72,7 +72,7 @@ public class FarmerEnemy : MonoBehaviour
     {
         if ((player.position - transform.position).x < 0)
         {
-            sightAngle =  Vector2.Angle(new Vector2(-1, 0), player.position - transform.position);
+            sightAngle = Vector2.Angle(new Vector2(-1, 0), player.position - transform.position);
         }
         else
         {
@@ -167,7 +167,7 @@ public class FarmerEnemy : MonoBehaviour
 
     }
 
-    void OnDisable()
+    public void cloneSFXSetup()
     {
         //Create screamholder and start its scream at current sfx time
         GameObject Clone = Instantiate(screamHolder, Vector3.zero, Quaternion.identity);
@@ -224,11 +224,11 @@ public class FarmerEnemy : MonoBehaviour
         aS2.Play();
 
         Vector2 direction = player.transform.position - transform.position;
-        
+
         for (int i = 0; i < bullets; i++)
         {
             GameObject Clone = Instantiate(projectile, transform.position + new Vector3(-0.5f, 0.6f, 0), Quaternion.identity, cloneHolder);
-            Clone.GetComponent<Rigidbody2D>().AddForce(direction.normalized * bulletSpeed + new Vector2(Random.Range(-1.5f, 1.0f), Random.Range(-1.5f, 1.2f)) , ForceMode2D.Impulse);
+            Clone.GetComponent<Rigidbody2D>().AddForce(direction.normalized * bulletSpeed + new Vector2(Random.Range(-1.5f, 1.0f), Random.Range(-1.5f, 1.2f)), ForceMode2D.Impulse);
             Destroy(Clone, 5);
         }
     }

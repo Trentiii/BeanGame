@@ -92,9 +92,9 @@ public class NewFlyingEnemy : MonoBehaviour
 
         if (currentState != State.grappled)
         {
-            if(aS.isPlaying) aS.Stop();
+            if (aS.isPlaying) aS.Stop();
 
-            if (!ani.GetCurrentAnimatorStateInfo(0).IsName("Attack") && !ani.GetCurrentAnimatorStateInfo(0).IsName("Idle 0") )
+            if (!ani.GetCurrentAnimatorStateInfo(0).IsName("Attack") && !ani.GetCurrentAnimatorStateInfo(0).IsName("Idle 0"))
             {
                 //Play attacking animation
                 ani.SetBool("Attacking", false);
@@ -201,7 +201,7 @@ public class NewFlyingEnemy : MonoBehaviour
 
     }
 
-    void OnDisable()
+    public void cloneSFXSetup()
     {
         //Create screamholder and start its scream at current sfx time
         GameObject Clone = Instantiate(screamHolder, Vector3.zero, Quaternion.identity);
@@ -212,9 +212,9 @@ public class NewFlyingEnemy : MonoBehaviour
         Destroy(Clone, 1);
     }
 
-        //What happens when Idling
-        private void Idling()
-    {       
+    //What happens when Idling
+    private void Idling()
+    {
         //Tell animator to idle
         ani.SetTrigger("Idling");
         speed = 0;
@@ -339,7 +339,7 @@ public class NewFlyingEnemy : MonoBehaviour
         transform.position = Vector2.MoveTowards(transform.position, moveSpots[nextSpot].position, speed * Time.deltaTime);
         if (Vector2.Distance(transform.position, moveSpots[nextSpot].position) < 0.2f)
         {
-            if(waitTime <= 0)
+            if (waitTime <= 0)
             {
                 //randomSpot = Random.Range(0, moveSpots.Length);
                 if (nextSpot < moveSpots.Length - 1)
@@ -417,7 +417,7 @@ public class NewFlyingEnemy : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, retreatDistance);
         //Raycast ground detection
         Gizmos.color = Color.yellow;
-        if(player != null) Gizmos.DrawLine(transform.position, player.position);
-       
+        if (player != null) Gizmos.DrawLine(transform.position, player.position);
+
     }
 }

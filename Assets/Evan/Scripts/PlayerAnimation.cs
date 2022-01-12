@@ -4,18 +4,22 @@ using UnityEngine;
 
 public class PlayerAnimation : MonoBehaviour
 {
+    public AnimatorOverrideController animationOverride;
+
+    [HideInInspector] public bool grown = false;
+
     //Holds current y velocity
     private float yVelocity;
 
-    private bool once = true;
+    //Hold camera speed
+    private float speed;
 
     //--Private references--
     private Rigidbody2D rb2;
     private GrapplingGun gg;
     private PlayerMovement pm;
-    private PlayerHealth ph;
-    private AudioSource aS;
     private Animator a;
+    private CameraMouseFollow cMF;
 
     // Start is called before the first frame update
     void Start()
@@ -25,8 +29,6 @@ public class PlayerAnimation : MonoBehaviour
         gg = transform.GetChild(0).GetComponent<GrapplingGun>();
         pm = GetComponent<PlayerMovement>();
         a = GetComponent<Animator>();
-        ph = GetComponent<PlayerHealth>();
-        aS = GetComponents<AudioSource>()[2];
     }
 
     // Update is called once per frame
@@ -72,7 +74,7 @@ public class PlayerAnimation : MonoBehaviour
             a.SetBool("grounded", false);
         }
 
-        if (a.GetCurrentAnimatorClipInfo(0)[0].clip.name == "NewPlayer_HoldFall")
+        if (a.GetCurrentAnimatorClipInfo(0)[0].clip.name == "NewPlayer_HoldFall" || a.GetCurrentAnimatorClipInfo(0)[0].clip.name == "GrossPlayer_HoldFall")
         {
             a.SetBool("InLongFall", true);
         }
@@ -80,17 +82,43 @@ public class PlayerAnimation : MonoBehaviour
         {
             a.SetBool("InLongFall", false);
         }
+    }
 
-        //Yes I know this part should be in player health
-        //But it was merge errored while I was working on this
-        if (PlayerHealth.dying && once)
-        {
-            once = false;
+    //Sets up grown state
+    [ContextMenu("Grow Player")]
+    public void grow()
+    {
+        //-----------Stop all player movment and camera-----------
+        pm.stopped = true;
+        gg.stopped = true;
 
-            //Plays death sound
-            aS.Play();
-        }
+        //Stop camera follow and save value
+        cMF = Camera.main.gameObject.GetComponent<CameraMouseFollow>();
+        cMF.centered = true;
+        speed = cMF.speed;
+        cMF.speed = 2;
 
+        //-----------Start transformation and change animations-----------
+        a.SetBool("Transforming", true); //Set tranforming parameter
+        a.Play("Base Layer.Transformation", 0);
+        a.runtimeAnimatorController = animationOverride; //Override new animations
+        grown = true; //Set grow to true
+
+        //Call transformingOff in 2.25 seconds
+        Invoke("transformingOff", 2.25f);
+    }
+
+    private void transformingOff()
+    {
+        //Reset transforming
+        a.SetBool("Transforming", false);
+
+        //Reset player
+        pm.stopped = false;
+        gg.stopped = false;
+
+        cMF.centered = false;
+        cMF.speed = speed;
     }
 
     public void fullReset()
@@ -102,6 +130,5 @@ public class PlayerAnimation : MonoBehaviour
         a.ResetTrigger("Jump");
         a.SetBool("grounded", false);
         a.SetBool("InLongFall", false);
-        once = true;
     }
 }
