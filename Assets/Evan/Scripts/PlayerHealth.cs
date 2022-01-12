@@ -196,24 +196,6 @@ public class PlayerHealth : MonoBehaviour
         playerHealth += 3;                           
     }
 
-    private void OnDisable(GameObject enemy)
-    {
-        if(enemy == null)
-        {
-            Debug.Log("Works");
-            OnDisable(enemy);
-        }
-        //OnDisable(enemy);
-       
-        /*if (enemy == null)
-        {
-            Debug.Log("Works");
-            heal();
-        }*/ 
-
-        
-    }
-
     private IEnumerator damageEffects()
     {
         //Start screenshake
