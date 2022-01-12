@@ -100,7 +100,7 @@ public class PlayerAnimation : MonoBehaviour
 
         //-----------Start transformation and change animations-----------
         a.SetBool("Transforming", true); //Set tranforming parameter
-        a.Play("Base Layer.Transformation", 0);
+        a.Play("Base Layer.Transformation", 0); //Start transformation animation
         a.runtimeAnimatorController = animationOverride; //Override new animations
         grown = true; //Set grow to true
 
