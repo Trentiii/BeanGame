@@ -28,12 +28,12 @@ public class GrappleAttacking : MonoBehaviour
 
     #endregion
     public bool destroyed;
-    public GameObject door;
+    private GameObject door;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        door = GameObject.FindGameObjectWithTag("Door");
        
         //Gets references
         
@@ -127,6 +127,7 @@ public class GrappleAttacking : MonoBehaviour
                 }
 
                 //Activates enemy counter
+                
                 if(door != null) door.GetComponent<Door>().EnemyCounter(); //If statement so test scenes still work
 
                 //Destroy original enemy

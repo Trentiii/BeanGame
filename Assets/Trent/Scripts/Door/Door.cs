@@ -5,6 +5,8 @@ using UnityEngine;
 public class Door : MonoBehaviour
 {
     private float enemyCounter;
+    [Header("Enemies Needed to Unlock Door")] 
+    public float enemiesNeeded;
     private bool unlockDoor;
     // Start is called before the first frame update
     void Start()
@@ -16,35 +18,31 @@ public class Door : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (enemyCounter == 1)
+        if (enemyCounter == enemiesNeeded)
         {
             unlockDoor = true;
         }
         if (unlockDoor == true)
         {
             gameObject.SetActive(false);
-            Debug.Log("DoorUnlocked!");
+            DoorReset();
+            
+            
         }
     }
 
     public void EnemyCounter()
     {
         enemyCounter += 1;
-        Debug.Log("+1");
+        
         
     }
 
-    /*private void UnlockDoor()
-    {
-        if (enemyCounter == 1)
-        {
-            unlockDoor = true;
-        }
-        if (unlockDoor == true)
-        {
-            gameObject.SetActive(false);
-        }
 
-        UnlockDoor();
-    }*/
+    private void DoorReset()
+    {
+        enemyCounter = 0;
+        Debug.Log("Reset!");
+    }
+    
 }
