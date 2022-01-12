@@ -29,9 +29,10 @@ public class PlayerHealth : MonoBehaviour
     private ColorAdjustments ca;
     private Camera main;
     private CameraMouseFollow cmf;
+    private AudioSource aS;
 
     #endregion
-    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -50,6 +51,7 @@ public class PlayerHealth : MonoBehaviour
         GameObject.Find("DeathVolume").GetComponent<Volume>().profile.TryGet(out ca);
         main = Camera.main;
         cmf = main.GetComponent<CameraMouseFollow>();
+        aS = GetComponents<AudioSource>()[2];
 
         //Sets defualt health
         playerHealth = maxHealth;
@@ -102,6 +104,9 @@ public class PlayerHealth : MonoBehaviour
         //Start screenshake
         ScreenShake.TriggerShake(0.1f);
 
+        //Plays death sound
+        aS.Play();
+
         //Sets priority
         v1.priority = 2;
 
@@ -111,7 +116,7 @@ public class PlayerHealth : MonoBehaviour
         //Wait
         yield return new WaitForSecondsRealtime(0.25f);
 
-        //While time is less than 2 run death effects
+        //While exposure is greater than -7 run death effects
         while (exposure > -7)
         {
             //Scale vignette over time
