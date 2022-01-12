@@ -167,7 +167,7 @@ public class FarmerEnemy : MonoBehaviour
 
     }
 
-    void OnDisable()
+    public void cloneSFXSetup()
     {
         //Create screamholder and start its scream at current sfx time
         GameObject Clone = Instantiate(screamHolder, Vector3.zero, Quaternion.identity);

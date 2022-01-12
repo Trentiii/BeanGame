@@ -201,7 +201,7 @@ public class NewFlyingEnemy : MonoBehaviour
 
     }
 
-    void OnDisable()
+    public void cloneSFXSetup()
     {
         //Create screamholder and start its scream at current sfx time
         GameObject Clone = Instantiate(screamHolder, Vector3.zero, Quaternion.identity);
@@ -212,8 +212,8 @@ public class NewFlyingEnemy : MonoBehaviour
         Destroy(Clone, 1);
     }
 
-        //What happens when Idling
-        private void Idling()
+    //What happens when Idling
+    private void Idling()
     {       
         //Tell animator to idle
         ani.SetTrigger("Idling");
