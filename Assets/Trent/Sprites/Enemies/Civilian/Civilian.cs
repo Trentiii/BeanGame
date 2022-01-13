@@ -33,18 +33,19 @@ public class Civilian : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-       /*/Radius for sight
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, lineOfSight);
-        //Radius for attacking
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackDistance);
-        //Radius for retreating
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, retreatDistance);
-        //Raycast ground detection
-        Gizmos.color = Color.yellow;
-        if (player != null) Gizmos.DrawLine(transform.position, player.position);
+        /*/Radius for sight
+         Gizmos.color = Color.green;
+         Gizmos.DrawWireSphere(transform.position, lineOfSight);
+         //Radius for attacking
+         Gizmos.color = Color.red;
+         Gizmos.DrawWireSphere(transform.position, attackDistance);
+         //Radius for retreating
+         Gizmos.color = Color.blue;
+         Gizmos.DrawWireSphere(transform.position, retreatDistance);
+         //Raycast ground detection
+         Gizmos.color = Color.yellow;
+         if (player != null) Gizmos.DrawLine(transform.position, player.position);
 
-    }*/
+     }*/
+    }
 }
