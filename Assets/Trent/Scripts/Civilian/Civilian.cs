@@ -138,11 +138,11 @@ public class Civilian : MonoBehaviour
 
     private void facer(Vector2 direction)
     {
-        if (direction.x > 0)
+        if (direction.x < 0)
         {
             sr.flipX = true;
         }
-        else if (direction.x < 0)
+        else if (direction.x > 0)
         {
             sr.flipX = false;
         }
