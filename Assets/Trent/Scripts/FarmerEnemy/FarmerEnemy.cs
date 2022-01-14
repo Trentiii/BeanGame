@@ -94,7 +94,9 @@ public class FarmerEnemy : MonoBehaviour
         {
             if (aS.isPlaying) aS.Stop();
 
-            if (!ani.GetCurrentAnimatorStateInfo(0).IsName("Attack") && currentState != State.attacking)
+            if (!ani.GetCurrentAnimatorStateInfo(0).IsName("Attack")
+                && !ani.GetCurrentAnimatorStateInfo(0).IsName("FarmerIdle 0")
+                && currentState != State.attacking)
             {
                 //Stop attacking animation
                 ani.SetBool("Attacking", false);
@@ -215,6 +217,11 @@ public class FarmerEnemy : MonoBehaviour
         //Stop and shoot projectiles at player
         //Play attacking animation
         ani.SetBool("Attacking", true);
+
+        if (!ani.GetCurrentAnimatorStateInfo(0).IsName("Attack") && !ani.GetCurrentAnimatorStateInfo(0).IsName("FarmerIdle 0"))
+        {
+            ani.SetTrigger("AttackStart");
+        }
     }
 
     public void Shoot()
@@ -288,7 +295,8 @@ public class FarmerEnemy : MonoBehaviour
         }
         else
         {
-            ani.SetBool("Attacking", true);
+            Attacking();
+            //ani.SetBool("Attacking", true);
         }
     }
 

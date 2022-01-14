@@ -124,7 +124,8 @@ public class GrappleAttacking : MonoBehaviour
                     enemy.GetComponent<FarmerEnemy>().cloneSFXSetup();
                 }
 
-                door.GetComponent<Door>().EnemyCounter();
+                //In fi statement so test scenes still work
+                if(door != null) door.GetComponent<Door>().EnemyCounter();
                 
                 //Destroy original enemy
                 Destroy(enemy);
