@@ -271,7 +271,17 @@ public class GrapplingGun : MonoBehaviour
                     }
 
                     grappleNormal = hit.normal; //Gets grapple normal
-                    ropeGrapplePoint = hit.point; //Gets grapple point for rope to go to
+
+                    //If not attacking
+                    if (!attacking)
+                    {
+                        ropeGrapplePoint = hit.point; //Gets grapple point for rope to go to
+                    }
+                    else
+                    {
+                        ropeGrapplePoint = enemy.transform.position; //Gets grapple point for rope to go to for enemies
+                    }
+
                     grapplePoint = hit.point + (grappleNormal * 0.4f); //Set grapple point to raycast hit point + normal + x offset
                     grappleDirection = grapplePoint - (Vector2)gunHolder.position; //Get grapple distance vector
                     grappleRope.enabled = true; //Starts grappleRope script

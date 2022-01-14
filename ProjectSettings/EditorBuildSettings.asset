@@ -15,6 +15,6 @@ EditorBuildSettings:
     path: Assets/Eric/Scenes/CreditScene.unity
     guid: 436e96d758be3fc4187747b4b303b86a
   - enabled: 1
-    path: Assets/Evan/TransitionTest.unity
+    path: Assets/Evan/Scenes/TransitionTest.unity
     guid: af09017e4868b274292e9b867d535917
   m_configObjects: {}
