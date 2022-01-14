@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Eric/Scenes/MainMenuScene.unity
     guid: 009456ea71f540549984804c84a4e8f5
   - enabled: 1
+    path: Assets/Eric/Scenes/IntroScene.unity
+    guid: e448aa121c1ca5643bb410d2a54a3059
+  - enabled: 1
     path: Assets/Logan/LoganTestScene.unity
     guid: 31b014a94f1195044b011a389ec56cbb
   - enabled: 1
