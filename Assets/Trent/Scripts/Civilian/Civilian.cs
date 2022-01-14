@@ -182,4 +182,9 @@ public class Civilian : MonoBehaviour
         if (player != null) Gizmos.DrawLine(transform.position, player.position);
 
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        
+    }
 }
