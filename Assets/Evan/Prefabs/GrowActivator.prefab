@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 944359989040367393}
   - component: {fileID: 944359989040367392}
   - component: {fileID: 5101852687374096220}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GrowActivator
   m_TagString: Untagged
   m_Icon: {fileID: 0}

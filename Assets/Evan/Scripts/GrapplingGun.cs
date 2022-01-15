@@ -257,16 +257,19 @@ public class GrapplingGun : MonoBehaviour
                         attacking = true;
                         enemy = hit.transform.gameObject;
 
-                        //Definitly the intended use of a try catch lol
-                        try
+                        if (enemy.name != "Boss")
                         {
-                            //Set flying enemy state
-                            enemy.GetComponent<NewFlyingEnemy>().currentState = NewFlyingEnemy.State.grappled;
-                        }
-                        catch //If flying enemy setting errored
-                        {
-                            //Set farmer enemy state
-                            enemy.GetComponent<FarmerEnemy>().currentState = FarmerEnemy.State.grappled;
+                            //Definitly the intended use of a try catch lol
+                            try
+                            {
+                                //Set flying enemy state
+                                enemy.GetComponent<NewFlyingEnemy>().currentState = NewFlyingEnemy.State.grappled;
+                            }
+                            catch //If flying enemy setting errored
+                            {
+                                //Set farmer enemy state
+                                enemy.GetComponent<FarmerEnemy>().currentState = FarmerEnemy.State.grappled;
+                            }
                         }
                     }
 

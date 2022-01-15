@@ -61,22 +61,31 @@ public class GrappleAttacking : MonoBehaviour
         aS.pitch = Random.Range(0.95f, 1.1f);
         aS.Play();
 
-        //Definitly the intended use of a try catch lol
-        try
+        if (enemy.name != "Boss")
         {
-            //Set flying enemy state
-            enemy.GetComponent<NewFlyingEnemy>().currentState = NewFlyingEnemy.State.grappled;
-        }
-        catch //If flying enemy setting errored
-        {
-            //Set farmer enemy state
-            enemy.GetComponent<FarmerEnemy>().currentState = FarmerEnemy.State.grappled;
-        }
+            //Definitly the intended use of a try catch lol
+            try
+            {
+                //Set flying enemy state
+                enemy.GetComponent<NewFlyingEnemy>().currentState = NewFlyingEnemy.State.grappled;
+            }
+            catch //If flying enemy setting errored
+            {
+                //Set farmer enemy state
+                enemy.GetComponent<FarmerEnemy>().currentState = FarmerEnemy.State.grappled;
+            }
 
-        eating = true; //Sets eating to true
-        gg.attacking = true; //Set attacking to true
-        gg.setAttackPoint(enemy.transform.position); //Starts setAttackPoint
-        StartCoroutine(doEating(enemy)); //Start doEating coroutine and passes it enemy
+            eating = true; //Sets eating to true
+            gg.attacking = true; //Set attacking to true
+            gg.setAttackPoint(enemy.transform.position); //Starts setAttackPoint
+            StartCoroutine(doEating(enemy)); //Start doEating coroutine and passes it enemy
+        }
+        else
+        {
+            //Start End scene (Just stops game for now)
+            Time.timeScale = 0;
+            Debug.Log("Ending scene not made yet :(");
+        }
     }
 
     private void Update()
