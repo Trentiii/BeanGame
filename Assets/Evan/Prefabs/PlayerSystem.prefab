@@ -507,6 +507,7 @@ MonoBehaviour:
   eating: 0
   clone: {fileID: 0}
   destroyed: 0
+  BossDeathSFX: {fileID: 8300000, guid: e91c8f80541df2b40afb9158a1915877, type: 3}
 --- !u!114 &2372370183271376371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1234,6 +1235,7 @@ MonoBehaviour:
   scrollDist: 7
   speed: 9
   centered: 0
+  usingBossPoint: 0
   dying: 0
 --- !u!114 &5885027085120685992
 MonoBehaviour:

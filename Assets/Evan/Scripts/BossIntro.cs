@@ -39,6 +39,7 @@ public class BossIntro : MonoBehaviour
         pm.stopped = false;
         gg.stopped = false;
 
-        Destroy(gameObject);
+        boss.GetComponent<BossAi>().start();
+        gameObject.SetActive(false);
     }
 }

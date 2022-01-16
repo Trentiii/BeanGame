@@ -271,6 +271,11 @@ public class GrapplingGun : MonoBehaviour
                                 enemy.GetComponent<FarmerEnemy>().currentState = FarmerEnemy.State.grappled;
                             }
                         }
+                        else
+                        {
+                            //Set boss enemy state
+                            enemy.GetComponent<BossAi>().grappled = true; ;
+                        }
                     }
 
                     grappleNormal = hit.normal; //Gets grapple normal

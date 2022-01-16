@@ -6,6 +6,7 @@ public class Projectile : MonoBehaviour
 {
 
     public float damage = 1;
+    public bool wallPierce = false;
     public GameObject deatheffects;
 
     bool remove = false;
@@ -60,7 +61,7 @@ public class Projectile : MonoBehaviour
             GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>().damage(damage);
         }
 
-        if (other.CompareTag("Ground") || other.CompareTag("Ungrapplable"))
+        if (!wallPierce && (other.CompareTag("Ground") || other.CompareTag("Ungrapplable")))
         {
             DestroyProjectile(aS2);
         }

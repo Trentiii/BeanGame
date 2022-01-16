@@ -12,14 +12,17 @@ public class WarningMaker : MonoBehaviour
     void Start()
     {
         tr = GetComponent<TrailRenderer>();
+    }
 
+    private void OnEnable()
+    {
         startPos = transform.position.y;
         StartCoroutine(move());
     }
 
     private IEnumerator move()
     {
-        while (transform.position.y < startPos + 1f)
+        while (transform.position.y < startPos + 2f)
         {
             transform.position += new Vector3(0, 0.01f, 0);
             yield return new WaitForEndOfFrame();

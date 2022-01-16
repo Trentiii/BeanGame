@@ -21,6 +21,7 @@ public class PlayerHealth : MonoBehaviour
     private GrapplingGun gg;
     private GrapplingRope gr;
     private GrappleAttacking ga;
+    private BossAi ba;
     private Animator a;
     private Volume v1;
     private Volume v2;
@@ -43,6 +44,7 @@ public class PlayerHealth : MonoBehaviour
         gg = transform.GetChild(0).GetComponent<GrapplingGun>();
         gr = transform.GetChild(0).GetChild(0).GetComponent<GrapplingRope>();
         ga = GetComponent<GrappleAttacking>();
+        ba = GameObject.Find("Boss").GetComponent<BossAi>();
         a = GetComponent<Animator>();
         v1 = GameObject.Find("DeathVolume").GetComponent<Volume>();
         v2 = GameObject.Find("DamageVolume").GetComponent<Volume>();
@@ -84,6 +86,7 @@ public class PlayerHealth : MonoBehaviour
         gg.fullReset();
         gr.fullReset();
         ga.fullReset();
+        ba.fullReset();
 
         //Set animator to unscaled time and pause time
         a.updateMode = AnimatorUpdateMode.UnscaledTime;
