@@ -11,7 +11,11 @@ public class MenusControllerScript : MonoBehaviour
     //reference to the Pause Menu
     public GameObject PauseMenu;
     //What state the Pause Panel is in
-    private bool PausePanelOpen = false;
+    public bool Paused = false;
+    public GameObject SceneTransitioner;
+    public Canvas MainCanvas;
+    public Animator ani;
+    public GameObject GV;
     #endregion
 
     #region DevMenuVariables
@@ -26,12 +30,15 @@ public class MenusControllerScript : MonoBehaviour
     private bool DevMenuAvailable = true;
     #endregion
 
+    private float cooldown = 0;
+
     #endregion
 
 
     // Start is called before the first frame update
     void Start()
     {
+        MainCanvas.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
         PauseMenu.SetActive(false);
         DevPanel.SetActive(false);
         
@@ -45,8 +52,12 @@ public class MenusControllerScript : MonoBehaviour
             OpenCloseDevMenu();
 
         //Calls function for controlling pause menu
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && cooldown < Time.time) 
+        { 
             OpenClosePauseMenu();
+            cooldown = Time.time + 0.5f;
+            //remember that time stops when pause menu opens
+        }
             
 
     }
@@ -57,18 +68,53 @@ public class MenusControllerScript : MonoBehaviour
     /// </summary>
     private void OpenClosePauseMenu()
     {
-        switch (PausePanelOpen)
+        switch (Paused)
         {
             case true:
-                PauseMenu.SetActive(false);
-                PausePanelOpen = false;
+                StartCoroutine(PauseOut());
+                Paused = false;
                 break;
             case false:
+                GV.SetActive(true);
                 PauseMenu.SetActive(true);
-                PausePanelOpen = true;
+                Time.timeScale = 0f;
+                Paused = true;
                 break;
         }
     }
+
+
+    public void creditsClicked()// if menu or credits clicked
+    {
+        MainCanvas.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceCamera;
+        //call transition to credit scene
+        SceneTransitioner.GetComponent<SceneTransitionScript>().creditScene();
+    }
+
+    public void MenuClicked()// if menu or credits clicked
+    {
+        MainCanvas.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceCamera;
+        //call transition to main menu
+        SceneTransitioner.GetComponent<SceneTransitionScript>().mainMenuScene();
+    }
+
+    public void xButtonClicked() // might not be working
+    {
+        OpenClosePauseMenu();
+
+    }
+
+    IEnumerator PauseOut()
+    {
+        ani.SetTrigger("Paused");
+        yield return new WaitForSecondsRealtime(1f);
+        PauseMenu.SetActive(false);
+        GV.SetActive(false);
+        Time.timeScale = 1f;
+    }
+
+
+
     #endregion
 
     #region DevMenu

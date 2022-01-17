@@ -24,18 +24,20 @@ public class PauseMenuScript : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Paused = !Paused;
-        }
-        if (!Paused)
-        {
-            //play fading away animation
-            StartCoroutine(PauseOut());
 
-        }else if (Paused)
-        {
-            //play sliding in animation
-            PausePanel.SetActive(true);
-            GV.SetActive(true);
-            Time.timeScale = 0f;
+            if (!Paused)
+            {
+                //play fading away animation
+                StartCoroutine(PauseOut());
+
+            }
+            else if (Paused)
+            {
+                //play sliding in animation
+                PausePanel.SetActive(true);
+                GV.SetActive(true);
+                Time.timeScale = 0f;
+            }
         }
     }
         
@@ -55,15 +57,15 @@ public class PauseMenuScript : MonoBehaviour
 
     public void xButtonClicked() // might not be working
     {
-        Paused = false;
-        
+        StartCoroutine(PauseOut());
+
     }
 
     IEnumerator PauseOut()
     {
         ani.SetTrigger("Paused");
-        yield return new WaitForSecondsRealtime(0);
-        //PausePanel.SetActive(false);
+        yield return new WaitForSecondsRealtime(1f);
+        PausePanel.SetActive(false);
         GV.SetActive(false);
         Time.timeScale = 1f;
         Paused = !Paused;
