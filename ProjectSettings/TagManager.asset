@@ -10,6 +10,7 @@ TagManager:
   - Checkpoint
   - Enemy
   - ScreamHolders
+  - Door
   layers:
   - Default
   - TransparentFX

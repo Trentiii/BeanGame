@@ -8,6 +8,13 @@ public class SceneTransitionScript : MonoBehaviour
 
     public Faucet Faucet;
 
+    private IntroComic ic;
+
+    private void Start()
+    {
+        ic = GetComponent<IntroComic>();
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -30,6 +37,12 @@ public class SceneTransitionScript : MonoBehaviour
         //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         Faucet.transitionToIndex(SceneManager.GetActiveScene().buildIndex);
     }
+
+    public void startLevel()
+    {
+        ic.startComic();
+    }
+
     public void quitGame()
     {
         Debug.Log("quitting");

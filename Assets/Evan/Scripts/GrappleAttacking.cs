@@ -28,12 +28,14 @@ public class GrappleAttacking : MonoBehaviour
 
     #endregion
     public bool destroyed;
+    public AudioClip BossDeathSFX;
+    private GameObject door;
 
     // Start is called before the first frame update
     void Start()
     {
         //Gets references
-        
+        door = GameObject.FindGameObjectWithTag("Door");
         gg = transform.GetChild(0).GetComponent<GrapplingGun>();
         aS = GetComponent<AudioSource>();
         gr = transform.GetChild(0).GetChild(0).GetComponent<GrapplingRope>();
@@ -53,29 +55,34 @@ public class GrappleAttacking : MonoBehaviour
     //Starts the enemy eating
     public void startEating(GameObject enemy)
     {
-        
-        
-
-        //Randomize pitch and play eating sound
-        aS.pitch = Random.Range(0.95f, 1.1f);
-        aS.Play();
-
-        //Definitly the intended use of a try catch lol
-        try
+        if (enemy.name != "Boss")
         {
-            //Set flying enemy state
-            enemy.GetComponent<NewFlyingEnemy>().currentState = NewFlyingEnemy.State.grappled;
+            //Randomize pitch and play eating sound
+            aS.pitch = Random.Range(0.95f, 1.1f);
+            aS.Play();
+
+            //Definitly the intended use of a try catch lol
+            try
+            {
+                //Set flying enemy state
+                enemy.GetComponent<NewFlyingEnemy>().currentState = NewFlyingEnemy.State.grappled;
+            }
+            catch //If flying enemy setting errored
+            {
+                //Set farmer enemy state
+                enemy.GetComponent<FarmerEnemy>().currentState = FarmerEnemy.State.grappled;
+            }
         }
-        catch //If flying enemy setting errored
+        else
         {
-            //Set farmer enemy state
-            enemy.GetComponent<FarmerEnemy>().currentState = FarmerEnemy.State.grappled;
+            //Set Boss enemy state
+            enemy.GetComponent<BossAi>().grappled = true; ;
         }
 
-        eating = true; //Sets eating to true
-        gg.attacking = true; //Set attacking to true
-        gg.setAttackPoint(enemy.transform.position); //Starts setAttackPoint
-        StartCoroutine(doEating(enemy)); //Start doEating coroutine and passes it enemy
+            eating = true; //Sets eating to true
+            gg.attacking = true; //Set attacking to true
+            gg.setAttackPoint(enemy.transform.position); //Starts setAttackPoint
+            StartCoroutine(doEating(enemy)); //Start doEating coroutine and passes it enemy
     }
 
     private void Update()
@@ -101,90 +108,112 @@ public class GrappleAttacking : MonoBehaviour
         //Extend tounge to enemy
         while (true)
         {
-            //If straightline and not spawned yet
-            if (gr.straightLine && !spawned)
+            if (enemy.name != "Boss")
             {
-                //Sets spawned to true
-                spawned = true;
-
-                //Spawns clone and sets sprite
-                clone = Instantiate(template, enemy.transform.position, enemy.transform.localRotation, cloneHolder.transform);
-                clone.GetComponent<SpriteRenderer>().sprite = enemy.GetComponent<SpriteRenderer>().sprite;
-
-                //Once again definitly the intended use of a try catch lol
-                try
+                //If straightline and not spawned yet
+                if (gr.straightLine && !spawned)
                 {
-                    //Sets up scream sfx clone
-                    enemy.GetComponent<NewFlyingEnemy>().cloneSFXSetup();
-                }
-                catch //If flying enemy setting errored
-                {
-                    //Sets up scream sfx clone
-                    enemy.GetComponent<FarmerEnemy>().cloneSFXSetup();
-                }
+                    //Sets spawned to true
+                    spawned = true;
 
-                //Destroy original enemy
-                Destroy(enemy);
+                    //Spawns clone and sets sprite
+                    clone = Instantiate(template, enemy.transform.position, enemy.transform.localRotation, cloneHolder.transform);
+                    clone.GetComponent<SpriteRenderer>().sprite = enemy.GetComponent<SpriteRenderer>().sprite;
 
-                //Heals player
-                PlayerHealth.heal();
-            }
+                    //Once again definitly the intended use of a try catch lol
+                    try
+                    {
+                        //Sets up scream sfx clone
+                        enemy.GetComponent<NewFlyingEnemy>().cloneSFXSetup();
+                    }
+                    catch //If flying enemy setting errored
+                    {
+                        //Sets up scream sfx clone
+                        enemy.GetComponent<FarmerEnemy>().cloneSFXSetup();
+                    }
 
-            //If player is spawned
-            if (spawned)
-            {
-                //Leave loop
-                break;
-            }
+                    //In fi statement so test scenes still work
+                    if (door != null) door.GetComponent<Door>().EnemyCounter();
 
-            //Wait
-            yield return new WaitForEndOfFrame();
-        }
+                    //Destroy original enemy
+                    Destroy(enemy);
 
-        //Sets pulling to true
-        pulling = true;
-
-        //Get sprite renderer of clone
-        SpriteRenderer cSR = clone.GetComponent<SpriteRenderer>();
-
-        //While not shrunk
-        while (clone.transform.localScale.x > 0.05f)
-        {
-            //If close enough
-            if ((clone.transform.position - transform.position).magnitude < 10.04f)
-            {
-                //Shrink clone
-                clone.transform.localScale -= new Vector3(0.05f, 0.05f, 0);
-
-                //Fade to mouth background
-                cSR.color -= new Color(0.06f, 0.12f, 0.06f);
-                cSR.color = new Color(Mathf.Clamp(cSR.color.r, 0.53f, 1), Mathf.Clamp(cSR.color.g, 0.26f, 1), Mathf.Clamp(cSR.color.b, 0.435f, 1));
-
-                //Wait for frames = eatWaitTime
-                for (int i = 0; i < eatWaitTime; i++)
-                {
-                    yield return new WaitForEndOfFrame();
+                    //Heals player
+                    PlayerHealth.heal();
                 }
 
+                //If enemy clone is spawned
+                if (spawned)
+                {
+                    //Leave loop
+                    break;
+                }
+
+                //Wait
+                yield return new WaitForEndOfFrame();
             }
             else
             {
-                //Wait for one frame
-                yield return new WaitForEndOfFrame();
+                //Play boss death sfx
+                aS.PlayOneShot(BossDeathSFX);
+
+                //Start End scene
+                Time.timeScale = 0;
+                enemy.GetComponent<BossAi>().end();
+
+                //Leave loop
+                break;
             }
         }
 
-        //Set grapple ended to true
-        gr.grappleEnded = true;
+        //If spawned clone
+        if (spawned)
+        {
+            //Sets pulling to true
+            pulling = true;
 
-        //Turn off pulling
-        pulling = false;
+            //Get sprite renderer of clone
+            SpriteRenderer cSR = clone.GetComponent<SpriteRenderer>();
 
-        //Destroy clone
-        Destroy(clone);
+            //While not shrunk
+            while (clone.transform.localScale.x > 0.05f)
+            {
+                //If close enough
+                if ((clone.transform.position - transform.position).magnitude < 10.04f)
+                {
+                    //Shrink clone
+                    clone.transform.localScale -= new Vector3(0.05f, 0.05f, 0);
 
-        //Turns off corRunning
-        corRunning = false;
+                    //Fade to mouth background
+                    cSR.color -= new Color(0.06f, 0.12f, 0.06f);
+                    cSR.color = new Color(Mathf.Clamp(cSR.color.r, 0.53f, 1), Mathf.Clamp(cSR.color.g, 0.26f, 1), Mathf.Clamp(cSR.color.b, 0.435f, 1));
+
+                    //Wait for frames = eatWaitTime
+                    for (int i = 0; i < eatWaitTime; i++)
+                    {
+                        yield return new WaitForEndOfFrame();
+                    }
+
+                }
+                else
+                {
+                    //Wait for one frame
+                    yield return new WaitForEndOfFrame();
+                }
+            }
+
+            //Set grapple ended to true
+            gr.grappleEnded = true;
+
+            //Turn off pulling
+            pulling = false;
+
+            //Destroy clone
+            Destroy(clone);
+
+            //Turns off corRunning
+            corRunning = false;
+        }
     }
 
     public void fullReset()
