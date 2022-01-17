@@ -67,9 +67,12 @@ public class BossAi : MonoBehaviour
         //Wait
         yield return new WaitForSecondsRealtime(5);
 
+        GrossChanger.grossed = true;
+        Time.timeScale = 1;
+
         Debug.Log("need to add bean transition here");
         //Load credit scene
-        SceneManager.LoadScene(3);
+        SceneManager.LoadScene(2);
     }
 
     public void end()

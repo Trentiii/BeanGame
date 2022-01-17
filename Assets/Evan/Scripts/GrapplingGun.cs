@@ -381,18 +381,28 @@ public class GrapplingGun : MonoBehaviour
         //Reset enemy animations if let go of enemy
         if (enemy != null)
         {
-            //Definitly the intended use of a try catch lol
-            try
+
+            if (enemy.name != "Boss")
             {
-                //Set flying enemy state
-                enemy.GetComponent<NewFlyingEnemy>().currentState = NewFlyingEnemy.State.idle;
+                //Definitly the intended use of a try catch lol
+                try
+                {
+                    //Set flying enemy state
+                    enemy.GetComponent<NewFlyingEnemy>().currentState = NewFlyingEnemy.State.idle;
+                }
+                catch //If flying enemy setting errored
+                {
+                    //Set farmer enemy state
+                    enemy.GetComponent<FarmerEnemy>().currentState = FarmerEnemy.State.idle;
+                }
+                enemy.GetComponent<Animator>().SetBool("Grappled", false);
             }
-            catch //If flying enemy setting errored
+            else
             {
-                //Set farmer enemy state
-                enemy.GetComponent<FarmerEnemy>().currentState = FarmerEnemy.State.idle;
+                //Set boss enemy state
+                enemy.GetComponent<BossAi>().grappled = false;
+                enemy.GetComponent<Animator>().Play("Base Layer.Boss_Idle", 0);
             }
-            enemy.GetComponent<Animator>().SetBool("Grappled", false);
         }
 
         //Turn rope and springjoint back off
