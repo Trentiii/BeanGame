@@ -44,7 +44,8 @@ public class PlayerHealth : MonoBehaviour
         gg = transform.GetChild(0).GetComponent<GrapplingGun>();
         gr = transform.GetChild(0).GetChild(0).GetComponent<GrapplingRope>();
         ga = GetComponent<GrappleAttacking>();
-        ba = GameObject.Find("Boss").GetComponent<BossAi>();
+        GameObject boss = GameObject.Find("Boss");
+        if (boss != null) ba = boss.GetComponent<BossAi>(); //In if statement so test scenes still work
         a = GetComponent<Animator>();
         v1 = GameObject.Find("DeathVolume").GetComponent<Volume>();
         v2 = GameObject.Find("DamageVolume").GetComponent<Volume>();
@@ -86,7 +87,7 @@ public class PlayerHealth : MonoBehaviour
         gg.fullReset();
         gr.fullReset();
         ga.fullReset();
-        ba.fullReset();
+        if(ba != null )ba.fullReset(); //In if statement so test scenes still work
 
         //Set animator to unscaled time and pause time
         a.updateMode = AnimatorUpdateMode.UnscaledTime;
