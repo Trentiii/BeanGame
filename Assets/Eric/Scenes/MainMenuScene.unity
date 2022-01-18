@@ -1811,6 +1811,7 @@ MonoBehaviour:
   - {fileID: 353073340}
   - {fileID: 1809834560}
   - {fileID: 1881771031}
+  mainPanel: {fileID: 88019579}
 --- !u!1 &1417929161
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,7 +9,7 @@ public class IntroComic : MonoBehaviour
     public Faucet Faucet;
 
     public Image[] mainMenu;
-    private GameObject mainPanel;
+    public  GameObject mainPanel;
     private Image comicFrame1;
     private Image comicFrame2;
     private Image comicFrame3;
@@ -20,7 +20,6 @@ public class IntroComic : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        mainPanel = GameObject.Find("MainPanel");
         comicFrame1 = GameObject.Find("Comic frame 1").GetComponent<Image>();
         comicFrame2 = GameObject.Find("Comic frame 2").GetComponent<Image>();
         comicFrame3 = GameObject.Find("Comic frame 3").GetComponent<Image>();
