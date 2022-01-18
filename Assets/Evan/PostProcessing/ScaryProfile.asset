@@ -19,12 +19,12 @@ MonoBehaviour:
     m_Value: 0
   intensity:
     m_OverrideState: 1
-    m_Value: 0.759
+    m_Value: 0
     min: 0
     max: 1
   response:
     m_OverrideState: 1
-    m_Value: 0.963
+    m_Value: 0
     min: 0
     max: 1
   texture:
@@ -69,7 +69,7 @@ MonoBehaviour:
     max: 100
   colorFilter:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 0.6650944, b: 0.6650944, a: 1}
+    m_Value: {r: 0.990566, g: 0.990566, b: 0.990566, a: 1}
     hdr: 1
     showAlpha: 0
     showEyeDropper: 1

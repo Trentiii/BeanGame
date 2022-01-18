@@ -1,10 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class BossIntro : MonoBehaviour
 {
     GameObject boss;
+
+    public AudioMixer musicMixer;
 
     PlayerMovement pm;
     GrapplingGun gg;
@@ -23,6 +26,8 @@ public class BossIntro : MonoBehaviour
         //If hit player
         if (collision.tag == "Player")
         {
+            musicMixer.SetFloat("Depth", 1);
+
             Camera.main.GetComponent<CameraMouseFollow>().bossPoint = boss.transform.position;
             boss.GetComponent<Animator>().SetTrigger("Start");
 
