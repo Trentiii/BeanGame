@@ -112,7 +112,7 @@ public class PlayerHealth : MonoBehaviour
         aS.Play();
 
         //Sets priority
-        v1.priority = 2;
+        v1.priority = 3;
 
         float time = 0; //Holds time to wait
         float exposure = 0; //Holds current exposure
@@ -208,7 +208,7 @@ public class PlayerHealth : MonoBehaviour
 
 
         //Sets priority
-        v2.priority = 1;
+        v2.priority = 2;
         
         //Holds current intenesity of the vignette
         float intensity = 0;

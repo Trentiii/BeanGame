@@ -16,6 +16,7 @@ public class MenusControllerScript : MonoBehaviour
     public Canvas MainCanvas;
     public Animator ani;
     public GameObject GV;
+    private GrapplingGun gg;
     #endregion
 
     #region DevMenuVariables
@@ -31,17 +32,18 @@ public class MenusControllerScript : MonoBehaviour
     #endregion
 
     private float cooldown = 0;
-
     #endregion
 
 
     // Start is called before the first frame update
     void Start()
     {
-        MainCanvas.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
+        //MainCanvas.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
         PauseMenu.SetActive(false);
         DevPanel.SetActive(false);
-        
+
+        //Needed to fix sound bug
+        gg = GameObject.Find("GrapplingGun").GetComponent<GrapplingGun>();
     }
 
     // Update is called once per frame
@@ -52,13 +54,17 @@ public class MenusControllerScript : MonoBehaviour
             OpenCloseDevMenu();
 
         //Calls function for controlling pause menu
-        if (Input.GetKeyDown(KeyCode.Escape) && cooldown < Time.time) 
-        { 
+        if (Input.GetKeyDown(KeyCode.Escape) && cooldown < Time.time)
+        {
             OpenClosePauseMenu();
             cooldown = Time.time + 0.5f;
             //remember that time stops when pause menu opens
         }
-            
+        else
+        {
+            //I noticed the cooldown wasnted working, hope you dont mind - Evan :D
+            cooldown -= Time.unscaledDeltaTime;
+        }
 
     }
 
@@ -71,11 +77,14 @@ public class MenusControllerScript : MonoBehaviour
         switch (Paused)
         {
             case true:
+                gg.enabled = true; //Turns grappling gun back on                
                 StartCoroutine(PauseOut());
                 Paused = false;
                 break;
             case false:
                 GV.SetActive(true);
+                gg.enabled = false; //Turns off grappling gun to stop click sounds
+                MainCanvas.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay; //Starts as ScreenSpaceCamera for transition in
                 PauseMenu.SetActive(true);
                 Time.timeScale = 0f;
                 Paused = true;

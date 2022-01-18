@@ -29,7 +29,7 @@ public class ScreenShake : MonoBehaviour
         {
             transform.localPosition +=  Random.insideUnitSphere * shakeMagnitude;
 
-            shakeDuration -= Time.deltaTime * dampingSpeed;
+            shakeDuration -= Time.unscaledDeltaTime * dampingSpeed;
         }
         else
         {

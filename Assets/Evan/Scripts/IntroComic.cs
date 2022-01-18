@@ -30,7 +30,7 @@ public class IntroComic : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Escape))
+        if (running && (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Escape)))
         {
             timer = 4;
         }
@@ -43,6 +43,7 @@ public class IntroComic : MonoBehaviour
 
     private IEnumerator comicRunner()
     {
+        running = true;
 
         //Fade out of mainMenu
         //While menu is fading out

@@ -37,6 +37,8 @@ public class Faucet : MonoBehaviour
         //Set started to true
         started = true;
         sceneIndex = index;
+
+        leaveSetup();
     }
 
     public void transitionToMainMenu()
@@ -44,6 +46,8 @@ public class Faucet : MonoBehaviour
         //Set started to true
         started = true;
         sceneIndex = 0;
+
+        leaveSetup();
     }
 
     public void transitionToCredits()
@@ -51,6 +55,8 @@ public class Faucet : MonoBehaviour
         //Set started to true
         started = true;
         sceneIndex = 2;
+
+        leaveSetup();
     }
 
     public void transitionToLevel()
@@ -60,7 +66,61 @@ public class Faucet : MonoBehaviour
         sceneIndex = 1;
     }
 
+    private void leaveSetup()
+    {
+        Time.timeScale = 1;
 
+        //Stop camera follow and save value
+        GameObject leaveCamera = Camera.main.gameObject;
+
+        //Move parents to camera
+        transform.parent.position = new Vector3(leaveCamera.transform.position.x, leaveCamera.transform.position.y, transform.parent.position.z);
+
+        //Find player and stop movement
+        GameObject player = GameObject.Find("Player");
+
+        try
+        {
+            pm = player.GetComponent<PlayerMovement>();
+        }
+        catch
+        {
+            //Nothing lol
+        }
+
+        if (pm != null)
+        {
+            pm = player.GetComponent<PlayerMovement>();
+            pm.stopped = true;
+
+            player.GetComponent<PlayerHealth>().enabled = false;
+
+            //Stop grappling
+            gg = player.transform.GetChild(0).GetComponent<GrapplingGun>();
+            gg.stopped = true;
+
+            
+        }
+
+        //Stop camera follow and save value
+        GameObject camera = Camera.main.gameObject;
+
+        try
+        {
+            cMF = camera.GetComponent<CameraMouseFollow>();
+        }
+        catch
+        {
+            //Nothing lol
+        }
+
+        if (cMF != null)
+        {
+            speed = cMF.speed;
+            cMF.speed = 0;
+        }
+
+    }
     void Update()
     {
         //If started run spawner
