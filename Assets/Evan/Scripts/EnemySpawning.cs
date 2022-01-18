@@ -21,7 +21,12 @@ public class EnemySpawning : MonoBehaviour
 
     //Holds if enemy needs to be respawned
     private bool respawn = false;
+    public float respawnTime = 5;
 
+    private float timer;
+
+    private ParticleSystem ps;
+    private GameObject enemy;
     private Transform enemyCloneHolder;
     private PlayerHealth ph;
 
@@ -38,7 +43,10 @@ public class EnemySpawning : MonoBehaviour
             Debug.LogError("Cannot find clone holder for enemies, please add/activate an empty gameObject titled \"Enemies\"");
         }
 
+        timer = respawnTime;
+
         ph = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
+        ps = GetComponent<ParticleSystem>();
 
         //Start spawn
         spawn();
@@ -46,8 +54,11 @@ public class EnemySpawning : MonoBehaviour
 
     private void spawn()
     {
+        timer = respawnTime;
+
         //Summon enemy
         GameObject clone = Instantiate(enemyPrefabs[(int)spawnedEnemy], transform.position, Quaternion.identity, enemyCloneHolder);
+        enemy = clone;
         if ((int)spawnedEnemy == 0) //Give flyer patrol points
         {
             clone.GetComponent<NewFlyingEnemy>().moveSpots = patrolPoints;
@@ -61,6 +72,23 @@ public class EnemySpawning : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (enemy == null)
+        {
+            if (timer <= 0)
+            {
+                spawn();
+            }
+            else
+            {
+                timer -= Time.deltaTime;
+            }
+
+            if (timer <= 2.5f)
+            {
+                if (!ps.isPlaying) ps.Play();
+            }
+        }
+
         if (PlayerHealth.dying)
         {
             respawn = true;
