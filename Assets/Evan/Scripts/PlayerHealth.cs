@@ -31,6 +31,7 @@ public class PlayerHealth : MonoBehaviour
     private Camera main;
     private CameraMouseFollow cmf;
     private AudioSource aS;
+    public GameObject civ;
 
     #endregion
 
@@ -40,6 +41,7 @@ public class PlayerHealth : MonoBehaviour
         //Gets references 
         //bool healing = gameObject.GetComponent<GrappleAttacking>().eating;
         //destroyed = 
+        //civ.GetComponent<Civilian>().Death();
         rb2 = GetComponent<Rigidbody2D>();
         gg = transform.GetChild(0).GetComponent<GrapplingGun>();
         gr = transform.GetChild(0).GetChild(0).GetComponent<GrapplingRope>();
@@ -250,4 +252,12 @@ public class PlayerHealth : MonoBehaviour
             currentCheckPoint.GetComponent<Collider2D>().enabled = false;
         }
     }
+
+    /*public void OnTriggerEnter2D(Collider collision)
+    {
+        if (collision.tag == "Civ")
+        {
+            civ.GetComponent<Civilian>().Death();
+        }
+    }*/
 }

@@ -11,12 +11,15 @@ public class Civilian : MonoBehaviour
     private float waitTime;
     public float startWaitTime;
 
+    
+
     public Transform player;
     private Rigidbody2D rb;
     private SpriteRenderer sr;
     public Transform[] moveSpots;
     public LayerMask ground;
     private int nextSpot = 0;
+    public GameObject particles;
 
 
     public enum State
@@ -29,6 +32,7 @@ public class Civilian : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
         rb = GetComponent<Rigidbody2D>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
         sr = GetComponent<SpriteRenderer>();
@@ -136,6 +140,16 @@ public class Civilian : MonoBehaviour
 
     }
 
+    public void Death()
+    {
+        
+        GameObject particle = Instantiate(particles, new Vector3(transform.position.x,transform.position.y,transform.position.z), this.transform.rotation);
+        particle.GetComponent<ParticleSystem>();
+        Destroy(this.gameObject);
+        Debug.Log("Test");
+       // Destroy(this.gameObject);
+    }
+
     private void facer(Vector2 direction)
     {
         if (direction.x < 0)
@@ -183,8 +197,11 @@ public class Civilian : MonoBehaviour
 
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        
+       if (collision.tag == "Player")
+        {
+            Death();
+        }
     }
 }

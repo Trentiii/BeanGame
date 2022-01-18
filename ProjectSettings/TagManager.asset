@@ -11,6 +11,7 @@ TagManager:
   - Enemy
   - ScreamHolders
   - Door
+  - Civ
   layers:
   - Default
   - TransparentFX
