@@ -191,8 +191,9 @@ public class Faucet : MonoBehaviour
 
             if (cMF != null)
             {
-                speed = cMF.speed;
-                cMF.speed = 0;
+                //speed = cMF.speed;
+                cMF.centered = true;
+                //cMF.speed = 0;
             }
 
             //Move parents to camera
@@ -256,7 +257,11 @@ public class Faucet : MonoBehaviour
             pm.stopped = false;
             gg.stopped = false;
         }
-        if(cMF != null) cMF.speed = speed;
+        if (cMF != null)
+        {
+            //cMF.speed = speed;
+            cMF.centered = false;
+        }
 
 
         //Start destroyer in 2 second

@@ -157,8 +157,8 @@ public class Civilian : MonoBehaviour
     {
         
         GameObject particle = Instantiate(particles, new Vector3(transform.position.x,transform.position.y,transform.position.z), this.transform.rotation);
-        particle.GetComponent<ParticleSystem>();
-        particle.GetComponent<AudioSource>().pitch = Random.Range(0.85f, 1.1f);
+        particle.transform.GetChild(0).GetComponent<ParticleSystem>();
+        particle.transform.GetChild(0).GetComponent<AudioSource>().pitch = Random.Range(0.85f, 1.1f);
         Destroy(this.gameObject);
         Debug.Log("Test");
        // Destroy(this.gameObject);

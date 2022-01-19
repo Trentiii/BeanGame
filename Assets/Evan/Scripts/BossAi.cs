@@ -26,6 +26,7 @@ public class BossAi : MonoBehaviour
     {
         a = GetComponent<Animator>();
         tr = warningMaker.GetComponent<TrailRenderer>();
+        warningStartPos = warningMaker.transform.position;
     }
 
     // Update is called once per frame

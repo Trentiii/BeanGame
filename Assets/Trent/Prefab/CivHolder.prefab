@@ -105,6 +105,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Civilian
       objectReference: {fileID: 0}
+    - target: {fileID: 1126958647097375840, guid: 52f680c7e79f00c4d81246f58f8e8825,
+        type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
     - target: {fileID: 1126958647097375844, guid: 52f680c7e79f00c4d81246f58f8e8825,
         type: 3}
       propertyPath: m_RootOrder
@@ -163,11 +168,6 @@ PrefabInstance:
     - target: {fileID: 1126958647097375846, guid: 52f680c7e79f00c4d81246f58f8e8825,
         type: 3}
       propertyPath: player
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1126958647097375846, guid: 52f680c7e79f00c4d81246f58f8e8825,
-        type: 3}
-      propertyPath: particles
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1126958647097375846, guid: 52f680c7e79f00c4d81246f58f8e8825,

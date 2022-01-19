@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 1126958647097375866}
   - component: {fileID: 1126958647097375865}
   - component: {fileID: 1126958647097375864}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Civilian
   m_TagString: Civ
   m_Icon: {fileID: 0}
@@ -110,7 +110,8 @@ MonoBehaviour:
   ground:
     serializedVersion: 2
     m_Bits: 256
-  particles: {fileID: 0}
+  particles: {fileID: 8930090592249468993, guid: 4718b852e29852042bc4a07e29e12105,
+    type: 3}
   currentState: 1
 --- !u!61 &1126958647097375847
 BoxCollider2D:
