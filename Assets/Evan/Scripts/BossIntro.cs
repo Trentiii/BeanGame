@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.UI;
 
 public class BossIntro : MonoBehaviour
 {
     GameObject boss;
     public GameObject HealthBar;
+    public Slider HealthBarSlider;
     public AudioMixer musicMixer;
 
     PlayerMovement pm;
     GrapplingGun gg;
+
+    bool fill = false;
 
     private void Start()
     {
@@ -19,6 +23,14 @@ public class BossIntro : MonoBehaviour
         gg = player.transform.GetChild(0).GetComponent<GrapplingGun>();
 
         boss = GameObject.Find("Boss");
+    }
+
+    private void Update()
+    {
+        if (fill)
+        {
+            HealthBarSlider.value += Time.deltaTime;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -34,8 +46,8 @@ public class BossIntro : MonoBehaviour
             pm.stopped = true;
             gg.stopped = true;
 
-            //HealthBar.SetActive(true);
-
+            HealthBar.SetActive(true);
+            fill = true;
 
             //Call introOff in 1.5 seconds
             Invoke("introOff", 1.5f);
