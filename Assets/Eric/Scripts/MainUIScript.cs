@@ -6,8 +6,8 @@ using TMPro;
 
 public class MainUIScript : MonoBehaviour
 {
-    public GameObject slider;
-    public TMP_Text UICounter;
+    public Slider slider;
+    public Slider BeanSlider;
     [HideInInspector] public int TotalEnemies = 0;
     [HideInInspector] public int EnemiesLeft = 0;
 
@@ -20,7 +20,9 @@ public class MainUIScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        UICounter.text = "Enemies left: " + EnemiesLeft + " / " + TotalEnemies;
+        //UICounter.text = "Enemies left: " + EnemiesLeft + " / " + TotalEnemies;
+        BeanSlider.maxValue = TotalEnemies;
+        BeanSlider.value = TotalEnemies - EnemiesLeft;
         slider.GetComponent<Slider>().value = PlayerHealth.playerHealth;
     }
 
