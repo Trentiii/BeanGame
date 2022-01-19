@@ -14,7 +14,11 @@ public class GrossChanger : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (grossed) MenuMusicWaver.mGrossed = true;
+        if (grossed)
+        {
+            MenuMusicWaver.mGrossed = true;
+            CreditMusicGross.cGrossed = true;
+        }
 
         if (grossed && !title)
         {
