@@ -6,7 +6,7 @@ using UnityEngine.Audio;
 public class BossIntro : MonoBehaviour
 {
     GameObject boss;
-
+    public GameObject HealthBar;
     public AudioMixer musicMixer;
 
     PlayerMovement pm;
@@ -33,6 +33,9 @@ public class BossIntro : MonoBehaviour
 
             pm.stopped = true;
             gg.stopped = true;
+
+            //HealthBar.SetActive(true);
+
 
             //Call introOff in 1.5 seconds
             Invoke("introOff", 1.5f);
