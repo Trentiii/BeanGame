@@ -122,7 +122,20 @@ public class Civilian : MonoBehaviour
 
             facer(dir);
 
-            if (groundChecker(dir))
+            RaycastHit2D hit;
+
+            if (dir.x < 0)
+            {
+                Debug.DrawRay(transform.position, new Vector2(-0.25f, 0));
+                hit = Physics2D.Raycast(transform.position, new Vector2(-1, 0), 0.25f, ground);
+            }
+            else
+            {
+                Debug.DrawRay(transform.position, new Vector2(0.25f, 0));
+                hit = Physics2D.Raycast(transform.position, new Vector2(1, 0), 0.25f, ground);
+            }
+
+            if (groundChecker(dir) && !hit)
             {
                 transform.position = new Vector2(Vector2.MoveTowards(transform.position, player.position, -speed * Time.deltaTime).x, transform.position.y);
             }
