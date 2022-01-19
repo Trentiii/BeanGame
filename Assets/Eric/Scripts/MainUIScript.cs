@@ -23,6 +23,7 @@ public class MainUIScript : MonoBehaviour
         //UICounter.text = "Enemies left: " + EnemiesLeft + " / " + TotalEnemies;
         BeanSlider.maxValue = TotalEnemies;
         BeanSlider.value = TotalEnemies - EnemiesLeft;
+        BeanSlider.value = TotalEnemies - EnemiesLeft;
         slider.GetComponent<Slider>().value = PlayerHealth.playerHealth;
     }
 

@@ -7,6 +7,7 @@ public class SceneTransitionScript : MonoBehaviour
 {
 
     public Faucet Faucet;
+    public GameObject optionsPanel;
 
     private IntroComic ic;
 
@@ -21,6 +22,15 @@ public class SceneTransitionScript : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
             reloadThisScene();
     }
+
+    public void optionsMenuToggle()
+    {
+        if (optionsPanel != null)
+        {
+            optionsPanel.SetActive(!optionsPanel.activeSelf);
+        }
+    }
+
 
     public void reloadScene()
     {
