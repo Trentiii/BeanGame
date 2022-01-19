@@ -99,7 +99,9 @@ public class Faucet : MonoBehaviour
             gg = player.transform.GetChild(0).GetComponent<GrapplingGun>();
             gg.stopped = true;
 
-            
+            player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+
+            EnemySpawning.stop();
         }
 
         //Stop camera follow and save value

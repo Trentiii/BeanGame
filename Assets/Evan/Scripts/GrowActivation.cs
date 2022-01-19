@@ -36,6 +36,8 @@ public class GrowActivation : MonoBehaviour
         v1 = GameObject.Find("ScaryVolume").GetComponent<Volume>();
         v1.profile.TryGet(out ca);
         v1.profile.TryGet(out fg);
+
+        musicMixer.SetFloat("Pitch", currentPitch);
     }
 
     private void Update()

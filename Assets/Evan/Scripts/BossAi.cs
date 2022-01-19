@@ -45,7 +45,7 @@ public class BossAi : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         warningMaker.SetActive(true);
         yield return new WaitForSeconds(4);
-        Instantiate(Attack, Attack.transform.position, Quaternion.identity).SetActive(true);
+        if(!endComic.enabled) Instantiate(Attack, Attack.transform.position, Quaternion.identity).SetActive(true);
     }
 
     private IEnumerator fader()
@@ -70,9 +70,12 @@ public class BossAi : MonoBehaviour
         GrossChanger.grossed = true;
         Time.timeScale = 1;
 
-        Debug.Log("need to add bean transition here");
         //Load credit scene
-        SceneManager.LoadScene(2);
+        endCanvas.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
+        endCanvas.GetComponent<Canvas>().sortingOrder = 9;
+        endCanvas.GetComponent<RectTransform>().localScale = new Vector3(0.016f, 0.016f, 1);
+        endCanvas.GetComponent<RectTransform>().position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, 0);
+        GameObject.Find("Canvas").GetComponent<MenusControllerScript>().creditsClicked();
     }
 
     public void end()

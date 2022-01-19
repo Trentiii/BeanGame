@@ -96,6 +96,11 @@ public class EnemySpawning : MonoBehaviour
         }
     }
 
+    public static void stop()
+    {
+        Destroy(GameObject.Find("Enemies"));
+    }
+
     // Update is called once per frame
     void Update()
     {
