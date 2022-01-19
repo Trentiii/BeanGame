@@ -20,6 +20,7 @@ public class NewFlyingEnemy : MonoBehaviour
     private int nextSpot = 0;
     //private bool idling;
     //private float groundDistance;
+    private int iterations = 0;
 
     public GameObject screamHolder;
     public GameObject projectile;
@@ -40,6 +41,7 @@ public class NewFlyingEnemy : MonoBehaviour
     }
     public State currentState = State.patrolling;
 
+    bool canShoot;
     bool remove = false;
 
     private Transform player;
@@ -102,34 +104,52 @@ public class NewFlyingEnemy : MonoBehaviour
 
             //groundDistance = Vector2.Distance(ground, transform.position);
             playerDistance = Vector2.Distance(player.position, transform.position);
-            if (playerDistance < lineOfSight && playerDistance > attackDistance)
+            canShoot = true;
+
+            if ((Vector3.Distance(new Vector3((transform.position + new Vector3(-0.25f, 0.7f, 0)).x, 0, 0), new Vector3(player.transform.position.x, 0, 0)) < 2f))
+            {
+                canShoot = false;
+            }
+
+            if(((transform.position + new Vector3(-0.25f, 0.7f, 0)).y) > (player.transform.position.y))
+            {
+                canShoot = true;
+            }
+
+            //bool higher = (((transform.position + new Vector3(-0.25f, 0.7f, 0)).y) > (player.transform.position.y));
+            if (playerDistance < lineOfSight && playerDistance > attackDistance && canShoot)
             {
                 //transform.position = Vector2.MoveTowards(this.transform.position, player.position, speed * Time.deltaTime);
                 currentState = State.following;
             }
-            else if (playerDistance <= attackDistance && playerDistance > retreatDistance)
+            else if (playerDistance <= attackDistance && playerDistance > retreatDistance && canShoot)
             {
                 currentState = State.attacking;
             }
-            else if (playerDistance <= retreatDistance)
+            else if (playerDistance <= retreatDistance && canShoot)
             {
                 currentState = State.retreat;
             }
             else if (playerDistance > lineOfSight)
             {
                 currentState = State.patrolling;
-                pc2d.isTrigger = true;
+                //pc2d.isTrigger = true;
+            }
+            else
+            {
+                currentState = State.patrolling;
+                //pc2d.isTrigger = true;
             }
 
             RaycastHit2D hit = Physics2D.Raycast(transform.position, player.position - transform.position, 100, groundAndPlayer);
             if (hit.transform != null && hit.transform.gameObject.layer == 8)
             {
                 currentState = State.patrolling;
-                pc2d.isTrigger = true;
+                //pc2d.isTrigger = true;
             }
             else if (playerDistance <= lineOfSight)
             {
-                pc2d.isTrigger = false;
+                //pc2d.isTrigger = false;
             }
 
             switch (currentState)
@@ -246,16 +266,26 @@ public class NewFlyingEnemy : MonoBehaviour
 
     public void Shoot()
     {
-        //Randomize pitch and play shoot sound
-        aS2.pitch = Random.Range(1f, 1.1f);
-        aS2.Play();
-        shootMath(LaunchAngle);
+        if (canShoot)
+        {
+            //Randomize pitch and play shoot sound
+            aS2.pitch = Random.Range(1f, 1.1f);
+            aS2.Play();
+            shootMath(LaunchAngle, false);
+        }
     }
 
-    private void shootMath(float mathLaunchAngle)
+    private void shootMath(float mathLaunchAngle, bool final)
     {
         if (Vector2.Distance(player.position, transform.position) < attackDistance)
         {
+            iterations++;
+
+            if(final)
+            {
+                iterations = 999;
+            }
+
             for (int i = 0; i < 3; i++)
             {
                 //Instantiate projectiles
@@ -265,6 +295,11 @@ public class NewFlyingEnemy : MonoBehaviour
                 Vector3 projectileXPos = new Vector3(Clone.transform.position.x, 0, 0);
                 Vector3 targetXxPos = new Vector3(player.transform.position.x, 0, 0);
 
+                if ((Vector3.Distance(new Vector3((transform.position + new Vector3(-0.25f, 0.7f, 0)).x, 0, 0), new Vector3(player.transform.position.x, 0, 0)) < 1f))
+                {
+                    targetXxPos = new Vector3(player.transform.position.x * 1.5f, 0, 0);
+                }
+                
                 //shorthands for the formula
                 float R = Mathf.Clamp(Vector3.Distance(projectileXPos, targetXxPos), -9, 9);
                 float G = Physics.gravity.y;
@@ -295,30 +330,26 @@ public class NewFlyingEnemy : MonoBehaviour
                     globalVelocity = new Vector3(-globalVelocity.x, globalVelocity.y, 0);
                 }
 
-                if (i == 0)
+                /*
+                if (i == 0 && !final)
                 {
                     RaycastHit2D hit = Physics2D.Raycast(Clone.transform.position, globalVelocity, globalVelocity.magnitude / 3, ground);
                     Debug.DrawRay(Clone.transform.position, globalVelocity / 3, Color.black, 1);
-                    if (hit.transform != null && mathLaunchAngle > 10)
+                    if (hit.transform != null && mathLaunchAngle > 10 && iterations < 3)
                     {
                         Destroy(Clone);
-                        shootMath(Mathf.Clamp(mathLaunchAngle - 10, 10, 360));
+                        shootMath(Mathf.Clamp(mathLaunchAngle - 10, 10, 360), false);
                         break;
                     }
                     else
                     {
-                        Clone.GetComponent<Rigidbody2D>().AddForce(globalVelocity, ForceMode2D.Impulse);
-
-                        //Set starting angle of bullets
-                        var dir = globalVelocity;
-                        var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-                        Clone.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);
-
-                        Destroy(Clone, 5);
+                        Destroy(Clone);
+                        shootMath(LaunchAngle, true);
                     }
                 }
                 else
                 {
+                */
                     Clone.GetComponent<Rigidbody2D>().AddForce(globalVelocity, ForceMode2D.Impulse);
 
                     //Set starting angle of bullets
@@ -327,9 +358,12 @@ public class NewFlyingEnemy : MonoBehaviour
                     Clone.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
                     Destroy(Clone, 5);
-                }
+                //}
             }
         }
+
+
+        iterations = 0;
     }
 
     //What happens when patrolling
