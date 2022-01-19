@@ -35,7 +35,12 @@ public class DoorControllerScript : MonoBehaviour
             OpenDoor();
         }
 
-        if (Input.GetKeyDown(KeyCode.U))
+        if (Input.GetKey(KeyCode.Alpha1) && Input.GetKey(KeyCode.LeftShift) && arena1)
+        {
+            OpenDoor();
+        }
+
+        if (Input.GetKey(KeyCode.Alpha2) && Input.GetKey(KeyCode.LeftShift) && !arena1)
         {
             OpenDoor();
         }

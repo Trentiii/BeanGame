@@ -45,7 +45,10 @@ public class BossAi : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         warningMaker.SetActive(true);
         yield return new WaitForSeconds(4);
-        if(!endComic.enabled) Instantiate(Attack, Attack.transform.position, Quaternion.identity).SetActive(true);
+        if (!endCanvas.activeSelf)
+        {
+            Instantiate(Attack, Attack.transform.position, Quaternion.identity).SetActive(true);
+        }
     }
 
     private IEnumerator fader()
@@ -63,6 +66,8 @@ public class BossAi : MonoBehaviour
             endComic.color = new Color(endComic.color.r, endComic.color.g, endComic.color.b, endComic.color.a + 0.05f);
             yield return new WaitForSecondsRealtime(0.01f); //Wait
         }
+
+        GameObject.Find("Volumes").SetActive(false);
 
         //Wait
         yield return new WaitForSecondsRealtime(5);
