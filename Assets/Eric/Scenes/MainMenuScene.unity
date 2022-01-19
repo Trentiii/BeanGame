@@ -487,7 +487,6 @@ GameObject:
   m_Component:
   - component: {fileID: 35188490}
   - component: {fileID: 35188493}
-  - component: {fileID: 35188492}
   - component: {fileID: 35188491}
   m_Layer: 5
   m_Name: VolumeSlider
@@ -546,19 +545,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
---- !u!114 &35188492
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 35188489}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18605fc129e4c26439ce98e4f07db949, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  musicMixer: {fileID: 24100000, guid: ca055de6e82650c468fdbbaeb062b6e5, type: 2}
 --- !u!114 &35188493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5032,7 +5018,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1537564809}
   - component: {fileID: 1537564812}
-  - component: {fileID: 1537564811}
   - component: {fileID: 1537564810}
   m_Layer: 5
   m_Name: VolumeSlider
@@ -5091,19 +5076,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
---- !u!114 &1537564811
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1537564808}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18605fc129e4c26439ce98e4f07db949, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  musicMixer: {fileID: 24100000, guid: ca055de6e82650c468fdbbaeb062b6e5, type: 2}
 --- !u!114 &1537564812
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6259,7 +6231,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1937114499}
   - component: {fileID: 1937114500}
-  - component: {fileID: 1937114501}
   - component: {fileID: 1937114502}
   m_Layer: 5
   m_Name: VolumeSlider
@@ -6351,19 +6322,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &1937114501
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1937114498}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18605fc129e4c26439ce98e4f07db949, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  musicMixer: {fileID: 24100000, guid: ca055de6e82650c468fdbbaeb062b6e5, type: 2}
 --- !u!114 &1937114502
 MonoBehaviour:
   m_ObjectHideFlags: 0
