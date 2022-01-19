@@ -199,7 +199,15 @@ public class PlayerHealth : MonoBehaviour
 
     public static void heal()
     {
-        playerHealth += 3;                           
+       
+        if (playerHealth <= 7)
+        {
+            playerHealth += 3;
+        }
+        else
+        {
+            playerHealth = 10;
+        }
     }
 
     private IEnumerator damageEffects()
