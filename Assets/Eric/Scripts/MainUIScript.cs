@@ -8,8 +8,8 @@ public class MainUIScript : MonoBehaviour
 {
     public GameObject slider;
     public TMP_Text UICounter;
-    private int TotalEnemies = 0;
-    private int EnemiesLeft = 0;
+    [HideInInspector] public int TotalEnemies = 0;
+    [HideInInspector] public int EnemiesLeft = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -32,5 +32,10 @@ public class MainUIScript : MonoBehaviour
     public void setEnemiesLeft(int enemies)
     {
         EnemiesLeft = enemies;
+    }
+
+    public void killEnemy()
+    {
+        EnemiesLeft--;
     }
 }

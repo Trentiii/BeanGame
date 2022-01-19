@@ -19,6 +19,8 @@ public class Door : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(gameObject.name);
+
         if (enemyCounter >= enemiesNeeded)
         {
             try

@@ -22,7 +22,7 @@ public class GrowActivation : MonoBehaviour
     float range = 1;
     float currentPitch = 1;
 
-    bool grown = false;
+    [HideInInspector] public bool grown = false;
     float currentReponse = 0;
 
     // Start is called before the first frame update

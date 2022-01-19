@@ -114,6 +114,8 @@ MonoBehaviour:
   patrolPoints:
   - {fileID: 9077386021361628606}
   - {fileID: 6984036219705797389}
+  enemyRemoveParticles: {fileID: 522877473838120276, guid: f47c14744d4760541af0e08e65a014ad,
+    type: 3}
   respawnTime: 5
 --- !u!198 &3089112841982242337
 ParticleSystem:

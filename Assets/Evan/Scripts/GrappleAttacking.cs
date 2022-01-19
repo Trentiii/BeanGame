@@ -25,6 +25,7 @@ public class GrappleAttacking : MonoBehaviour
     AudioSource aS;
     GrapplingRope gr;
     GameObject cloneHolder;
+    MainUIScript mus;
 
     #endregion
     public bool destroyed;
@@ -39,6 +40,7 @@ public class GrappleAttacking : MonoBehaviour
         gg = transform.GetChild(0).GetComponent<GrapplingGun>();
         aS = GetComponent<AudioSource>();
         gr = transform.GetChild(0).GetChild(0).GetComponent<GrapplingRope>();
+        mus = GameObject.Find("MainUIPanel").GetComponent<MainUIScript>();
         cloneHolder = transform.GetChild(3).gameObject;
     }
 
@@ -208,6 +210,8 @@ public class GrappleAttacking : MonoBehaviour
             //Turn off pulling
             pulling = false;
 
+            mus.killEnemy();
+
             //Destroy clone
             Destroy(clone);
 
@@ -223,5 +227,7 @@ public class GrappleAttacking : MonoBehaviour
         clone = null;
         pulling = false;
         corRunning = false;
+
+        mus.EnemiesLeft = mus.TotalEnemies;
     }
 }
