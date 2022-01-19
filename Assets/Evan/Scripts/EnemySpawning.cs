@@ -113,8 +113,8 @@ public class EnemySpawning : MonoBehaviour
         if (once && ga.grown && !arena1)
         {
             once = false;
-            mus.setTotalEnemies(25);
-            mus.setEnemiesLeft(25);
+            mus.setTotalEnemies(18);
+            mus.setEnemiesLeft(18);
         }
 
         if (enemy == null && !dcs.open)

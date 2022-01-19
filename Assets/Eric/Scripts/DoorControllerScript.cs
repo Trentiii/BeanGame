@@ -30,7 +30,7 @@ public class DoorControllerScript : MonoBehaviour
         {
             OpenDoor();
         }
-        else if (!arena1 && mus.TotalEnemies == 25 && mus.EnemiesLeft == 0)
+        else if (!arena1 && mus.TotalEnemies == 18 && mus.EnemiesLeft == 0)
         {
             OpenDoor();
         }
